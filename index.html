@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思德库养老能力支持终端</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        body { background: linear-gradient(160deg, #0f2744 0%, #1a3a5c 40%, #2d5a7b 100%); }
+        .page-header h1 { color: white; font-size: 52px; }
+        .page-header .sub { color: rgba(255,255,255,0.8); font-size: 24px; }
+        .page-footer { border-top-color: rgba(255,255,255,0.2); }
+        .page-footer .disclaimer { color: rgba(255,255,255,0.6); }
+        .big-btn { border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .btn-grid { grid-template-columns: repeat(4, 1fr); }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>思德库养老能力支持终端</h1>
+            <p class="sub">从评估到能力支持，从筛查到照护行动</p>
+        </div>
+
+        <div class="btn-grid">
+            <div class="big-btn" onclick="location.href='terminal-v2/02-activity.html'">
+                <div class="icon">🦿</div>
+                <h3>活动能力筛查</h3>
+                <p>跌倒风险识别与照护建议</p>
+            </div>
+            <div class="big-btn" onclick="location.href='terminal-v2/03-cognitive.html'">
+                <div class="icon">🧠</div>
+                <h3>认知症能力支持</h3>
+                <p>行为观察与BPSD风险识别</p>
+            </div>
+            <div class="big-btn" onclick="location.href='terminal-v2/04-bpsd.html'">
+                <div class="icon">⚠️</div>
+                <h3>照护风险管理</h3>
+                <p>走失、攻击、夜间游走应对</p>
+            </div>
+            <div class="big-btn" onclick="location.href='cognitive-care.html'">
+                <div class="icon">🧩</div>
+                <h3>认知症照护工具</h3>
+                <p>行为风险识别与照护建议</p>
+            </div>
+            <div class="big-btn" onclick="location.href='assess-system.html'">
+                <div class="icon">📋</div>
+                <h3>能力评估系统</h3>
+                <p>在线评估，自动计算等级</p>
+            </div>
+            <div class="big-btn" onclick="location.href='care-plan.html'">
+                <div class="icon">📝</div>
+                <h3>照护计划模板</h3>
+                <p>评估结果转化为照护方案</p>
+            </div>
+            <div class="big-btn" onclick="location.href='nursing-record.html'">
+                <div class="icon">📑</div>
+                <h3>护理记录工具</h3>
+                <p>日常记录与交接班模板</p>
+            </div>
+            <div class="big-btn" onclick="location.href='self-check.html'">
+                <div class="icon">✅</div>
+                <h3>机构自查工具</h3>
+                <p>质量自查与迎检准备</p>
+            </div>
+            <div class="big-btn" onclick="location.href='courses.html'">
+                <div class="icon">📚</div>
+                <h3>课程学习</h3>
+                <p>护理员技能考试精讲7课</p>
+            </div>
+            <div class="big-btn" onclick="location.href='courses-assess.html'">
+                <div class="icon">📋</div>
+                <h3>评估师课程</h3>
+                <p>能力评估师三级精讲8课</p>
+            </div>
+            <div class="big-btn" onclick="location.href='courses-conflict.html'">
+                <div class="icon">⚡</div>
+                <h3>冲突案例课程</h3>
+                <p>评估高频冲突十问十解</p>
+            </div>
+            <div class="big-btn" onclick="location.href='coach.html'">
+                <div class="icon">🎓</div>
+                <h3>成长教练</h3>
+                <p>评估师资格自查与备考</p>
+            </div>
+            <div class="big-btn" onclick="location.href='terminal-v2/06-pricing.html'">
+                <div class="icon">💰</div>
+                <h3>服务与价格</h3>
+                <p>服务菜单与合作方案</p>
+            </div>
+            <div class="big-btn" onclick="location.href='terminal-v2/07-partner.html'">
+                <div class="icon">🏢</div>
+                <h3>伙伴机构</h3>
+                <p>申请成为合作伙伴</p>
+            </div>
+            <div class="big-btn" onclick="location.href='terminal-v2/08-contact.html'">
+                <div class="icon">🤝</div>
+                <h3>合作与联系</h3>
+                <p>咨询与联系方式</p>
+            </div>
+        </div>
+
+        <div style="margin-top:40px;padding:0 10px;">
+            <h2 style="color:white;font-size:32px;margin-bottom:20px;text-align:center;">专项评估工具</h2>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+                <a href="assess-morse.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🚶</div><h3>跌倒风险</h3><p>Morse跌倒评估</p>
+                </a>
+                <a href="assess-braden.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🛏️</div><h3>压疮风险</h3><p>Braden压疮评估</p>
+                </a>
+                <a href="assess-mna.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🍽️</div><h3>营养风险</h3><p>MNA营养筛查</p>
+                </a>
+                <a href="assess-mmse.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🧠</div><h3>认知筛查</h3><p>MMSE认知评估</p>
+                </a>
+                <a href="assess-gds.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">😔</div><h3>抑郁筛查</h3><p>GDS-15抑郁量表</p>
+                </a>
+                <a href="assess-pain.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">💊</div><h3>疼痛评估</h3><p>NRS+行为观察</p>
+                </a>
+                <a href="assess-swallow.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🥤</div><h3>吞咽筛查</h3><p>噎食误吸风险</p>
+                </a>
+                <a href="assess-restraint.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🔒</div><h3>约束评估</h3><p>约束必要性判定</p>
+                </a>
+                <a href="assess-incontinence.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🚽</div><h3>排泄评估</h3><p>失禁程度与照护</p>
+                </a>
+            </div>
+        </div>
+
+        <div style="margin-top:40px;padding:0 10px;">
+            <h2 style="color:white;font-size:32px;margin-bottom:20px;text-align:center;">认知症照护专区</h2>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+                <a href="dementia-cdr.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">📊</div><h3>CDR认知分期</h3><p>认知症严重程度评定</p>
+                </a>
+                <a href="dementia-adl.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🏠</div><h3>ADL能力追踪</h3><p>日常生活能力评估</p>
+                </a>
+                <a href="dementia-bpsd-log.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">📝</div><h3>BPSD行为日志</h3><p>ABC记录与分析</p>
+                </a>
+                <a href="dementia-bpsd-plan.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">📖</div><h3>BPSD应对方案</h3><p>行为问题应对流程</p>
+                </a>
+                <a href="dementia-activity.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🎨</div><h3>非药物干预</h3><p>活动方案与执行指引</p>
+                </a>
+                <a href="dementia-cognitive-train.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🧩</div><h3>认知训练</h3><p>分阶段认知刺激活动</p>
+                </a>
+                <a href="dementia-environment.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🏗️</div><h3>环境自查</h3><p>认知症友好环境检查</p>
+                </a>
+                <a href="dementia-wandering.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🚨</div><h3>走失防控</h3><p>风险评估与应急预案</p>
+                </a>
+                <a href="dementia-family-comm.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">💬</div><h3>家属沟通</h3><p>沟通模板与技巧</p>
+                </a>
+                <a href="dementia-family-edu.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">📚</div><h3>家属教育</h3><p>认知症知识科普</p>
+                </a>
+                <a href="dementia-training.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">🎓</div><h3>专项培训</h3><p>照护员技能考核</p>
+                </a>
+                <a href="dementia-quality.html" class="big-btn" style="text-decoration:none;text-align:center;padding:18px 10px;margin:0;">
+                    <div class="icon">📈</div><h3>质量看板</h3><p>KPI监控与数据追踪</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <p class="disclaimer">本终端工具用于养老服务场景中的照护参考，不作为医学诊断依据。</p>
+        </div>
+    </div>
+</body>
+</html>

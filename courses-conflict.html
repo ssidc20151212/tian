@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评估高频冲突十问十解 — 思德库网络学苑</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(160deg, #1a1a2e 0%, #2d2d44 50%, #1a1a2e 100%);
+            color: #e8e8ec;
+            min-height: 100vh;
+        }
+        .page-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .page-header h1 {
+            font-size: 42px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .page-header .brand {
+            color: #FF8C42;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .page-header .sub {
+            color: rgba(255,255,255,0.7);
+            font-size: 18px;
+        }
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, #FF8C42, #FFD166, #FF8C42);
+            border-radius: 2px;
+            margin: 0 auto 48px;
+            max-width: 400px;
+        }
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 28px;
+        }
+        .course-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,140,66,0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(255,140,66,0.15);
+            border-color: rgba(255,140,66,0.5);
+        }
+        .card-video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #111;
+            display: block;
+        }
+        .card-body {
+            padding: 20px 24px;
+        }
+        .card-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF8C42, #FFD166);
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .card-body h3 {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .card-body p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.7;
+        }
+        .card-audio {
+            padding: 0 24px 20px;
+        }
+        .card-audio audio {
+            width: 100%;
+            height: 36px;
+            border-radius: 18px;
+        }
+        .page-footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .page-footer p {
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #FFD166;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        .back-link:hover { text-decoration: underline; }
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 28px; }
+            .course-grid { grid-template-columns: 1fr; }
+        }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+    <a href="index.html" class="back-link">← 返回首页</a>
+    <div class="page-header">
+        <p class="brand">思德库网络学苑</p>
+        <h1>评估高频冲突十问十解</h1>
+        <p class="sub">真实案例解析 · 10个冲突场景 · 评估师实战指南</p>
+    </div>
+    <div class="divider"></div>
+    <div class="course-grid" id="courseGrid"></div>
+    <div class="page-footer">
+        <p>本课程基于评估实战中的真实冲突案例编制，帮助评估师提升应对能力。</p>
+    </div>
+</div>
+<script>
+const courses = [
+    {
+        num: 1, title: "等级争议下的评估攻防",
+        desc: "家属不认可「轻度」结果，期望与标准的落差如何化解。",
+        video: "output/冲突视频1-等级争议下的评估攻防.mp4",
+        audio: "output/冲突视频1-等级争议下的评估攻防.mp3"
+    },
+    {
+        num: 2, title: "信息断层下的误会",
+        desc: "多子女签字争议，照护人确认机制如何建立。",
+        video: "output/冲突视频2-信息断层下的误会.mp4",
+        audio: "output/冲突视频2-信息断层下的误会.mp3"
+    },
+    {
+        num: 3, title: "系统操作与评估认知混乱",
+        desc: "新手评估师系统操作困难，判断模糊时如何应对。",
+        video: "output/冲突视频3-系统操作与评估认知混乱.mp4",
+        audio: "output/冲突视频3-系统操作与评估认知混乱.mp3"
+    },
+    {
+        num: 4, title: "当评估遇上剧本",
+        desc: "家属教唆老人装病，功利化评估的识别与应对。",
+        video: "output/冲突视频4-当评估遇上剧本.mp4",
+        audio: "output/冲突视频4-当评估遇上剧本.mp3"
+    },
+    {
+        num: 5, title: "隐私与评估的界限",
+        desc: "家属质疑评估侵犯隐私权时的专业应对方法。",
+        video: "output/冲突视频5-隐私与评估的界限.mp4",
+        audio: "output/冲突视频5-隐私与评估的界限.mp3"
+    },
+    {
+        num: 6, title: "协作断层下的单兵作战",
+        desc: "社区不配合、组织协调缺失时评估师如何破局。",
+        video: "output/冲突视频6-协作断层下的单兵作战.mp4",
+        audio: "output/冲突视频6-协作断层下的单兵作战.mp3"
+    },
+    {
+        num: 7, title: "家属强烈质疑评估结果",
+        desc: "家属质疑「评重了」，情绪化对抗的化解策略。",
+        video: "output/冲突视频7-家属强烈质疑评估结果.mp4",
+        audio: "output/冲突视频7-家属强烈质疑评估结果.mp3"
+    },
+    {
+        num: 8, title: "认知障碍老人无法配合评估",
+        desc: "失智老人拒绝配合时的间接评估方法。",
+        video: "output/冲突视频8-认知障碍老人无法配合评估.mp4",
+        audio: "output/冲突视频8-认知障碍老人无法配合评估.mp3"
+    },
+    {
+        num: 9, title: "家属希望往重里评",
+        desc: "补贴驱动下的道德困境与坚守原则的方法。",
+        video: "output/冲突视频9-家属希望往重里评.mp4",
+        audio: "output/冲突视频9-家属希望往重里评.mp3"
+    },
+    {
+        num: 10, title: "新手与老手的经验拉扯",
+        desc: "流程化与经验主义的冲突协调策略。",
+        video: "output/冲突视频10-新手与老手的经验拉扯.mp4",
+        audio: "output/冲突视频10-新手与老手的经验拉扯.mp3"
+    }
+];
+
+const grid = document.getElementById("courseGrid");
+courses.forEach(c => {
+    grid.innerHTML += `
+    <div class="course-card">
+        <video class="card-video" controls preload="metadata" poster="">
+            <source src="${c.video}" type="video/mp4">
+        </video>
+        <div class="card-body">
+            <span class="card-num">第${c.num}讲</span>
+            <h3>${c.title}</h3>
+            <p>${c.desc}</p>
+        </div>
+        <div class="card-audio">
+            <audio controls preload="none">
+                <source src="${c.audio}" type="audio/mpeg">
+            </audio>
+        </div>
+    </div>`;
+});
+</script>
+</body>
+</html>

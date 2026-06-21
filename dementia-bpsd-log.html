@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPSD行为日志</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #e74c3c; }
+        .form-group { margin: 16px 0; }
+        .form-group label { display: block; font-size: 20px; font-weight: bold; color: #2c3e50; margin-bottom: 8px; }
+        .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 14px; border-radius: 8px; border: 2px solid #ddd; font-size: 18px; box-sizing: border-box; }
+        .form-group textarea { height: 80px; resize: vertical; }
+        .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: #e74c3c; outline: none; }
+        .tag-group { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tag-item { padding: 10px 16px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 17px; cursor: pointer; }
+        .tag-item.selected { border-color: #e74c3c; background: #fdecea; color: #c0392b; font-weight: bold; }
+        .log-list { margin-top: 20px; }
+        .log-entry { background: #f8f9fa; border-radius: 10px; padding: 16px; margin: 10px 0; border-left: 4px solid #e74c3c; position: relative; }
+        .log-entry .time { color: #7f8c8d; font-size: 15px; }
+        .log-entry .behavior { font-size: 18px; font-weight: bold; color: #2c3e50; margin: 6px 0; }
+        .log-entry .del-btn { position: absolute; top: 12px; right: 12px; background: #fdecea; border: none; color: #c0392b; border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 14px; }
+        .nav-btns { display: flex; gap: 16px; justify-content: center; margin: 20px 0; }
+        .nav-btns button { padding: 14px 40px; border-radius: 10px; font-size: 20px; cursor: pointer; border: none; }
+        .nav-btns .btn-save { background: #e74c3c; color: white; }
+        .nav-btns .btn-clear { background: #ecf0f1; color: #333; }
+        .nav-btns .btn-export { background: #27ae60; color: white; }
+        .counter { text-align: center; padding: 16px; background: #fdecea; border-radius: 10px; margin: 16px 0; font-size: 20px; color: #c0392b; font-weight: bold; }
+        .person-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+        .person-tag { padding: 10px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 18px; cursor: pointer; }
+        .person-tag.active { border-color: #e74c3c; background: #fdecea; color: #c0392b; font-weight: bold; }
+        .person-tag.add { border-style: dashed; color: #999; }
+        .current-person { font-size: 22px; font-weight: bold; color: #e74c3c; text-align: center; padding: 12px; background: #fdecea; border-radius: 10px; margin: 16px 0; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>行为观察日志</h1>
+            <p class="sub">记录老人异常行为，分析规律，改善照护</p>
+        </div>
+        <div class="notice">每次发生异常行为时记录：什么时候、发生了什么、之前发生了什么、怎么处理的。坚持记录能帮助找到规律。</div>
+        <div class="block">
+            <h2>选择老人</h2>
+            <div class="person-bar" id="personBar"></div>
+        </div>
+        <div class="current-person" id="currentPerson">请先选择或添加老人</div>
+        <div id="mainContent" style="display:none;">
+            <div class="block">
+                <h2>记录一次行为事件</h2>
+                <div class="form-group">
+                    <label>什么时间发生的</label>
+                    <input type="datetime-local" id="logTime">
+                </div>
+                <div class="form-group">
+                    <label>发生了什么行为（可多选）</label>
+                    <div class="tag-group" id="behaviorTags"></div>
+                </div>
+                <div class="form-group">
+                    <label>发生前在做什么（前因）</label>
+                    <textarea id="antecedent" placeholder="比如：刚吃完饭、来了陌生人、被叫去洗澡、下午太阳快落山了..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>具体表现（行为描述）</label>
+                    <textarea id="behaviorDesc" placeholder="比如：一直走向大门要出去、大声喊了10分钟、推了护理员一下..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>怎么处理的（干预和结果）</label>
+                    <textarea id="consequence" placeholder="比如：陪着走了一圈就平静了、放了他喜欢的歌后停止了..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>持续多久</label>
+                    <select id="duration">
+                        <option value="">请选择</option>
+                        <option value="不到5分钟">不到5分钟</option>
+                        <option value="5-15分钟">5-15分钟</option>
+                        <option value="15-30分钟">15-30分钟</option>
+                        <option value="30分钟-1小时">30分钟-1小时</option>
+                        <option value="超过1小时">超过1小时</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>严重吗</label>
+                    <select id="severity">
+                        <option value="">请选择</option>
+                        <option value="轻">轻（没造成伤害，很快平复）</option>
+                        <option value="中">中（有一定风险，费了些劲才平复）</option>
+                        <option value="重">重（造成伤害或长时间无法平复）</option>
+                    </select>
+                </div>
+            </div>
+            <div class="nav-btns">
+                <button class="btn-clear" onclick="clearForm()">清空</button>
+                <button class="btn-save" onclick="saveLog()">保存这条记录</button>
+            </div>
+            <div class="counter" id="counter"></div>
+            <div class="block">
+                <h2>历史记录</h2>
+                <div class="nav-btns" style="margin:10px 0;">
+                    <button class="btn-export" onclick="exportData()">导出记录</button>
+                </div>
+                <div class="log-list" id="logList"><p style="color:#999;text-align:center;">暂无记录</p></div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const behaviors = ['游走/徘徊','打人/推人','大声喊叫','不肯吃饭','拒绝洗澡/换衣','傍晚烦躁','看到不存在的东西','晚上不睡觉','反复做同一件事','情绪低落/哭泣','翻找/藏东西','脱衣/不当行为'];
+    let selectedBehaviors = [];
+    let persons = JSON.parse(localStorage.getItem('bpsd_persons') || '[]');
+    let currentId = '';
+
+    function renderPersons() {
+        const bar = document.getElementById('personBar');
+        bar.innerHTML = '';
+        persons.forEach(p => {
+            const cls = currentId === p.id ? ' active' : '';
+            bar.innerHTML += `<div class="person-tag${cls}" onclick="selectPerson('${p.id}')">${p.name}</div>`;
+        });
+        bar.innerHTML += `<div class="person-tag add" onclick="addPerson()">+ 添加老人</div>`;
+    }
+    function addPerson() {
+        const name = prompt('请输入老人姓名：');
+        if(!name || !name.trim()) return;
+        const id = 'p_' + Date.now();
+        persons.push({ id, name: name.trim() });
+        localStorage.setItem('bpsd_persons', JSON.stringify(persons));
+        selectPerson(id);
+    }
+    function selectPerson(id) {
+        currentId = id;
+        const person = persons.find(p => p.id === id);
+        document.getElementById('currentPerson').textContent = '当前记录：' + person.name;
+        document.getElementById('mainContent').style.display = 'block';
+        renderPersons();
+        renderLogs();
+    }
+    function getKey() { return 'bpsd_log_' + currentId; }
+    function getLogs() { return JSON.parse(localStorage.getItem(getKey()) || '[]'); }
+
+    function renderTags() {
+        const box = document.getElementById('behaviorTags');
+        box.innerHTML = '';
+        behaviors.forEach(b => {
+            const sel = selectedBehaviors.includes(b) ? ' selected' : '';
+            box.innerHTML += `<div class="tag-item${sel}" onclick="toggleB('${b}')">${b}</div>`;
+        });
+    }
+    function toggleB(b) {
+        const idx = selectedBehaviors.indexOf(b);
+        if(idx >= 0) selectedBehaviors.splice(idx, 1);
+        else selectedBehaviors.push(b);
+        renderTags();
+    }
+    function saveLog() {
+        if(!currentId) { alert('请先选择老人'); return; }
+        const entry = {
+            time: document.getElementById('logTime').value,
+            behaviors: [...selectedBehaviors],
+            antecedent: document.getElementById('antecedent').value,
+            behaviorDesc: document.getElementById('behaviorDesc').value,
+            consequence: document.getElementById('consequence').value,
+            duration: document.getElementById('duration').value,
+            severity: document.getElementById('severity').value
+        };
+        if(!entry.time || entry.behaviors.length === 0) { alert('请至少填写时间和行为类型'); return; }
+        const logs = getLogs();
+        logs.unshift(entry);
+        localStorage.setItem(getKey(), JSON.stringify(logs));
+        clearForm();
+        renderLogs();
+        alert('记录已保存');
+    }
+    function clearForm() {
+        document.getElementById('logTime').value = new Date().toISOString().slice(0,16);
+        document.getElementById('antecedent').value = '';
+        document.getElementById('behaviorDesc').value = '';
+        document.getElementById('consequence').value = '';
+        document.getElementById('duration').value = '';
+        document.getElementById('severity').value = '';
+        selectedBehaviors = [];
+        renderTags();
+    }
+    function deleteLog(i) {
+        if(!confirm('确定删除这条记录？')) return;
+        const logs = getLogs();
+        logs.splice(i, 1);
+        localStorage.setItem(getKey(), JSON.stringify(logs));
+        renderLogs();
+    }
+    function renderLogs() {
+        const logs = getLogs();
+        const box = document.getElementById('logList');
+        const ct = document.getElementById('counter');
+        const person = persons.find(p => p.id === currentId);
+        ct.textContent = `${person.name} 共记录 ${logs.length} 次行为事件`;
+        if(logs.length === 0) { box.innerHTML = '<p style="color:#999;text-align:center;">暂无记录，记录第一条吧</p>'; return; }
+        box.innerHTML = '';
+        logs.forEach((l, i) => {
+            const timeStr = l.time ? l.time.replace('T', ' ') : '';
+            box.innerHTML += `<div class="log-entry"><button class="del-btn" onclick="deleteLog(${i})">删除</button><div class="time">${timeStr} | ${l.duration || ''} | 严重程度：${l.severity || ''}</div><div class="behavior">${l.behaviors.join('、')}</div><p><b>前因：</b>${l.antecedent || '未填写'}</p><p><b>表现：</b>${l.behaviorDesc || '未填写'}</p><p><b>处理：</b>${l.consequence || '未填写'}</p></div>`;
+        });
+    }
+    function exportData() {
+        const logs = getLogs();
+        const person = persons.find(p => p.id === currentId);
+        if(logs.length === 0) { alert('暂无记录可导出'); return; }
+        let csv = '姓名,时间,行为类型,前因,行为描述,干预结果,持续时长,严重程度\n';
+        logs.forEach(l => {
+            csv += `"${person.name}","${l.time}","${l.behaviors.join('/')}","${l.antecedent||''}","${l.behaviorDesc||''}","${l.consequence||''}","${l.duration||''}","${l.severity||''}"\n`;
+        });
+        const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `行为日志_${person.name}_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // 迁移旧数据
+    const oldLogs = JSON.parse(localStorage.getItem('bpsd_logs') || '[]');
+    if(oldLogs.length > 0 && persons.length === 0) {
+        persons.push({ id: 'p_legacy', name: '未分类记录' });
+        localStorage.setItem('bpsd_persons', JSON.stringify(persons));
+        localStorage.setItem('bpsd_log_p_legacy', JSON.stringify(oldLogs));
+        localStorage.removeItem('bpsd_logs');
+    }
+
+    document.getElementById('logTime').value = new Date().toISOString().slice(0,16);
+    renderPersons();
+    renderTags();
+    </script>
+</body>
+</html>

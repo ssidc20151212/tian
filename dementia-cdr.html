@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDR认知分期评估</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #6c3483; }
+        .person-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+        .person-tag { padding: 10px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 18px; cursor: pointer; }
+        .person-tag.active { border-color: #6c3483; background: #f4ecf7; color: #6c3483; font-weight: bold; }
+        .person-tag.add { border-style: dashed; color: #999; }
+        .current-person { font-size: 22px; font-weight: bold; color: #6c3483; text-align: center; padding: 12px; background: #f4ecf7; border-radius: 10px; margin: 16px 0; }
+        .q-card { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 14px 0; border-left: 4px solid #6c3483; }
+        .q-card h4 { font-size: 20px; color: #2c3e50; margin-bottom: 12px; }
+        .q-options { display: flex; flex-wrap: wrap; gap: 10px; }
+        .q-opt { padding: 12px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 17px; cursor: pointer; }
+        .q-opt:active { transform: scale(0.96); }
+        .q-opt.selected { border-color: #6c3483; background: #f4ecf7; color: #6c3483; font-weight: bold; }
+        .score-display { text-align: center; padding: 30px; margin: 20px 0; border-radius: 16px; background: #f8f9fa; display: none; }
+        .score-display .total { font-size: 48px; font-weight: bold; }
+        .score-display .level { font-size: 28px; margin-top: 10px; font-weight: bold; padding: 8px 30px; border-radius: 10px; display: inline-block; }
+        .level-0 { background: #e8f8f0; color: #1e8449; }
+        .level-05 { background: #e8f4fd; color: #2471a3; }
+        .level-1 { background: #fef9e7; color: #d68910; }
+        .level-2 { background: #fdecea; color: #e74c3c; }
+        .level-3 { background: #4a235a; color: white; }
+        .suggest-box { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 16px 0; display: none; }
+        .nav-btns { display: flex; gap: 16px; justify-content: center; margin: 20px 0; }
+        .nav-btns button { padding: 14px 40px; border-radius: 10px; font-size: 20px; cursor: pointer; border: none; }
+        .nav-btns .btn-calc { background: #6c3483; color: white; }
+        .nav-btns .btn-reset { background: #ecf0f1; color: #333; }
+        .history-box { margin-top: 20px; }
+        .history-entry { background: #f8f9fa; border-radius: 8px; padding: 12px 16px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #6c3483; }
+        .history-entry .date { color: #7f8c8d; font-size: 15px; }
+        .history-entry .result { font-weight: bold; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>认知分期评估</h1>
+            <p class="sub">评估认知症严重程度，指导照护方案分级</p>
+        </div>
+        <div class="notice">通过6个方面观察老人的日常表现，判断认知症处于哪个阶段。</div>
+        <div class="block">
+            <h2>选择老人</h2>
+            <div class="person-bar" id="personBar"></div>
+        </div>
+        <div class="current-person" id="currentPerson">请先选择或添加老人</div>
+        <div id="mainContent" style="display:none;">
+            <div class="block">
+                <h2>逐项观察评估</h2>
+                <div id="questions"></div>
+            </div>
+            <div class="nav-btns">
+                <button class="btn-reset" onclick="resetAll()">重新评估</button>
+                <button class="btn-calc" onclick="calcResult()">计算并保存结果</button>
+            </div>
+            <div class="score-display" id="result">
+                <div class="total" id="totalScore"></div>
+                <div class="level" id="levelText"></div>
+            </div>
+            <div class="suggest-box" id="suggestBox"></div>
+            <div class="block history-box">
+                <h2>历史评估记录</h2>
+                <div id="historyList"><p style="color:#999;text-align:center;">暂无历史记录</p></div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const items = [
+        { title:'1. 记忆力怎么样', opts:[{text:'正常，没有明显遗忘',score:0},{text:'有点健忘，但能想起来一些',score:0.5},{text:'记不住新事情，影响日常',score:1},{text:'严重遗忘，只记得很久以前的片段',score:2},{text:'几乎什么都记不住',score:3}] },
+        { title:'2. 知道时间地点吗', opts:[{text:'完全清楚',score:0},{text:'偶尔搞不清几号/星期几',score:0.5},{text:'经常搞混时间，偶尔认不出地方',score:1},{text:'时间地点都搞不清',score:2},{text:'只认得身边的人',score:3}] },
+        { title:'3. 能处理事情吗', opts:[{text:'和以前一样能处理日常事务',score:0},{text:'处理复杂事情有点吃力',score:0.5},{text:'复杂的事做不了了',score:1},{text:'判断力明显下降',score:2},{text:'完全无法自己做决定',score:3}] },
+        { title:'4. 社交活动能力', opts:[{text:'能正常参加社交活动',score:0},{text:'参与度比以前少了',score:0.5},{text:'不能独立参加活动了',score:1},{text:'只能在家里活动',score:2},{text:'基本不能离开房间',score:3}] },
+        { title:'5. 做家务和爱好', opts:[{text:'能维持家务和爱好',score:0},{text:'做得比以前少/差一些',score:0.5},{text:'只能做简单家务，爱好丢了',score:1},{text:'只保留最简单的活动',score:2},{text:'什么都做不了了',score:3}] },
+        { title:'6. 自己照顾自己', opts:[{text:'完全能自理',score:0},{text:'偶尔需要提醒',score:0.5},{text:'穿衣洗漱需要帮忙',score:1},{text:'大部分要人帮',score:2},{text:'完全不能自理',score:3}] }
+    ];
+    const answers = {};
+    let persons = JSON.parse(localStorage.getItem('bpsd_persons') || '[]');
+    let currentId = '';
+
+    function renderPersons() {
+        const bar = document.getElementById('personBar');
+        bar.innerHTML = '';
+        persons.forEach(p => {
+            const cls = currentId === p.id ? ' active' : '';
+            bar.innerHTML += `<div class="person-tag${cls}" onclick="selectPerson('${p.id}')">${p.name}</div>`;
+        });
+        bar.innerHTML += `<div class="person-tag add" onclick="addPerson()">+ 添加老人</div>`;
+    }
+    function addPerson() {
+        const name = prompt('请输入老人姓名：');
+        if(!name || !name.trim()) return;
+        const id = 'p_' + Date.now();
+        persons.push({ id, name: name.trim() });
+        localStorage.setItem('bpsd_persons', JSON.stringify(persons));
+        selectPerson(id);
+    }
+    function selectPerson(id) {
+        currentId = id;
+        const person = persons.find(p => p.id === id);
+        document.getElementById('currentPerson').textContent = '当前评估：' + person.name;
+        document.getElementById('mainContent').style.display = 'block';
+        resetAll();
+        renderPersons();
+        renderHistory();
+    }
+
+    function renderQ() {
+        const box = document.getElementById('questions');
+        box.innerHTML = '';
+        items.forEach((q, qi) => {
+            let optsHtml = '';
+            q.opts.forEach((opt, oi) => {
+                const sel = answers[qi] === oi ? ' selected' : '';
+                optsHtml += `<div class="q-opt${sel}" onclick="sel(${qi},${oi})">${opt.text}</div>`;
+            });
+            box.innerHTML += `<div class="q-card"><h4>${q.title}</h4><div class="q-options">${optsHtml}</div></div>`;
+        });
+    }
+    function sel(qi, oi) { answers[qi] = oi; renderQ(); }
+
+    function calcResult() {
+        if(!currentId) { alert('请先选择老人'); return; }
+        let scores = [];
+        items.forEach((q, qi) => { scores.push(answers[qi]!==undefined ? q.opts[answers[qi]].score : 0); });
+        let mem = scores[0];
+        let others = scores.slice(1);
+        let cdr = mem;
+        let higher = others.filter(s => s > mem).length;
+        let lower = others.filter(s => s < mem).length;
+        if(higher >= 3) cdr = mem + 0.5;
+        if(lower >= 3) cdr = mem - 0.5;
+        if(cdr < 0) cdr = 0;
+        let cdrText = cdr % 1 === 0 ? cdr.toString() : cdr.toFixed(1);
+        document.getElementById('totalScore').textContent = 'CDR = ' + cdrText;
+        const el = document.getElementById('levelText');
+        const sb = document.getElementById('suggestBox');
+        let levelName = '';
+        if(cdr === 0) { levelName='正常'; el.textContent='CDR 0 - 正常'; el.className='level level-0'; sb.innerHTML='<h3 style="color:#1e8449;">认知功能正常</h3><p>无认知障碍表现，建议每年筛查。</p>'; }
+        else if(cdr === 0.5) { levelName='可疑认知症'; el.textContent='CDR 0.5 - 可疑认知症'; el.className='level level-05'; sb.innerHTML='<h3 style="color:#2471a3;">可疑认知症/轻度认知损害</h3><p>1. 转介记忆门诊进一步检查<br>2. 认知刺激活动<br>3. 监测日常功能变化<br>4. 3个月后复评</p>'; }
+        else if(cdr === 1) { levelName='轻度认知症'; el.textContent='CDR 1 - 轻度认知症'; el.className='level level-1'; sb.innerHTML='<h3 style="color:#d68910;">轻度认知症照护要点</h3><p>1. 制定认知维持训练计划<br>2. 结构化日程安排<br>3. 安全环境布置<br>4. 家属教育<br>5. 非药物干预（回忆疗法、音乐）<br>6. 每月复评</p>'; }
+        else if(cdr === 2) { levelName='中度认知症'; el.textContent='CDR 2 - 中度认知症'; el.className='level level-2'; sb.innerHTML='<h3 style="color:#e74c3c;">中度认知症照护要点</h3><p>1. 24小时照护监护<br>2. BPSD行为观察记录<br>3. 走失防控措施<br>4. 简化环境和指令<br>5. 感官刺激活动<br>6. 营养和安全重点关注<br>7. 每2周复评</p>'; }
+        else { levelName='重度认知症'; el.textContent='CDR 3 - 重度认知症'; el.className='level level-3'; sb.innerHTML='<h3 style="color:#c0392b;">重度认知症照护要点</h3><p>1. 全面生活照料<br>2. 舒适护理为主<br>3. 预防并发症（压疮、肺炎、跌倒）<br>4. 吞咽安全评估<br>5. 疼痛和不适观察<br>6. 临终关怀准备<br>7. 家属心理支持</p>'; }
+        document.getElementById('result').style.display = 'block';
+        sb.style.display = 'block';
+        // 保存记录
+        const key = 'cdr_history_' + currentId;
+        const history = JSON.parse(localStorage.getItem(key) || '[]');
+        history.unshift({ date: new Date().toISOString().slice(0,10), cdr: cdrText, level: levelName });
+        localStorage.setItem(key, JSON.stringify(history));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const key = 'cdr_history_' + currentId;
+        const history = JSON.parse(localStorage.getItem(key) || '[]');
+        const box = document.getElementById('historyList');
+        if(history.length === 0) { box.innerHTML = '<p style="color:#999;text-align:center;">暂无历史记录</p>'; return; }
+        box.innerHTML = '';
+        history.forEach(h => {
+            box.innerHTML += `<div class="history-entry"><span class="date">${h.date}</span><span class="result">CDR ${h.cdr} - ${h.level}</span></div>`;
+        });
+    }
+
+    function resetAll() {
+        Object.keys(answers).forEach(k => delete answers[k]);
+        document.getElementById('result').style.display = 'none';
+        document.getElementById('suggestBox').style.display = 'none';
+        renderQ();
+    }
+    renderPersons();
+    renderQ();
+    </script>
+</body>
+</html>

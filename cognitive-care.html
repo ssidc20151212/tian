@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>认知症行为风险识别与照护建议系统</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 30px 0; }
+        header h1 { font-size: 24px; color: #2c3e50; margin-bottom: 8px; }
+        header p { color: #7f8c8d; font-size: 14px; }
+        .nav-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 20px 0; }
+        .nav-btn { padding: 10px 18px; border: 2px solid #3498db; border-radius: 25px; background: white; color: #3498db; cursor: pointer; font-size: 14px; transition: all 0.3s; }
+        .nav-btn:hover, .nav-btn.active { background: #3498db; color: white; }
+        .section { display: none; background: white; border-radius: 12px; padding: 25px; margin: 20px 0; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .section.active { display: block; }
+        .section h2 { font-size: 20px; color: #2c3e50; margin-bottom: 15px; border-left: 4px solid #3498db; padding-left: 12px; }
+        .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .checkbox-item { display: flex; align-items: center; padding: 12px 16px; border: 2px solid #ecf0f1; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+        .checkbox-item:hover { border-color: #3498db; background: #f0f8ff; }
+        .checkbox-item.checked { border-color: #3498db; background: #e8f4fd; }
+        .checkbox-item input { margin-right: 10px; transform: scale(1.2); }
+        .checkbox-item label { cursor: pointer; font-size: 15px; }
+        .submit-btn { display: block; width: 100%; max-width: 300px; margin: 25px auto; padding: 14px; background: #3498db; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: background 0.3s; }
+        .submit-btn:hover { background: #2980b9; }
+        .result-card { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 15px 0; border-left: 4px solid #e74c3c; }
+        .result-card h3 { color: #e74c3c; margin-bottom: 10px; font-size: 16px; }
+        .result-card .cause { color: #8e44ad; }
+        .result-card .risk { color: #e74c3c; }
+        .result-card .suggestion { color: #27ae60; }
+        .result-card .service { color: #2980b9; }
+        .result-card p { margin: 8px 0; font-size: 14px; }
+        .result-card strong { display: inline-block; width: 80px; }
+        .tag { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; margin: 2px; }
+        .tag-red { background: #fdecea; color: #e74c3c; }
+        .tag-green { background: #e8f8f0; color: #27ae60; }
+        .tag-blue { background: #e8f4fd; color: #2980b9; }
+        .price-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .price-table th, .price-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ecf0f1; }
+        .price-table th { background: #3498db; color: white; }
+        .price-table tr:hover { background: #f5f7fa; }
+        .info-block { background: #fef9e7; border-radius: 8px; padding: 15px; margin: 12px 0; border-left: 4px solid #f39c12; }
+        .info-block h4 { color: #f39c12; margin-bottom: 8px; }
+        .risk-level { display: inline-block; padding: 4px 12px; border-radius: 4px; color: white; font-size: 13px; font-weight: bold; }
+        .risk-high { background: #e74c3c; }
+        .risk-medium { background: #f39c12; }
+        .risk-low { background: #27ae60; }
+        #results { display: none; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>认知症行为风险识别与照护建议系统</h1>
+            <p>帮助机构识别认知症行为风险，转化为照护建议和服务报价</p>
+        </header>
+        <div class="nav-buttons">
+            <button class="nav-btn active" data-section="observation">认知症行为观察</button>
+            <button class="nav-btn" data-section="bpsd">BPSD风险识别</button>
+            <button class="nav-btn" data-section="wandering">走失/夜间风险提示</button>
+            <button class="nav-btn" data-section="communication">家属沟通说明</button>
+            <button class="nav-btn" data-section="advice">照护建议模板</button>
+            <button class="nav-btn" data-section="pricing">查看服务价格表</button>
+        </div>
+        <div id="observation" class="section active">
+            <h2>认知症行为观察表</h2>
+            <p style="color:#7f8c8d;margin-bottom:15px;">请勾选老人最近出现的行为表现（可多选）：</p>
+            <div class="checkbox-group">
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" value="repeat" id="b1"><label for="b1">重复提问</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" value="night_walk" id="b2"><label for="b2">夜间走动</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" value="refuse_bath" id="b3"><label for="b3">拒绝洗澡</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" value="refuse_eat" id="b4"><label for="b4">不肯吃饭</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" value="attack" id="b5"><label for="b5">攻击护理员</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" value="go_home" id="b6"><label for="b6">总说要回家</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" value="rummage" id="b7"><label for="b7">翻东西</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" value="hallucination" id="b8"><label for="b8">幻觉妄想</label>
+                </div>
+            </div>
+            <button class="submit-btn" onclick="analyzeSymptoms()">生成风险分析与照护建议</button>
+            <div id="results"></div>
+        </div>
+        <div id="bpsd" class="section">
+            <h2>BPSD行为风险识别卡</h2>
+            <div class="info-block">
+                <h4>什么是BPSD？</h4>
+                <p style="font-size:14px;">BPSD（Behavioral and Psychological Symptoms of Dementia）即认知症的行为和心理症状，包括激越、攻击、游走、幻觉、妄想、抑郁、焦虑等。</p>
+            </div>
+            <h3 style="margin:20px 0 10px;color:#2c3e50;">常见BPSD症状与风险等级</h3>
+            <table class="price-table">
+                <thead><tr><th>症状类型</th><th>具体表现</th><th>风险等级</th><th>建议措施</th></tr></thead>
+                <tbody>
+                    <tr><td>激越/攻击</td><td>打人、踢人、扔东西</td><td><span class="risk-level risk-high">高风险</span></td><td>1对1专护，环境安抚</td></tr>
+                    <tr><td>游走</td><td>反复走动、试图外出</td><td><span class="risk-level risk-high">高风险</span></td><td>GPS定位、门禁管理</td></tr>
+                    <tr><td>幻觉妄想</td><td>看到不存在的人/物</td><td><span class="risk-level risk-medium">中风险</span></td><td>不否认不对抗、转移注意力</td></tr>
+                    <tr><td>抑郁焦虑</td><td>哭泣、退缩、不参与活动</td><td><span class="risk-level risk-medium">中风险</span></td><td>情感陪伴、结构化活动</td></tr>
+                    <tr><td>睡眠障碍</td><td>日夜颠倒、夜间游走</td><td><span class="risk-level risk-medium">中风险</span></td><td>白天增加活动、光照疗法</td></tr>
+                    <tr><td>拒绝照护</td><td>不洗澡、不吃药、不换衣</td><td><span class="risk-level risk-low">低风险</span></td><td>选择合适时机、逐步引导</td></tr>
+                    <tr><td>重复行为</td><td>反复提问、重复动作</td><td><span class="risk-level risk-low">低风险</span></td><td>耐心回应、提供安抚物</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="wandering" class="section">
+            <h2>走失/夜间游走风险提示</h2>
+            <div class="info-block">
+                <h4>走失风险评估要点</h4>
+                <ul style="font-size:14px;padding-left:20px;">
+                    <li>是否有外出意图（反复说"要回家"、"要上班"）</li>
+                    <li>是否曾经走失过</li>
+                    <li>是否能认识回家/回房间的路</li>
+                    <li>是否对环境定向力下降</li>
+                    <li>是否有独自外出的能力</li>
+                </ul>
+            </div>
+            <div class="info-block" style="border-left-color:#e74c3c;background:#fef0f0;">
+                <h4 style="color:#e74c3c;">高走失风险预警信号</h4>
+                <ul style="font-size:14px;padding-left:20px;">
+                    <li>反复在门口徘徊或尝试开门</li>
+                    <li>穿好外出衣服但无明确目的</li>
+                    <li>对当前所在地点产生困惑</li>
+                    <li>既往有走失史</li>
+                </ul>
+            </div>
+            <div class="info-block" style="border-left-color:#8e44ad;background:#f5eef8;">
+                <h4 style="color:#8e44ad;">夜间游走风险提示</h4>
+                <ul style="font-size:14px;padding-left:20px;">
+                    <li>日夜节律紊乱，白天嗜睡夜间清醒</li>
+                    <li>夜间起床后找不到厕所</li>
+                    <li>夜间在走廊/他人房间游走</li>
+                    <li>跌倒风险显著增高</li>
+                </ul>
+            </div>
+            <h3 style="margin:20px 0 10px;color:#2c3e50;">防护措施建议</h3>
+            <table class="price-table">
+                <thead><tr><th>风险类型</th><th>防护措施</th><th>责任人</th></tr></thead>
+                <tbody>
+                    <tr><td>走失风险</td><td>佩戴GPS定位手环、门禁感应报警、照片备档</td><td>护理主管</td></tr>
+                    <tr><td>夜间游走</td><td>夜间巡查加密、走廊夜灯、床边感应垫</td><td>夜班护理员</td></tr>
+                    <tr><td>跌倒风险</td><td>防滑地面、扶手、低床位、髋部保护裤</td><td>护理员</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="communication" class="section">
+            <h2>家属沟通说明</h2>
+            <div class="info-block">
+                <h4>沟通原则</h4>
+                <p style="font-size:14px;">以事实为依据、以专业为支撑、以关怀为导向，帮助家属理解认知症行为的本质，减少误解和焦虑。</p>
+            </div>
+            <h3 style="margin:20px 0 10px;color:#2c3e50;">常见家属疑问与回应建议</h3>
+            <div class="result-card" style="border-left-color:#3498db;">
+                <h3 style="color:#3498db;">"老人为什么总说要回家？"</h3>
+                <p><strong>解释：</strong>这是认知症常见表现，"回家"代表对安全感的需求，不一定是对当前环境不满。</p>
+                <p><strong>建议：</strong>不要反驳，可用转移注意力或陪伴的方式安抚情绪。</p>
+            </div>
+            <div class="result-card" style="border-left-color:#3498db;">
+                <h3 style="color:#3498db;">"为什么会打护理员？"</h3>
+                <p><strong>解释：</strong>攻击行为通常源于恐惧、疼痛或不理解照护意图，并非故意为之。</p>
+                <p><strong>建议：</strong>需要调整照护方式，在老人情绪平稳时进行照护操作。</p>
+            </div>
+            <div class="result-card" style="border-left-color:#3498db;">
+                <h3 style="color:#3498db;">"老人说有人偷他东西怎么办？"</h3>
+                <p><strong>解释：</strong>这属于妄想症状，是大脑病变导致的，并非真的丢失物品。</p>
+                <p><strong>建议：</strong>不否认、不辩论，帮助一起"找"，同时转移注意力。</p>
+            </div>
+            <div class="result-card" style="border-left-color:#3498db;">
+                <h3 style="color:#3498db;">"病情还会好转吗？"</h3>
+                <p><strong>解释：</strong>认知症目前无法逆转，但通过专业照护可以延缓进展、提升生活质量。</p>
+                <p><strong>建议：</strong>鼓励家属参与照护计划，定期沟通老人状况变化。</p>
+            </div>
+        </div>
+        <div id="advice" class="section">
+            <h2>认知症照护建议模板</h2>
+            <div class="result-card" style="border-left-color:#27ae60;">
+                <h3 style="color:#27ae60;">拒绝照护处理建议</h3>
+                <p>1. 不强迫，先离开稍后再试</p>
+                <p>2. 选择老人情绪好的时间段操作</p>
+                <p>3. 用简短指令、分步骤引导</p>
+                <p>4. 提供选择感："先洗手还是先洗脸？"</p>
+                <p>5. 保持微笑和温和语气</p>
+            </div>
+            <div class="result-card" style="border-left-color:#27ae60;">
+                <h3 style="color:#27ae60;">攻击行为处理建议</h3>
+                <p>1. 立即保持安全距离，确保自身安全</p>
+                <p>2. 用平静语气安抚，避免大声说话</p>
+                <p>3. 移除环境中的危险物品</p>
+                <p>4. 记录攻击行为发生的时间、前因和环境</p>
+                <p>5. 分析诱因：是否疼痛、恐惧、环境刺激过多</p>
+                <p>6. 必要时申请1对1专护或药物干预评估</p>
+            </div>
+            <div class="result-card" style="border-left-color:#27ae60;">
+                <h3 style="color:#27ae60;">夜间游走处理建议</h3>
+                <p>1. 白天增加体力活动和光照时间</p>
+                <p>2. 减少午睡时长（不超过30分钟）</p>
+                <p>3. 睡前避免刺激性饮品和活动</p>
+                <p>4. 安装床边感应器，及时响应</p>
+                <p>5. 走廊保持柔和夜灯照明</p>
+            </div>
+            <div class="result-card" style="border-left-color:#27ae60;">
+                <h3 style="color:#27ae60;">走失预防建议</h3>
+                <p>1. 佩戴GPS定位手环（建议24小时佩戴）</p>
+                <p>2. 衣物缝制姓名和联系电话标签</p>
+                <p>3. 设置门禁感应报警系统</p>
+                <p>4. 建立定时巡查制度（每30分钟）</p>
+                <p>5. 保存近期照片用于紧急寻找</p>
+            </div>
+        </div>
+        <div id="pricing" class="section">
+            <h2>认知症照护服务价格表</h2>
+            <table class="price-table">
+                <thead><tr><th>服务包</th><th>服务内容</th><th>适用对象</th><th>参考价格（元/月）</th></tr></thead>
+                <tbody>
+                    <tr><td>基础认知照护包</td><td>日常生活照料+认知刺激活动+行为观察记录</td><td>轻度认知障碍</td><td>6,000-8,000</td></tr>
+                    <tr><td>标准认知照护包</td><td>基础包+BPSD行为管理+家属沟通+个性化照护计划</td><td>中度认知症</td><td>10,000-13,000</td></tr>
+                    <tr><td>专护认知照护包</td><td>标准包+1对1专护+夜间照护+走失防护+医疗协调</td><td>中重度认知症</td><td>15,000-20,000</td></tr>
+                    <tr><td>走失防护增值包</td><td>GPS定位手环+门禁报警+定时巡查+应急预案</td><td>高走失风险</td><td>2,000-3,000</td></tr>
+                    <tr><td>夜间照护增值包</td><td>夜间专人巡查+感应设备+如厕辅助</td><td>夜间游走者</td><td>3,000-4,000</td></tr>
+                    <tr><td>家属支持服务包</td><td>月度沟通会+照护指导+心理支持+远程视频</td><td>所有家属</td><td>800-1,500</td></tr>
+                </tbody>
+            </table>
+            <div class="info-block">
+                <h4>说明</h4>
+                <p style="font-size:14px;">1. 以上价格为参考区间，具体费用根据评估结果确定<br>2. 可根据老人实际情况组合服务包<br>3. 病情变化时将及时调整照护方案和费用</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 导航切换
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.section).classList.add('active');
+            });
+        });
+
+        // 复选框切换
+        function toggleCheck(el) {
+            const cb = el.querySelector('input[type="checkbox"]');
+            cb.checked = !cb.checked;
+            el.classList.toggle('checked', cb.checked);
+        }
+
+        // 行为数据库
+        const behaviorData = {
+            repeat: { name: '重复提问', cause: '短期记忆严重受损，无法记住刚才的对话', risk: '低直接风险，但提示认知功能持续下降', suggestion: '耐心回应，不表现不耐烦；提供记忆辅助工具；结构化日常活动', needAssess: true, service: '基础认知照护包' },
+            night_walk: { name: '夜间走动', cause: '日夜节律紊乱、睡眠障碍、环境不熟悉', risk: '跌倒风险高、走失风险、影响他人休息', suggestion: '安装床边感应器；夜间巡查加密；白天增加活动量；走廊保持夜灯', needAssess: true, service: '夜间照护增值包' },
+            refuse_bath: { name: '拒绝洗澡', cause: '对脱衣感到不安全、水温不适、不理解照护意图', risk: '个人卫生问题、皮肤感染风险', suggestion: '选择情绪好的时段；分步骤引导；保护隐私；用温和语气', needAssess: false, service: '标准认知照护包' },
+            refuse_eat: { name: '不肯吃饭', cause: '忘记如何进食、药物副作用、情绪低落、口腔问题', risk: '营养不良、脱水、体重下降', suggestion: '检查口腔状况；提供易咀嚼食物；少量多餐；陪伴进餐', needAssess: true, service: '标准认知照护包' },
+            attack: { name: '攻击护理员', cause: '恐惧、疼痛、不理解照护意图、感觉被侵犯', risk: '护理员受伤、老人情绪加剧、照护关系破裂', suggestion: '保持安全距离；分析诱因；调整照护方式；必要时1对1专护', needAssess: true, service: '专护认知照护包' },
+            go_home: { name: '总说要回家', cause: '对安全感的需求、对当前环境不适应、长期记忆中的"家"', risk: '走失风险高、情绪焦虑、可能试图外出', suggestion: '不否认不辩论；转移注意力；打造熟悉环境；提供安抚物品', needAssess: true, service: '走失防护增值包' },
+            rummage: { name: '翻东西', cause: '寻找安全感、过去职业习惯、无聊需要活动', risk: '可能吞食异物、打扰他人、物品丢失', suggestion: '提供"翻找箱"满足需求；移除危险物品；引导参与整理活动', needAssess: false, service: '基础认知照护包' },
+            hallucination: { name: '幻觉妄想', cause: '大脑病变导致知觉异常、药物副作用、环境因素', risk: '情绪激动、行为异常、可能导致攻击行为', suggestion: '不否认不附和；转移注意力；检查药物和环境；严重时就医', needAssess: true, service: '专护认知照护包' }
+        };
+        // 生成分析结果
+        function analyzeSymptoms() {
+            const checked = document.querySelectorAll('#observation input[type="checkbox"]:checked');
+            const results = document.getElementById('results');
+            if (checked.length === 0) {
+                results.style.display = 'block';
+                results.innerHTML = '<div class="info-block"><h4>请至少选择一项行为表现</h4></div>';
+                return;
+            }
+            let html = '<h3 style="margin-bottom:15px;color:#2c3e50;">风险分析结果</h3>';
+            const services = new Set();
+            checked.forEach(cb => {
+                const data = behaviorData[cb.value];
+                services.add(data.service);
+                html += `<div class="result-card">
+                    <h3>${data.name}</h3>
+                    <p><strong>可能原因：</strong><span class="cause">${data.cause}</span></p>
+                    <p><strong>主要风险：</strong><span class="risk">${data.risk}</span></p>
+                    <p><strong>照护建议：</strong><span class="suggestion">${data.suggestion}</span></p>
+                    <p><strong>进一步评估：</strong>${data.needAssess ? '<span class="tag tag-red">建议进一步专业评估</span>' : '<span class="tag tag-green">暂无需专业评估</span>'}</p>
+                    <p><strong>推荐服务：</strong><span class="tag tag-blue">${data.service}</span></p>
+                </div>`;
+            });
+            html += '<div class="info-block" style="border-left-color:#27ae60;background:#e8f8f0;"><h4 style="color:#27ae60;">推荐服务包组合</h4><p style="font-size:14px;">';
+            services.forEach(s => { html += `<span class="tag tag-blue">${s}</span> `; });
+            html += '</p><p style="font-size:13px;color:#7f8c8d;margin-top:8px;">点击上方"查看服务价格表"了解详细价格信息</p></div>';
+            results.style.display = 'block';
+            results.innerHTML = html;
+            results.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

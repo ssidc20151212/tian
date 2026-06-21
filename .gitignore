@@ -1,0 +1,15 @@
+# 排除非网站文件
+__pycache__/
+*.py
+*.md
+*.zip
+*.txt
+*.json
+output/
+editgirl/
+ssidc-website/
+WhatyTerm/
+terminal/
+视频*/
+冲突视频*/
+评估师视频*/

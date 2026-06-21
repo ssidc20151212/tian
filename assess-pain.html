@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>疼痛评估工具</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #d35400; }
+        .q-card { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 14px 0; border-left: 4px solid #d35400; }
+        .q-card h4 { font-size: 20px; color: #2c3e50; margin-bottom: 12px; }
+        .q-options { display: flex; flex-wrap: wrap; gap: 10px; }
+        .q-opt { padding: 12px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 17px; cursor: pointer; }
+        .q-opt:active { transform: scale(0.96); }
+        .q-opt.selected { border-color: #d35400; background: #fef5e7; color: #d35400; font-weight: bold; }
+        .score-display { text-align: center; padding: 30px; margin: 20px 0; border-radius: 16px; background: #f8f9fa; display: none; }
+        .score-display .total { font-size: 64px; font-weight: bold; }
+        .score-display .level { font-size: 28px; margin-top: 10px; font-weight: bold; padding: 8px 30px; border-radius: 10px; display: inline-block; }
+        .level-none { background: #e8f8f0; color: #1e8449; }
+        .level-mild { background: #e8f4fd; color: #2471a3; }
+        .level-moderate { background: #fef9e7; color: #d68910; }
+        .level-severe { background: #fdecea; color: #c0392b; }
+        .suggest-box { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 16px 0; display: none; }
+        .nav-btns { display: flex; gap: 16px; justify-content: center; margin: 20px 0; }
+        .nav-btns button { padding: 14px 40px; border-radius: 10px; font-size: 20px; cursor: pointer; border: none; }
+        .nav-btns .btn-calc { background: #d35400; color: white; }
+        .nav-btns .btn-reset { background: #ecf0f1; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>疼痛评估工具</h1>
+            <p class="sub">NRS数字评分+行为观察，综合评估疼痛程度</p>
+        </div>
+        <div class="notice">适用于能自述的老人使用NRS评分；不能自述的老人使用行为观察法。</div>
+        <div class="block">
+            <h2>评估方式选择与评分</h2>
+            <div id="questions"></div>
+        </div>
+        <div class="nav-btns">
+            <button class="btn-reset" onclick="resetAll()">重新评估</button>
+            <button class="btn-calc" onclick="calcResult()">计算结果</button>
+        </div>
+        <div class="score-display" id="result">
+            <div class="total" id="totalScore">0</div>
+            <div>疼痛评分</div>
+            <div class="level" id="levelText"></div>
+        </div>
+        <div class="suggest-box" id="suggestBox"></div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const items = [
+        { title:'1. 老人能否自我表述疼痛？', opts:[{text:'能自述（使用NRS评分）',score:0},{text:'不能自述（使用行为观察）',score:0}] },
+        { title:'2. NRS数字评分：请老人指出疼痛程度（0=无痛，10=最痛）', opts:[{text:'0分（无痛）',score:0},{text:'1—3分（轻度）',score:2},{text:'4—6分（中度）',score:5},{text:'7—10分（重度）',score:8}] },
+        { title:'3. 面部表情', opts:[{text:'放松平静',score:0},{text:'偶尔皱眉/紧绷',score:1},{text:'经常皱眉/咬牙/哭泣',score:2}] },
+        { title:'4. 身体动作', opts:[{text:'正常体位/放松',score:0},{text:'紧张/烦躁/来回摇晃',score:1},{text:'僵硬/握拳/屈膝蜷缩',score:2}] },
+        { title:'5. 发声', opts:[{text:'无异常发声',score:0},{text:'偶尔呻吟/叹气',score:1},{text:'反复呻吟/哭喊/呼叫',score:2}] },
+        { title:'6. 可安抚性', opts:[{text:'无需安抚',score:0},{text:'分散注意力可缓解',score:1},{text:'无法安抚或安慰',score:2}] },
+        { title:'7. 疼痛部位', opts:[{text:'无明确疼痛',score:0},{text:'单一部位',score:1},{text:'多处疼痛',score:2}] },
+        { title:'8. 疼痛持续时间', opts:[{text:'无疼痛',score:0},{text:'间歇性',score:1},{text:'持续性',score:2}] }
+    ];
+    const answers = {};
+    function renderQ() {
+        const box = document.getElementById('questions');
+        box.innerHTML = '';
+        items.forEach((q, qi) => {
+            let optsHtml = '';
+            q.opts.forEach((opt, oi) => {
+                const sel = answers[qi] === oi ? ' selected' : '';
+                optsHtml += `<div class="q-opt${sel}" onclick="sel(${qi},${oi})">${opt.text}</div>`;
+            });
+            box.innerHTML += `<div class="q-card"><h4>${q.title}</h4><div class="q-options">${optsHtml}</div></div>`;
+        });
+    }
+    function sel(qi, oi) { answers[qi] = oi; renderQ(); }
+    function calcResult() {
+        let total = 0;
+        items.forEach((q, qi) => { if(answers[qi]!==undefined) total += q.opts[answers[qi]].score; });
+        document.getElementById('totalScore').textContent = total;
+        const el = document.getElementById('levelText');
+        const sb = document.getElementById('suggestBox');
+        if(total === 0) { el.textContent='无疼痛'; el.className='level level-none'; sb.innerHTML='<h3 style="color:#1e8449;">无疼痛</h3><p>目前无疼痛表现，继续日常观察。</p>'; }
+        else if(total <= 3) { el.textContent='轻度疼痛'; el.className='level level-mild'; sb.innerHTML='<h3 style="color:#2471a3;">轻度疼痛照护建议</h3><p>1. 非药物干预（热敷、按摩、体位调整）<br>2. 分散注意力<br>3. 记录疼痛发生时间和诱因<br>4. 每日评估</p>'; }
+        else if(total <= 7) { el.textContent='中度疼痛'; el.className='level level-moderate'; sb.innerHTML='<h3 style="color:#d68910;">中度疼痛照护建议</h3><p>1. 报告医生考虑药物干预<br>2. 非药物措施辅助<br>3. 记录疼痛日志<br>4. 观察睡眠和进食影响<br>5. 每班评估</p>'; }
+        else { el.textContent='重度疼痛'; el.className='level level-severe'; sb.innerHTML='<h3 style="color:#c0392b;">重度疼痛照护建议</h3><p>1. 立即报告医生<br>2. 遵医嘱用药并观察效果<br>3. 舒适体位<br>4. 每2小时评估<br>5. 记录用药后反应<br>6. 通知家属</p>'; }
+        document.getElementById('result').style.display = 'block';
+        sb.style.display = 'block';
+    }
+    function resetAll() { Object.keys(answers).forEach(k=>delete answers[k]); document.getElementById('result').style.display='none'; document.getElementById('suggestBox').style.display='none'; renderQ(); }
+    renderQ();
+    </script>
+</body>
+</html>

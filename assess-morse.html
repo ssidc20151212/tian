@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morse跌倒风险评估</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #e74c3c; }
+        .q-card { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 14px 0; border-left: 4px solid #e74c3c; }
+        .q-card h4 { font-size: 20px; color: #2c3e50; margin-bottom: 12px; }
+        .q-options { display: flex; flex-wrap: wrap; gap: 10px; }
+        .q-opt { padding: 12px 20px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 18px; cursor: pointer; transition: all 0.2s; }
+        .q-opt:active { transform: scale(0.96); }
+        .q-opt.selected { border-color: #e74c3c; background: #fdecea; color: #c0392b; font-weight: bold; }
+        .score-display { text-align: center; padding: 30px; margin: 20px 0; border-radius: 16px; background: #f8f9fa; display: none; }
+        .score-display .total { font-size: 64px; font-weight: bold; color: #2c3e50; }
+        .score-display .level { font-size: 28px; margin-top: 10px; font-weight: bold; padding: 8px 30px; border-radius: 10px; display: inline-block; }
+        .level-low { background: #e8f8f0; color: #1e8449; }
+        .level-mid { background: #fef9e7; color: #d68910; }
+        .level-high { background: #fdecea; color: #c0392b; }
+        .suggest-box { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 16px 0; display: none; }
+        .nav-btns { display: flex; gap: 16px; justify-content: center; margin: 20px 0; }
+        .nav-btns button { padding: 14px 40px; border-radius: 10px; font-size: 20px; cursor: pointer; border: none; }
+        .nav-btns .btn-calc { background: #e74c3c; color: white; }
+        .nav-btns .btn-reset { background: #ecf0f1; color: #333; }
+        .nav-btns button:active { transform: scale(0.96); }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>Morse跌倒风险评估</h1>
+            <p class="sub">识别跌倒高风险老人，制定防护方案</p>
+        </div>
+        <div class="notice">本工具用于照护场景中的跌倒风险筛查，不作为医学诊断依据。</div>
+        <div class="block">
+            <h2>逐项评估</h2>
+            <div id="questions"></div>
+        </div>
+        <div class="nav-btns">
+            <button class="btn-reset" onclick="resetAll()">重新评估</button>
+            <button class="btn-calc" onclick="calcResult()">计算结果</button>
+        </div>
+        <div class="score-display" id="result">
+            <div class="total" id="totalScore">0</div>
+            <div>总分</div>
+            <div class="level" id="levelText"></div>
+        </div>
+        <div class="suggest-box" id="suggestBox"></div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+        const items = [
+            { title:'1. 跌倒史（近3个月内是否跌倒过）', opts:[{text:'无',score:0},{text:'有',score:25}] },
+            { title:'2. 医学诊断（是否有2个以上诊断）', opts:[{text:'无',score:0},{text:'有',score:15}] },
+            { title:'3. 行走辅助', opts:[{text:'无需辅助/卧床/有人搀扶',score:0},{text:'使用拐杖/助行器/轮椅',score:15},{text:'扶家具行走',score:30}] },
+            { title:'4. 静脉输液/肝素锁', opts:[{text:'无',score:0},{text:'有',score:20}] },
+            { title:'5. 步态', opts:[{text:'正常/卧床/轮椅',score:0},{text:'步态虚弱',score:10},{text:'步态障碍',score:20}] },
+            { title:'6. 精神状态（对自身活动能力的认知）', opts:[{text:'能正确评估自身能力',score:0},{text:'高估自身能力/忘记限制',score:15}] }
+        ];
+        const answers = {};
+        function renderQ() {
+            const box = document.getElementById('questions');
+            box.innerHTML = '';
+            items.forEach((q, qi) => {
+                let optsHtml = '';
+                q.opts.forEach((opt, oi) => {
+                    const sel = answers[qi] === oi ? ' selected' : '';
+                    optsHtml += `<div class="q-opt${sel}" onclick="sel(${qi},${oi})">${opt.text}（${opt.score}分）</div>`;
+                });
+                box.innerHTML += `<div class="q-card"><h4>${q.title}</h4><div class="q-options">${optsHtml}</div></div>`;
+            });
+        }
+        function sel(qi, oi) { answers[qi] = oi; renderQ(); }
+        function calcResult() {
+            let total = 0;
+            items.forEach((q, qi) => { if(answers[qi]!==undefined) total += q.opts[answers[qi]].score; });
+            document.getElementById('totalScore').textContent = total;
+            const el = document.getElementById('levelText');
+            const sb = document.getElementById('suggestBox');
+            if(total <= 24) { el.textContent='低风险'; el.className='level level-low'; sb.innerHTML='<h3 style="color:#1e8449;">低风险照护建议</h3><p>维持现有活动方式，常规预防即可。30天后复评。</p>'; }
+            else if(total <= 44) { el.textContent='中风险'; el.className='level level-mid'; sb.innerHTML='<h3 style="color:#d68910;">中风险照护建议</h3><p>1. 落实防跌倒措施（防滑、夜灯、扶手）<br>2. 标识床头"跌倒风险"<br>3. 辅助如厕和转移<br>4. 14天后复评</p>'; }
+            else { el.textContent='高风险'; el.className='level level-high'; sb.innerHTML='<h3 style="color:#c0392b;">高风险照护建议</h3><p>1. 立即制定防跌倒专项方案<br>2. 加强巡查频率<br>3. 考虑辅具配置（助行器、髋部保护裤）<br>4. 环境全面排查<br>5. 通知家属并记录<br>6. 7天后复评</p>'; }
+            document.getElementById('result').style.display = 'block';
+            sb.style.display = 'block';
+        }
+        function resetAll() { Object.keys(answers).forEach(k=>delete answers[k]); document.getElementById('result').style.display='none'; document.getElementById('suggestBox').style.display='none'; renderQ(); }
+        renderQ();
+    </script>
+</body>
+</html>

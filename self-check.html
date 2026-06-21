@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>机构自查工具</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #16a085; }
+        .check-item { display: flex; align-items: flex-start; padding: 14px 18px; margin: 8px 0; background: #f8f9fa; border-radius: 10px; border: 2px solid #e8edf2; cursor: pointer; transition: all 0.2s; }
+        .check-item:active { transform: scale(0.98); }
+        .check-item.checked { border-color: #27ae60; background: #f0faf4; }
+        .check-item.checked .check-box { background: #27ae60; border-color: #27ae60; color: white; }
+        .check-box { width: 32px; height: 32px; min-width: 32px; border: 3px solid #bdc3c7; border-radius: 6px; margin-right: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: transparent; }
+        .check-label { font-size: 20px; }
+        .progress-bar { background: #ecf0f1; border-radius: 10px; height: 22px; margin: 16px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #16a085, #1abc9c); border-radius: 10px; transition: width 0.4s; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; color: white; font-size: 14px; font-weight: bold; }
+        .category-title { font-size: 22px; font-weight: bold; color: #16a085; margin: 20px 0 10px; padding-left: 10px; border-left: 4px solid #16a085; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>机构自查工具</h1>
+            <p class="sub">照护质量自查清单与迎检准备</p>
+        </div>
+
+        <div class="block">
+            <h2>自查说明</h2>
+            <p>本工具帮助机构在日常管理和迎检前，逐项检查关键环节是否到位。点击每一项进行确认，系统显示完成进度。</p>
+        </div>
+
+        <div class="block">
+            <h2>照护质量自查</h2>
+            <div class="progress-bar"><div class="progress-fill" id="pf1" style="width:0%"></div></div>
+
+            <div class="category-title">一、评估与计划</div>
+            <div class="check-section" id="cat1">
+            </div>
+
+            <div class="category-title">二、日常照护</div>
+            <div class="check-section" id="cat2">
+            </div>
+
+            <div class="category-title">三、安全管理</div>
+            <div class="check-section" id="cat3">
+            </div>
+
+            <div class="category-title">四、人员与培训</div>
+            <div class="check-section" id="cat4">
+            </div>
+
+            <div class="category-title">五、制度与记录</div>
+            <div class="check-section" id="cat5">
+            </div>
+        </div>
+
+        <div class="block">
+            <h2>迎检重点提醒</h2>
+            <table class="data-table">
+                <thead><tr><th>检查重点</th><th>常见问题</th><th>整改建议</th></tr></thead>
+                <tbody>
+                    <tr><td>评估档案</td><td>评估表缺项、无签字、过期未复评</td><td>逐份核查，补充完善</td></tr>
+                    <tr><td>照护计划</td><td>计划与评估不对应、无更新记录</td><td>评估后48小时内出计划</td></tr>
+                    <tr><td>护理记录</td><td>记录不及时、内容空泛、无签名</td><td>加强培训，落实当班记录</td></tr>
+                    <tr><td>安全设施</td><td>消防通道堵塞、应急预案过期</td><td>每月检查，及时更新</td></tr>
+                    <tr><td>人员资质</td><td>无上岗证、培训记录不全</td><td>建立人员档案，定期培训</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="block">
+            <h2>下一步建议</h2>
+            <table class="data-table">
+                <thead><tr><th>需求</th><th>建议</th></tr></thead>
+                <tbody>
+                    <tr><td>发现薄弱环节</td><td>针对未通过项制定整改计划</td></tr>
+                    <tr><td>系统性改善</td><td>联系思德库安排机构能力支持诊断</td></tr>
+                    <tr><td>人员能力不足</td><td>安排机构内训或报名思德库课程</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="page-footer">
+            <a class="footer-btn" href="terminal-v2/08-contact.html">联系思德库</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+
+    <script>
+        const categories = {
+            cat1: [
+                '每位在住老人均有能力评估记录',
+                '评估表填写完整，评估师签字确认',
+                '评估后30天内完成复评',
+                '每位老人有对应的照护计划',
+                '照护计划与评估等级匹配',
+                '照护计划定期更新（至少每3个月）'
+            ],
+            cat2: [
+                '日常护理记录按时填写',
+                '交接班记录完整规范',
+                '进食、排泄、睡眠情况有记录',
+                '用药管理有专人负责、有记录',
+                '皮肤观察和翻身记录到位',
+                '认知症老人行为观察有记录'
+            ],
+            cat3: [
+                '跌倒风险评估已完成并有防护措施',
+                '走失高风险老人有防护措施和标识',
+                '消防设施完好、通道畅通',
+                '应急预案更新且员工知晓',
+                '风险事件有记录和分析',
+                '夜间巡查制度落实到位'
+            ],
+            cat4: [
+                '护理员持有上岗证',
+                '评估师持有职业技能证书',
+                '年度培训计划已制定并执行',
+                '培训记录完整（签到+考核）',
+                '新员工有岗前培训记录',
+                '认知症照护人员有专项培训'
+            ],
+            cat5: [
+                '各项管理制度文件齐全',
+                '制度张贴或可随时查阅',
+                '护理记录保存规范（至少3年）',
+                '老人档案管理有序',
+                '投诉处理有制度和记录',
+                '质量检查有定期记录'
+            ]
+        };
+
+        let allItems = [];
+        Object.keys(categories).forEach(catId => {
+            const container = document.getElementById(catId);
+            categories[catId].forEach(text => {
+                const div = document.createElement('div');
+                div.className = 'check-item';
+                div.innerHTML = `<div class="check-box">✓</div><div class="check-label">${text}</div>`;
+                div.onclick = function() {
+                    this.classList.toggle('checked');
+                    updateProgress();
+                };
+                container.appendChild(div);
+                allItems.push(div);
+            });
+        });
+
+        function updateProgress() {
+            const total = allItems.length;
+            const checked = document.querySelectorAll('.check-item.checked').length;
+            const pct = Math.round((checked / total) * 100);
+            const fill = document.getElementById('pf1');
+            fill.style.width = pct + '%';
+            fill.textContent = checked + '/' + total + '（' + pct + '%）';
+        }
+    </script>
+</body>
+</html>

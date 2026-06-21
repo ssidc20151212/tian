@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>老年人能力评估师三级精讲 — 思德库网络学苑</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(160deg, #1a1a2e 0%, #2d2d44 50%, #1a1a2e 100%);
+            color: #e8e8ec;
+            min-height: 100vh;
+        }
+        .page-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .page-header h1 {
+            font-size: 42px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .page-header .brand {
+            color: #FF8C42;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .page-header .sub {
+            color: rgba(255,255,255,0.7);
+            font-size: 18px;
+        }
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, #FF8C42, #FFD166, #FF8C42);
+            border-radius: 2px;
+            margin: 0 auto 48px;
+            max-width: 400px;
+        }
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 28px;
+        }
+        .course-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,140,66,0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(255,140,66,0.15);
+            border-color: rgba(255,140,66,0.5);
+        }
+        .card-video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #111;
+            display: block;
+        }
+        .card-body {
+            padding: 20px 24px;
+        }
+        .card-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF8C42, #FFD166);
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .card-body h3 {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .card-body p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.7;
+        }
+        .card-audio {
+            padding: 0 24px 20px;
+        }
+        .card-audio audio {
+            width: 100%;
+            height: 36px;
+            border-radius: 18px;
+        }
+        .page-footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .page-footer p {
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #FFD166;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        .back-link:hover { text-decoration: underline; }
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 28px; }
+            .course-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <a href="index.html" class="back-link">← 返回首页</a>
+        <div class="page-header">
+            <p class="brand">思德库网络学苑</p>
+            <h1>老年人能力评估师三级精讲</h1>
+            <p class="sub">涵盖国标全模块 · 8门系统课程 · 高级工备考</p>
+        </div>
+        <div class="divider"></div>
+        <div class="course-grid" id="courseGrid"></div>
+        <div class="page-footer">
+            <p>本课程用于老年人能力评估师三级（高级工）考试备考参考，内容依据国家职业技能标准编制。</p>
+        </div>
+    </div>
+<script>
+const courses = [
+    {
+        num: 1, title: "职业概述与政策法规",
+        desc: "评估师职业定位、等级标准、核心法规文件、职业道德与伦理原则。",
+        video: "output/评估师视频1-职业概述与政策法规.mp4",
+        audio: "output/评估师视频1-职业概述与政策法规.mp3"
+    },
+    {
+        num: 2, title: "评估标准体系解读",
+        desc: "MZ/T 039-2013与GB/T 42195-2022标准解析、等级判定规则、评估流程规范。",
+        video: "output/评估师视频2-评估标准体系解读.mp4",
+        audio: "output/评估师视频2-评估标准体系解读.mp3"
+    },
+    {
+        num: 3, title: "日常生活活动评估",
+        desc: "Barthel指数10项评分标准、BADL与IADL区别、典型案例评分练习。",
+        video: "output/评估师视频3-日常生活活动评估.mp4",
+        audio: "output/评估师视频3-日常生活活动评估.mp3"
+    },
+    {
+        num: 4, title: "精神状态评估",
+        desc: "MMSE/MoCA认知评估工具、GDS-15抑郁量表、行为观察与分级标准。",
+        video: "output/评估师视频4-精神状态评估.mp4",
+        audio: "output/评估师视频4-精神状态评估.mp3"
+    },
+    {
+        num: 5, title: "感知觉与沟通评估",
+        desc: "视力/听力/意识水平评估、沟通能力评定、疼痛评估NRS量表。",
+        video: "output/评估师视频5-感知觉与沟通评估.mp4",
+        audio: "output/评估师视频5-感知觉与沟通评估.mp3"
+    },
+    {
+        num: 6, title: "社会参与评估",
+        desc: "Lawton IADL量表、社会交往能力、定向力评估、综合等级判定方法。",
+        video: "output/评估师视频6-社会参与评估.mp4",
+        audio: "output/评估师视频6-社会参与评估.mp3"
+    },
+    {
+        num: 7, title: "专项评估工具实操",
+        desc: "Morse跌倒/MNA营养/Braden压疮风险评估、吞咽筛查与失禁评估。",
+        video: "output/评估师视频7-专项评估工具实操.mp4",
+        audio: "output/评估师视频7-专项评估工具实操.mp3"
+    },
+    {
+        num: 8, title: "综合案例与质量控制",
+        desc: "完整评估流程案例演示、报告撰写规范、复评机制与质量控制体系。",
+        video: "output/评估师视频8-综合案例与质量控制.mp4",
+        audio: "output/评估师视频8-综合案例与质量控制.mp3"
+    }
+];
+
+const grid = document.getElementById("courseGrid");
+courses.forEach(c => {
+    grid.innerHTML += `
+    <div class="course-card">
+        <video class="card-video" controls preload="metadata" poster="">
+            <source src="${c.video}" type="video/mp4">
+        </video>
+        <div class="card-body">
+            <span class="card-num">第${c.num}课</span>
+            <h3>${c.title}</h3>
+            <p>${c.desc}</p>
+        </div>
+        <div class="card-audio">
+            <audio controls preload="none">
+                <source src="${c.audio}" type="audio/mpeg">
+            </audio>
+        </div>
+    </div>`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思德库成长教练 - 评估师资格检查</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #8e44ad; }
+        .check-section { margin: 16px 0; }
+        .check-item { display: flex; align-items: flex-start; padding: 16px 20px; margin: 10px 0; background: #f8f9fa; border-radius: 10px; border: 2px solid #e8edf2; cursor: pointer; transition: all 0.2s; }
+        .check-item:active { transform: scale(0.98); }
+        .check-item.checked { border-color: #27ae60; background: #f0faf4; }
+        .check-item.checked .check-box { background: #27ae60; border-color: #27ae60; color: white; }
+        .check-box { width: 36px; height: 36px; min-width: 36px; border: 3px solid #bdc3c7; border-radius: 8px; margin-right: 16px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: transparent; transition: all 0.2s; }
+        .check-label { flex: 1; }
+        .check-label strong { font-size: 20px; display: block; margin-bottom: 4px; }
+        .check-label span { font-size: 17px; color: #7f8c8d; }
+        .progress-bar { background: #ecf0f1; border-radius: 10px; height: 24px; margin: 20px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #27ae60, #2ecc71); border-radius: 10px; transition: width 0.4s; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; color: white; font-size: 14px; font-weight: bold; }
+        .result-box { padding: 24px; border-radius: 12px; margin: 20px 0; text-align: center; font-size: 22px; display: none; }
+        .result-pass { background: #e8f8f0; border: 2px solid #27ae60; color: #1e8449; }
+        .result-fail { background: #fef0f0; border: 2px solid #e74c3c; color: #c0392b; }
+        .condition-table td:first-child { font-weight: bold; white-space: nowrap; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>思德库成长教练</h1>
+            <p class="sub">老年人能力评估师（三级/高级工）资格材料自查系统</p>
+        </div>
+
+        <div class="block">
+            <h2>三级申报条件（满足之一）</h2>
+            <table class="data-table condition-table">
+                <thead><tr><th>路径</th><th>条件要求</th></tr></thead>
+                <tbody>
+                    <tr><td>路径A</td><td>取得四级证书后，累计从事本职业4年（含）以上</td></tr>
+                    <tr><td>路径B</td><td>取得四级证书后，累计从事本职业3年以上，且经三级培训达规定学时并取得结业证书</td></tr>
+                    <tr><td>路径C</td><td>具有相关专业大专及以上学历，取得四级证书后，累计从事本职业2年（含）以上</td></tr>
+                    <tr><td>路径D</td><td>具有相关专业本科及以上学历，取得四级证书后，累计从事本职业1年（含）以上</td></tr>
+                </tbody>
+            </table>
+            <div class="notice">相关专业包括：护理学、康复治疗、社会工作、老年服务与管理、养老服务管理等。</div>
+        </div>
+
+        <div class="block">
+            <h2>材料提交自查</h2>
+            <p>请逐项确认以下材料是否已准备齐全：</p>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width:0%"></div>
+            </div>
+
+            <div class="check-section" id="checkList">
+            </div>
+
+            <div class="result-box result-pass" id="resultPass">
+                <strong>材料齐全，可以提交申报！</strong>
+                <p style="margin-top:8px;font-size:18px;">建议联系思德库确认考试安排和考前辅导。</p>
+            </div>
+            <div class="result-box result-fail" id="resultFail">
+                <strong>材料尚未齐全</strong>
+                <p style="margin-top:8px;font-size:18px;" id="missingText"></p>
+            </div>
+        </div>
+
+        <div class="block">
+            <h2>三级考核内容</h2>
+            <table class="data-table">
+                <thead><tr><th>考核科目</th><th>考核方式</th><th>合格标准</th><th>考核重点</th></tr></thead>
+                <tbody>
+                    <tr><td>理论知识</td><td>机考/笔试，90分钟</td><td>60分及以上</td><td>评估标准、老年医学基础、照护计划</td></tr>
+                    <tr><td>技能操作</td><td>现场实操/模拟评估</td><td>60分及以上</td><td>完整评估流程、量表使用、报告撰写</td></tr>
+                    <tr><td>综合评审</td><td>论文/案例答辩</td><td>60分及以上</td><td>实际工作案例分析与专业判断能力</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="block">
+            <h2>思德库支持服务</h2>
+            <table class="data-table">
+                <thead><tr><th>服务</th><th>内容</th><th>价格</th></tr></thead>
+                <tbody>
+                    <tr><td>三级考前辅导班</td><td>理论精讲+实操模拟+案例写作指导</td><td style="color:#c0392b;font-weight:bold;">1,980元/人</td></tr>
+                    <tr><td>综合评审辅导</td><td>论文/案例撰写一对一指导</td><td style="color:#c0392b;font-weight:bold;">980元/人</td></tr>
+                    <tr><td>评估实操集训</td><td>真实场景评估演练+点评</td><td style="color:#c0392b;font-weight:bold;">1,280元/人</td></tr>
+                    <tr><td>能力支持师训练营</td><td>系统学习评估+照护计划+团队带教</td><td style="color:#c0392b;font-weight:bold;">980—1,980元/人</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="block">
+            <h2>下一步建议</h2>
+            <table class="data-table">
+                <thead><tr><th>情况</th><th>建议</th></tr></thead>
+                <tbody>
+                    <tr><td>材料齐全</td><td>联系思德库确认最近考试批次，报名考前辅导</td></tr>
+                    <tr><td>缺少四级证书</td><td>先报考四级，思德库提供四级培训</td></tr>
+                    <tr><td>工作年限不够</td><td>继续积累经验，提前学习三级课程</td></tr>
+                    <tr><td>缺少培训学时</td><td>报名思德库三级规定学时培训班</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="notice">
+            本页面用于材料自查参考，最终申报条件以人社部门及鉴定机构发布的最新要求为准。
+        </div>
+
+        <div class="page-footer">
+            <a class="footer-btn" href="terminal-v2/08-contact.html">联系思德库</a>
+            <p class="disclaimer">思德库成长教练 | 养老能力支持终端</p>
+        </div>
+    </div>
+
+    <script>
+        const checkItems = [
+            { id: 'id_card', title: '身份证复印件', desc: '正反面复印件各一份，需清晰可辨' },
+            { id: 'photo', title: '近期免冠照片', desc: '2寸白底证件照电子版+纸质版2张' },
+            { id: 'level4_cert', title: '四级（中级工）职业技能证书', desc: '老年人能力评估师四级证书复印件' },
+            { id: 'edu_cert', title: '学历证书复印件', desc: '最高学历毕业证书复印件' },
+            { id: 'work_proof', title: '工作年限证明', desc: '单位盖章的工作证明，注明从事评估工作起止时间' },
+            { id: 'training_cert', title: '培训结业证书（如适用）', desc: '三级规定学时培训结业证书（路径B适用）' },
+            { id: 'assess_records', title: '评估工作记录', desc: '至少5份完整的老年人能力评估报告样本' },
+            { id: 'apply_form', title: '技能等级认定申请表', desc: '填写完整并由单位盖章确认' },
+            { id: 'case_paper', title: '综合评审材料', desc: '论文或案例报告1篇（3000字以上）' },
+        ];
+
+        const checkList = document.getElementById('checkList');
+        checkItems.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'check-item';
+            div.dataset.id = item.id;
+            div.innerHTML = `<div class="check-box">✓</div><div class="check-label"><strong>${item.title}</strong><span>${item.desc}</span></div>`;
+            div.onclick = function() {
+                this.classList.toggle('checked');
+                updateProgress();
+            };
+            checkList.appendChild(div);
+        });
+
+        function updateProgress() {
+            const total = checkItems.length;
+            const checked = document.querySelectorAll('.check-item.checked').length;
+            const pct = Math.round((checked / total) * 100);
+            const fill = document.getElementById('progressFill');
+            fill.style.width = pct + '%';
+            fill.textContent = pct + '%';
+
+            const passBox = document.getElementById('resultPass');
+            const failBox = document.getElementById('resultFail');
+
+            if (checked === total) {
+                passBox.style.display = 'block';
+                failBox.style.display = 'none';
+            } else if (checked > 0) {
+                passBox.style.display = 'none';
+                failBox.style.display = 'block';
+                const missing = [];
+                document.querySelectorAll('.check-item:not(.checked)').forEach(el => {
+                    missing.push(el.querySelector('strong').textContent);
+                });
+                document.getElementById('missingText').textContent = '还缺：' + missing.join('、');
+            } else {
+                passBox.style.display = 'none';
+                failBox.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

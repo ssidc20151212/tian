@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>认知训练工具包</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #2980b9; }
+        .person-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+        .person-tag { padding: 10px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 18px; cursor: pointer; }
+        .person-tag.active { border-color: #2980b9; background: #e8f4fd; color: #2471a3; font-weight: bold; }
+        .person-tag.add { border-style: dashed; color: #999; }
+        .current-person { font-size: 22px; font-weight: bold; color: #2980b9; text-align: center; padding: 12px; background: #e8f4fd; border-radius: 10px; margin: 16px 0; }
+        .train-card { background: #f8f9fa; border-radius: 12px; padding: 20px; margin: 14px 0; border-left: 4px solid #2980b9; }
+        .train-card h3 { font-size: 22px; color: #2c3e50; margin-bottom: 8px; }
+        .train-card .tag { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 14px; margin-right: 8px; }
+        .tag-mild { background: #e8f4fd; color: #2471a3; }
+        .tag-mod { background: #fef9e7; color: #d68910; }
+        .train-card .content { margin-top: 12px; font-size: 17px; line-height: 1.8; }
+        .train-card .tips { background: #e8f8f0; padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 16px; color: #1e8449; }
+        .train-card .record-btn { margin-top: 10px; padding: 8px 20px; background: #2980b9; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        .train-card .used { font-size: 14px; color: #2980b9; margin-top: 8px; }
+        .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+        .filter-btn { padding: 10px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 17px; cursor: pointer; }
+        .filter-btn.active { border-color: #2980b9; background: #e8f4fd; color: #2471a3; font-weight: bold; }
+        .history-entry { background: #f8f9fa; border-radius: 8px; padding: 12px 16px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #2980b9; }
+        .history-entry .date { color: #7f8c8d; font-size: 15px; }
+        .history-entry .result { font-weight: bold; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>认知训练工具包</h1>
+            <p class="sub">分阶段认知刺激活动，记录训练情况</p>
+        </div>
+        <div class="notice">认知训练重在过程参与，不追求正确率。保持愉快体验最重要。</div>
+        <div class="block">
+            <h2>选择老人</h2>
+            <div class="person-bar" id="personBar"></div>
+        </div>
+        <div class="current-person" id="currentPerson">请先选择或添加老人</div>
+        <div id="mainContent" style="display:none;">
+            <div class="block">
+                <h2>活动方案</h2>
+                <div class="filter-bar" id="filters"></div>
+                <div id="trainList"></div>
+            </div>
+            <div class="block">
+                <h2>训练记录</h2>
+                <div id="historyList"><p style="color:#999;text-align:center;">暂无记录</p></div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const trains = [
+        { name:'时间定向练习', stage:'轻度', type:'定向力', content:'每天早晨询问：今天几号？星期几？什么季节？可配合日历牌一起确认。', tips:'不纠错，用引导方式（"我看看日历..."）' },
+        { name:'物品分类', stage:'轻度', type:'执行功能', content:'准备若干物品（水果模型、餐具、衣物），请老人按类别分组。', tips:'3-5个类别为宜，允许有自己的分类逻辑' },
+        { name:'数字接龙', stage:'轻度', type:'注意力', content:'从1开始交替数数；或从100倒数减3；或说出含"7"的数。', tips:'根据能力调整难度，重在参与感' },
+        { name:'词语联想', stage:'轻度', type:'语言', content:'给一个主题词（水果/动物/城市），轮流说出相关词语。', tips:'每人至少想出3个即可鼓励，不施压' },
+        { name:'拼图/配对', stage:'轻度', type:'视空间', content:'使用大块拼图（6-12片）或图片配对卡片。', tips:'准备半成品拼图降低难度，确保能完成' },
+        { name:'生活情境排序', stage:'轻度', type:'执行功能', content:'将日常步骤图片打乱，请老人排出正确顺序。', tips:'3-5步为宜，使用真实照片更有效' },
+        { name:'猜谜语/谚语填空', stage:'轻度', type:'语言/记忆', content:'说出谚语前半句让老人接后半句，或出简单谜语。', tips:'选择老人年代熟悉的谚语和谜语' },
+        { name:'简单计算', stage:'轻度', type:'计算', content:'日常情境计算：买菜找零、数筷子配碗等。', tips:'用实物辅助，与生活结合更自然' },
+        { name:'颜色/形状匹配', stage:'中度', type:'视知觉', content:'准备不同颜色/形状卡片，找出相同的配对。', tips:'一次不超过6对，成功就给予表扬' },
+        { name:'触摸猜物', stage:'中度', type:'感知觉', content:'将常见物品放入布袋，通过触摸猜测是什么。', tips:'选择安全、熟悉的物品，如勺子、毛巾、球' },
+        { name:'节奏模仿', stage:'中度', type:'注意力', content:'拍出简单节奏，请老人模仿重复。', tips:'从最简单的2-3拍开始，配合音乐更有趣' },
+        { name:'看图说话', stage:'中度', type:'语言', content:'展示一张生活场景图片，引导描述看到了什么。', tips:'开放式提问，任何回答都给予回应和鼓励' }
+    ];
+    const types = ['全部','轻度','中度'];
+    let cur = '全部';
+    let persons = JSON.parse(localStorage.getItem('bpsd_persons') || '[]');
+    let currentId = '';
+
+    function renderPersons() {
+        const bar = document.getElementById('personBar');
+        bar.innerHTML = '';
+        persons.forEach(p => {
+            const cls = currentId === p.id ? ' active' : '';
+            bar.innerHTML += `<div class="person-tag${cls}" onclick="selectPerson('${p.id}')">${p.name}</div>`;
+        });
+        bar.innerHTML += `<div class="person-tag add" onclick="addPerson()">+ 添加老人</div>`;
+    }
+    function addPerson() {
+        const name = prompt('请输入老人姓名：');
+        if(!name || !name.trim()) return;
+        const id = 'p_' + Date.now();
+        persons.push({ id, name: name.trim() });
+        localStorage.setItem('bpsd_persons', JSON.stringify(persons));
+        selectPerson(id);
+    }
+    function selectPerson(id) {
+        currentId = id;
+        const person = persons.find(p => p.id === id);
+        document.getElementById('currentPerson').textContent = '当前查看：' + person.name;
+        document.getElementById('mainContent').style.display = 'block';
+        renderPersons();
+        renderList();
+        renderHistory();
+    }
+    function getKey() { return 'cogn_train_' + currentId; }
+    function getRecords() { return JSON.parse(localStorage.getItem(getKey()) || '[]'); }
+
+    function renderFilters() {
+        const box = document.getElementById('filters');
+        box.innerHTML = '';
+        types.forEach(t => {
+            const cls = cur === t ? ' active' : '';
+            box.innerHTML += `<div class="filter-btn${cls}" onclick="filter('${t}')">${t}</div>`;
+        });
+    }
+    function filter(t) { cur = t; renderFilters(); renderList(); }
+    function renderList() {
+        const box = document.getElementById('trainList');
+        const records = getRecords();
+        box.innerHTML = '';
+        const list = cur === '全部' ? trains : trains.filter(t => t.stage === cur);
+        list.forEach(t => {
+            const tagCls = t.stage === '轻度' ? 'tag-mild' : 'tag-mod';
+            const count = records.filter(r => r.train === t.name).length;
+            const usedHtml = count > 0 ? `<div class="used">已训练 ${count} 次</div>` : '';
+            const idx = trains.indexOf(t);
+            box.innerHTML += `<div class="train-card"><h3>${t.name}</h3><span class="tag ${tagCls}">${t.stage}</span><span class="tag" style="background:#f0f0f0;color:#555;">${t.type}</span><div class="content">${t.content}</div><div class="tips">💡 ${t.tips}</div><button class="record-btn" onclick="recordTrain(${idx})">记录训练</button>${usedHtml}</div>`;
+        });
+    }
+    function recordTrain(i) {
+        const reaction = prompt('老人参与表现？（积极/一般/不愿参与）');
+        if(!reaction) return;
+        const records = getRecords();
+        records.unshift({ date: new Date().toISOString().slice(0,10), train: trains[i].name, reaction: reaction.trim() });
+        localStorage.setItem(getKey(), JSON.stringify(records));
+        renderList();
+        renderHistory();
+        alert('已记录');
+    }
+    function renderHistory() {
+        const records = getRecords();
+        const box = document.getElementById('historyList');
+        if(records.length === 0) { box.innerHTML = '<p style="color:#999;text-align:center;">暂无记录</p>'; return; }
+        box.innerHTML = '';
+        records.forEach(r => {
+            box.innerHTML += `<div class="history-entry"><span class="date">${r.date}</span><span class="result">${r.train} - ${r.reaction}</span></div>`;
+        });
+    }
+    renderPersons();
+    renderFilters();
+    </script>
+</body>
+</html>

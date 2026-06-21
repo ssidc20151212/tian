@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排泄功能评估</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #2e86c1; }
+        .q-card { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 14px 0; border-left: 4px solid #2e86c1; }
+        .q-card h4 { font-size: 20px; color: #2c3e50; margin-bottom: 12px; }
+        .q-options { display: flex; flex-wrap: wrap; gap: 10px; }
+        .q-opt { padding: 12px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 17px; cursor: pointer; }
+        .q-opt:active { transform: scale(0.96); }
+        .q-opt.selected { border-color: #2e86c1; background: #eaf2f8; color: #1a5276; font-weight: bold; }
+        .score-display { text-align: center; padding: 30px; margin: 20px 0; border-radius: 16px; background: #f8f9fa; display: none; }
+        .score-display .total { font-size: 64px; font-weight: bold; }
+        .score-display .level { font-size: 28px; margin-top: 10px; font-weight: bold; padding: 8px 30px; border-radius: 10px; display: inline-block; }
+        .level-normal { background: #e8f8f0; color: #1e8449; }
+        .level-mild { background: #e8f4fd; color: #2471a3; }
+        .level-moderate { background: #fef9e7; color: #d68910; }
+        .level-severe { background: #fdecea; color: #c0392b; }
+        .suggest-box { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 16px 0; display: none; }
+        .nav-btns { display: flex; gap: 16px; justify-content: center; margin: 20px 0; }
+        .nav-btns button { padding: 14px 40px; border-radius: 10px; font-size: 20px; cursor: pointer; border: none; }
+        .nav-btns .btn-calc { background: #2e86c1; color: white; }
+        .nav-btns .btn-reset { background: #ecf0f1; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>排泄功能评估</h1>
+            <p class="sub">评估排尿排便控制能力，制定照护方案</p>
+        </div>
+        <div class="notice">本工具评估老人排泄控制能力，帮助制定个性化排泄照护计划。</div>
+        <div class="block">
+            <h2>逐项评估</h2>
+            <div id="questions"></div>
+        </div>
+        <div class="nav-btns">
+            <button class="btn-reset" onclick="resetAll()">重新评估</button>
+            <button class="btn-calc" onclick="calcResult()">计算结果</button>
+        </div>
+        <div class="score-display" id="result">
+            <div class="total" id="totalScore">0</div>
+            <div>失禁评分（分数越高失禁越严重）</div>
+            <div class="level" id="levelText"></div>
+        </div>
+        <div class="suggest-box" id="suggestBox"></div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const items = [
+        { title:'1. 尿失禁频率', opts:[{text:'无失禁',score:0},{text:'偶尔（每周<2次）',score:1},{text:'经常（每天1-2次）',score:2},{text:'持续失禁',score:3}] },
+        { title:'2. 大便失禁频率', opts:[{text:'无失禁',score:0},{text:'偶尔（每周<2次）',score:1},{text:'经常',score:2},{text:'完全失控',score:3}] },
+        { title:'3. 是否能感知排尿/排便意愿', opts:[{text:'能及时感知并表达',score:0},{text:'能感知但表达延迟',score:1},{text:'感知不明确',score:2},{text:'完全无感知',score:3}] },
+        { title:'4. 如厕能力', opts:[{text:'完全自理',score:0},{text:'需少量帮助（扶持）',score:1},{text:'需大量帮助',score:2},{text:'完全依赖他人',score:3}] },
+        { title:'5. 夜间排泄情况', opts:[{text:'能自行起夜',score:0},{text:'需呼叫协助',score:1},{text:'经常来不及（尿湿）',score:2},{text:'需使用尿垫/尿裤',score:3}] },
+        { title:'6. 目前使用的辅具', opts:[{text:'无需辅具',score:0},{text:'使用便盆/尿壶',score:1},{text:'使用尿垫',score:2},{text:'使用纸尿裤/留置导尿',score:3}] },
+        { title:'7. 皮肤状况（会阴/臀部）', opts:[{text:'皮肤完好',score:0},{text:'轻微发红',score:1},{text:'皮疹/破损',score:2},{text:'严重皮损/感染',score:3}] },
+        { title:'8. 认知配合程度', opts:[{text:'完全配合如厕训练',score:0},{text:'部分配合',score:1},{text:'不太配合',score:2},{text:'完全不配合/无法理解',score:3}] }
+    ];
+    const answers = {};
+    function renderQ() {
+        const box = document.getElementById('questions');
+        box.innerHTML = '';
+        items.forEach((q, qi) => {
+            let optsHtml = '';
+            q.opts.forEach((opt, oi) => {
+                const sel = answers[qi] === oi ? ' selected' : '';
+                optsHtml += `<div class="q-opt${sel}" onclick="sel(${qi},${oi})">${opt.text}</div>`;
+            });
+            box.innerHTML += `<div class="q-card"><h4>${q.title}</h4><div class="q-options">${optsHtml}</div></div>`;
+        });
+    }
+    function sel(qi, oi) { answers[qi] = oi; renderQ(); }
+    function calcResult() {
+        let total = 0;
+        items.forEach((q, qi) => { if(answers[qi]!==undefined) total += q.opts[answers[qi]].score; });
+        document.getElementById('totalScore').textContent = total;
+        const el = document.getElementById('levelText');
+        const sb = document.getElementById('suggestBox');
+        if(total <= 3) { el.textContent='排泄功能正常'; el.className='level level-normal'; sb.innerHTML='<h3 style="color:#1e8449;">排泄功能正常</h3><p>维持自主如厕，保持规律作息，3个月后复评。</p>'; }
+        else if(total <= 8) { el.textContent='轻度失禁'; el.className='level level-mild'; sb.innerHTML='<h3 style="color:#2471a3;">轻度失禁照护建议</h3><p>1. 定时提醒如厕（每2-3小时）<br>2. 夜间备便盆或呼叫器<br>3. 盆底肌锻炼指导<br>4. 记录排泄规律<br>5. 每月复评</p>'; }
+        else if(total <= 16) { el.textContent='中度失禁'; el.className='level level-moderate'; sb.innerHTML='<h3 style="color:#d68910;">中度失禁照护建议</h3><p>1. 制定个体化如厕计划<br>2. 白天定时辅助如厕<br>3. 夜间使用尿垫保护<br>4. 皮肤护理（清洁+保护霜）<br>5. 液体摄入管理<br>6. 记录排泄日志<br>7. 14天后复评</p>'; }
+        else { el.textContent='重度失禁'; el.className='level level-severe'; sb.innerHTML='<h3 style="color:#c0392b;">重度失禁照护建议</h3><p>1. 使用纸尿裤并定时更换（≤4小时）<br>2. 每次更换时清洁皮肤<br>3. 使用皮肤保护剂<br>4. 监测皮肤完整性<br>5. 评估留置导尿必要性<br>6. 预防尿路感染<br>7. 通知家属照护方案<br>8. 每周复评</p>'; }
+        document.getElementById('result').style.display = 'block';
+        sb.style.display = 'block';
+    }
+    function resetAll() { Object.keys(answers).forEach(k=>delete answers[k]); document.getElementById('result').style.display='none'; document.getElementById('suggestBox').style.display='none'; renderQ(); }
+    renderQ();
+    </script>
+</body>
+</html>

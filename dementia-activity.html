@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>非药物干预活动方案</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #27ae60; }
+        .person-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+        .person-tag { padding: 10px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 18px; cursor: pointer; }
+        .person-tag.active { border-color: #27ae60; background: #e8f8f0; color: #1e8449; font-weight: bold; }
+        .person-tag.add { border-style: dashed; color: #999; }
+        .current-person { font-size: 22px; font-weight: bold; color: #27ae60; text-align: center; padding: 12px; background: #e8f8f0; border-radius: 10px; margin: 16px 0; }
+        .act-card { background: #f8f9fa; border-radius: 12px; padding: 20px; margin: 14px 0; border-left: 4px solid #27ae60; }
+        .act-card h3 { font-size: 22px; color: #2c3e50; margin-bottom: 8px; }
+        .act-card .meta { color: #7f8c8d; font-size: 15px; margin-bottom: 10px; }
+        .act-card .meta span { margin-right: 16px; }
+        .act-card ul { padding-left: 20px; font-size: 17px; line-height: 1.8; }
+        .act-card .record-btn { margin-top: 10px; padding: 8px 20px; background: #27ae60; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        .act-card .used { font-size: 14px; color: #27ae60; margin-top: 8px; }
+        .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+        .filter-btn { padding: 10px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 17px; cursor: pointer; }
+        .filter-btn.active { border-color: #27ae60; background: #e8f8f0; color: #1e8449; font-weight: bold; }
+        .history-entry { background: #f8f9fa; border-radius: 8px; padding: 12px 16px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #27ae60; }
+        .history-entry .date { color: #7f8c8d; font-size: 15px; }
+        .history-entry .result { font-weight: bold; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>非药物干预活动方案</h1>
+            <p class="sub">适合不同认知分期的活动模板，记录参与情况</p>
+        </div>
+        <div class="notice">非药物干预是认知症照护的核心手段，可有效减少行为问题、延缓功能衰退。</div>
+        <div class="block">
+            <h2>选择老人</h2>
+            <div class="person-bar" id="personBar"></div>
+        </div>
+        <div class="current-person" id="currentPerson">请先选择或添加老人</div>
+        <div id="mainContent" style="display:none;">
+            <div class="block">
+                <h2>按适用阶段筛选</h2>
+                <div class="filter-bar" id="filters"></div>
+                <div id="actList"></div>
+            </div>
+            <div class="block">
+                <h2>活动参与记录</h2>
+                <div id="historyList"><p style="color:#999;text-align:center;">暂无记录</p></div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const activities = [
+        { name:'回忆疗法', stage:['轻度','中度'], duration:'30-45分钟', freq:'每周2-3次', target:'情绪改善、社交参与', steps:['准备老照片/旧物件/老歌曲','2-4人小组围坐','引导讲述过去的故事','倾听为主，不纠正记忆错误','用肯定和赞赏回应','结束时总结积极感受'] },
+        { name:'音乐疗法', stage:['轻度','中度','重度'], duration:'20-30分钟', freq:'每天1次', target:'减少焦躁、改善情绪', steps:['选择老人年轻时熟悉的歌曲','可播放或现场演唱','鼓励跟唱、打拍子','观察情绪反应调整曲目','避免过于激烈的音乐','结束用舒缓音乐过渡'] },
+        { name:'园艺疗法', stage:['轻度','中度'], duration:'30-60分钟', freq:'每周2次', target:'感官刺激、有意义活动', steps:['准备简单园艺工具和花苗','浇水、松土、摘菜等操作','利用触觉和嗅觉刺激','允许按自己节奏参与','赞赏每一个小成果','注意防晒和体力消耗'] },
+        { name:'感官刺激', stage:['中度','重度'], duration:'15-20分钟', freq:'每天1-2次', target:'安抚情绪、建立连接', steps:['触觉：不同材质物品触摸','嗅觉：花香、精油、食物香气','视觉：彩色物品、光影变化','听觉：自然声音、熟悉音乐','一次一种感官为主','观察反应，避免过度刺激'] },
+        { name:'运动操/椅子操', stage:['轻度','中度','重度'], duration:'15-20分钟', freq:'每天1次', target:'维持身体功能、预防跌倒', steps:['选择适合能力的动作','坐姿或站姿均可','配合音乐节奏','上肢：举手、拍手、伸展','下肢：抬腿、踏步、脚踝转圈','动作缓慢，注意安全'] },
+        { name:'手工活动', stage:['轻度','中度'], duration:'30-45分钟', freq:'每周2-3次', target:'精细动作、专注力、成就感', steps:['折纸、串珠、简单编织','按能力降低难度','提供半成品降低挫败感','重过程不重结果','作品可展示或送人','赞赏每一步完成'] },
+        { name:'怀旧影像', stage:['轻度','中度','重度'], duration:'20-30分钟', freq:'每周2次', target:'唤起记忆、减少孤独感', steps:['播放老年代电影片段/新闻','选择老人熟悉的年代内容','小组观看，鼓励评论','不测试记忆，只引发情感','可配合茶点小食','观察情绪反应'] },
+        { name:'宠物/娃娃疗法', stage:['中度','重度'], duration:'随时', freq:'按需', target:'情感慰藉、减少焦虑', steps:['提供仿真宠物或布娃娃','允许抱抱、抚摸、说话','不强制也不嘲笑','观察是否带来安慰','定期清洁替换','部分老人可能不接受，尊重选择'] }
+    ];
+    const stages = ['全部','轻度','中度','重度'];
+    let currentStage = '全部';
+    let persons = JSON.parse(localStorage.getItem('bpsd_persons') || '[]');
+    let currentId = '';
+
+    function renderPersons() {
+        const bar = document.getElementById('personBar');
+        bar.innerHTML = '';
+        persons.forEach(p => {
+            const cls = currentId === p.id ? ' active' : '';
+            bar.innerHTML += `<div class="person-tag${cls}" onclick="selectPerson('${p.id}')">${p.name}</div>`;
+        });
+        bar.innerHTML += `<div class="person-tag add" onclick="addPerson()">+ 添加老人</div>`;
+    }
+    function addPerson() {
+        const name = prompt('请输入老人姓名：');
+        if(!name || !name.trim()) return;
+        const id = 'p_' + Date.now();
+        persons.push({ id, name: name.trim() });
+        localStorage.setItem('bpsd_persons', JSON.stringify(persons));
+        selectPerson(id);
+    }
+    function selectPerson(id) {
+        currentId = id;
+        const person = persons.find(p => p.id === id);
+        document.getElementById('currentPerson').textContent = '当前查看：' + person.name;
+        document.getElementById('mainContent').style.display = 'block';
+        renderPersons();
+        renderList();
+        renderHistory();
+    }
+    function getKey() { return 'activity_log_' + currentId; }
+    function getRecords() { return JSON.parse(localStorage.getItem(getKey()) || '[]'); }
+
+    function renderFilters() {
+        const box = document.getElementById('filters');
+        box.innerHTML = '';
+        stages.forEach(s => {
+            const cls = currentStage === s ? ' active' : '';
+            box.innerHTML += `<div class="filter-btn${cls}" onclick="filterStage('${s}')">${s}</div>`;
+        });
+    }
+    function filterStage(s) { currentStage = s; renderFilters(); renderList(); }
+    function renderList() {
+        const box = document.getElementById('actList');
+        const records = getRecords();
+        box.innerHTML = '';
+        const filtered = currentStage === '全部' ? activities : activities.filter(a => a.stage.includes(currentStage));
+        filtered.forEach((a, i) => {
+            const stepsHtml = a.steps.map(s => `<li>${s}</li>`).join('');
+            const count = records.filter(r => r.activity === a.name).length;
+            const usedHtml = count > 0 ? `<div class="used">已参与 ${count} 次</div>` : '';
+            const idx = activities.indexOf(a);
+            box.innerHTML += `<div class="act-card"><h3>${a.name}</h3><div class="meta"><span>适用：${a.stage.join('/')}</span><span>时长：${a.duration}</span><span>频率：${a.freq}</span></div><p><b>目标：</b>${a.target}</p><ul>${stepsHtml}</ul><button class="record-btn" onclick="recordActivity(${idx})">记录参与</button>${usedHtml}</div>`;
+        });
+    }
+    function recordActivity(i) {
+        const reaction = prompt('老人参与表现如何？（积极/一般/不愿参与）');
+        if(!reaction) return;
+        const records = getRecords();
+        records.unshift({ date: new Date().toISOString().slice(0,10), activity: activities[i].name, reaction: reaction.trim() });
+        localStorage.setItem(getKey(), JSON.stringify(records));
+        renderList();
+        renderHistory();
+        alert('已记录');
+    }
+    function renderHistory() {
+        const records = getRecords();
+        const box = document.getElementById('historyList');
+        if(records.length === 0) { box.innerHTML = '<p style="color:#999;text-align:center;">暂无记录</p>'; return; }
+        box.innerHTML = '';
+        records.forEach(r => {
+            box.innerHTML += `<div class="history-entry"><span class="date">${r.date}</span><span class="result">${r.activity} - ${r.reaction}</span></div>`;
+        });
+    }
+    renderPersons();
+    renderFilters();
+    </script>
+</body>
+</html>

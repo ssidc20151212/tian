@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>身体约束必要性评估</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #7f8c8d; }
+        .q-card { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 14px 0; border-left: 4px solid #7f8c8d; }
+        .q-card h4 { font-size: 20px; color: #2c3e50; margin-bottom: 12px; }
+        .q-options { display: flex; flex-wrap: wrap; gap: 10px; }
+        .q-opt { padding: 12px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 17px; cursor: pointer; }
+        .q-opt:active { transform: scale(0.96); }
+        .q-opt.selected { border-color: #7f8c8d; background: #f2f3f4; color: #2c3e50; font-weight: bold; }
+        .score-display { text-align: center; padding: 30px; margin: 20px 0; border-radius: 16px; background: #f8f9fa; display: none; }
+        .score-display .total { font-size: 64px; font-weight: bold; }
+        .score-display .level { font-size: 28px; margin-top: 10px; font-weight: bold; padding: 8px 30px; border-radius: 10px; display: inline-block; }
+        .level-no { background: #e8f8f0; color: #1e8449; }
+        .level-caution { background: #fef9e7; color: #d68910; }
+        .level-need { background: #fdecea; color: #c0392b; }
+        .suggest-box { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 16px 0; display: none; }
+        .nav-btns { display: flex; gap: 16px; justify-content: center; margin: 20px 0; }
+        .nav-btns button { padding: 14px 40px; border-radius: 10px; font-size: 20px; cursor: pointer; border: none; }
+        .nav-btns .btn-calc { background: #7f8c8d; color: white; }
+        .nav-btns .btn-reset { background: #ecf0f1; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>身体约束必要性评估</h1>
+            <p class="sub">评估约束必要性，尽量减少约束使用</p>
+        </div>
+        <div class="notice">身体约束应作为最后手段。使用前须穷尽替代措施，并取得知情同意。</div>
+        <div class="block">
+            <h2>逐项评估</h2>
+            <div id="questions"></div>
+        </div>
+        <div class="nav-btns">
+            <button class="btn-reset" onclick="resetAll()">重新评估</button>
+            <button class="btn-calc" onclick="calcResult()">计算结果</button>
+        </div>
+        <div class="score-display" id="result">
+            <div class="total" id="totalScore">0</div>
+            <div>风险评分</div>
+            <div class="level" id="levelText"></div>
+        </div>
+        <div class="suggest-box" id="suggestBox"></div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const items = [
+        { title:'1. 是否存在自伤行为（拔管、抓伤自己等）', opts:[{text:'无',score:0},{text:'偶尔',score:1},{text:'频繁',score:2}] },
+        { title:'2. 是否存在伤害他人的行为', opts:[{text:'无',score:0},{text:'偶尔',score:1},{text:'频繁',score:2}] },
+        { title:'3. 跌倒/坠床风险', opts:[{text:'低风险',score:0},{text:'中风险',score:1},{text:'高风险且已发生',score:2}] },
+        { title:'4. 是否有非计划拔管风险（胃管、尿管、输液等）', opts:[{text:'无管路',score:0},{text:'有管路但配合',score:1},{text:'有管路且反复拔除',score:2}] },
+        { title:'5. 是否已尝试替代措施', opts:[{text:'未尝试（应先尝试）',score:0},{text:'尝试过部分无效',score:1},{text:'所有替代措施均无效',score:2}] },
+        { title:'6. 认知状态', opts:[{text:'清醒/能配合',score:0},{text:'轻度意识模糊',score:1},{text:'严重躁动/谵妄',score:2}] },
+        { title:'7. 当前行为对本人的危险程度', opts:[{text:'无明确危险',score:0},{text:'有潜在危险',score:1},{text:'即刻危险',score:2}] },
+        { title:'8. 家属/监护人态度', opts:[{text:'明确拒绝约束',score:0},{text:'可接受短时约束',score:1},{text:'同意约束',score:2}] }
+    ];
+    const answers = {};
+    function renderQ() {
+        const box = document.getElementById('questions');
+        box.innerHTML = '';
+        items.forEach((q, qi) => {
+            let optsHtml = '';
+            q.opts.forEach((opt, oi) => {
+                const sel = answers[qi] === oi ? ' selected' : '';
+                optsHtml += `<div class="q-opt${sel}" onclick="sel(${qi},${oi})">${opt.text}</div>`;
+            });
+            box.innerHTML += `<div class="q-card"><h4>${q.title}</h4><div class="q-options">${optsHtml}</div></div>`;
+        });
+    }
+    function sel(qi, oi) { answers[qi] = oi; renderQ(); }
+    function calcResult() {
+        let total = 0;
+        items.forEach((q, qi) => { if(answers[qi]!==undefined) total += q.opts[answers[qi]].score; });
+        document.getElementById('totalScore').textContent = total;
+        const el = document.getElementById('levelText');
+        const sb = document.getElementById('suggestBox');
+        if(total <= 4) { el.textContent='无需约束'; el.className='level level-no'; sb.innerHTML='<h3 style="color:#1e8449;">建议：不使用约束</h3><p>1. 继续使用替代措施（陪伴、环境调整、活动引导）<br>2. 加强巡视观察<br>3. 定期复评风险</p>'; }
+        else if(total <= 9) { el.textContent='谨慎评估'; el.className='level level-caution'; sb.innerHTML='<h3 style="color:#d68910;">建议：谨慎决定</h3><p>1. 优先尝试所有替代措施<br>2. 如必须约束：最低限度、最短时间<br>3. 取得家属知情同意书<br>4. 每2小时松解观察<br>5. 记录约束原因和时长<br>6. 24小时内再评估</p>'; }
+        else { el.textContent='需约束保护'; el.className='level level-need'; sb.innerHTML='<h3 style="color:#c0392b;">建议：实施保护性约束</h3><p>1. 签署知情同意书<br>2. 选择最小限制约束方式<br>3. 每2小时松解15分钟<br>4. 检查约束部位皮肤和循环<br>5. 详细记录（原因、方式、时长、观察）<br>6. 每班评估是否可解除<br>7. 持续寻找替代方案</p>'; }
+        document.getElementById('result').style.display = 'block';
+        sb.style.display = 'block';
+    }
+    function resetAll() { Object.keys(answers).forEach(k=>delete answers[k]); document.getElementById('result').style.display='none'; document.getElementById('suggestBox').style.display='none'; renderQ(); }
+    renderQ();
+    </script>
+</body>
+</html>

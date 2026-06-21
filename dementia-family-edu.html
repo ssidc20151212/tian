@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家属教育手册</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #e67e22; }
+        .person-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+        .person-tag { padding: 10px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 18px; cursor: pointer; }
+        .person-tag.active { border-color: #e67e22; background: #fef5e7; color: #e67e22; font-weight: bold; }
+        .person-tag.add { border-style: dashed; color: #999; }
+        .current-person { font-size: 22px; font-weight: bold; color: #e67e22; text-align: center; padding: 12px; background: #fef5e7; border-radius: 10px; margin: 16px 0; }
+        .chapter { background: #f8f9fa; border-radius: 12px; padding: 20px; margin: 14px 0; border-left: 4px solid #e67e22; }
+        .chapter h3 { font-size: 22px; color: #2c3e50; margin-bottom: 12px; cursor: pointer; }
+        .chapter h3::before { content: '▶ '; color: #e67e22; }
+        .chapter.open h3::before { content: '▼ '; }
+        .chapter-content { display: none; font-size: 17px; line-height: 1.9; padding-top: 10px; }
+        .chapter.open .chapter-content { display: block; }
+        .chapter .read-btn { margin-top: 10px; padding: 6px 16px; background: #e67e22; color: white; border: none; border-radius: 6px; font-size: 15px; cursor: pointer; }
+        .chapter .read-mark { font-size: 14px; color: #27ae60; margin-left: 10px; }
+        .highlight { background: #fef9e7; padding: 12px; border-radius: 8px; margin: 10px 0; }
+        .qa { margin: 12px 0; }
+        .qa .q { font-weight: bold; color: #e67e22; }
+        .qa .a { margin-top: 4px; padding-left: 16px; }
+        .history-entry { background: #f8f9fa; border-radius: 8px; padding: 12px 16px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #e67e22; }
+        .history-entry .date { color: #7f8c8d; font-size: 15px; }
+        .history-entry .result { font-weight: bold; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>家属教育手册</h1>
+            <p class="sub">帮助家属理解认知症，学会科学照护</p>
+        </div>
+        <div class="notice">认知症不是正常衰老，是一种脑部疾病。了解疾病有助于减少焦虑和自责。</div>
+        <div class="block">
+            <h2>选择老人</h2>
+            <div class="person-bar" id="personBar"></div>
+        </div>
+        <div class="current-person" id="currentPerson">请先选择或添加老人</div>
+        <div id="mainContent" style="display:none;">
+            <div class="block">
+                <h2>点击章节展开阅读</h2>
+                <div id="chapters"></div>
+            </div>
+            <div class="block">
+                <h2>家属学习记录</h2>
+                <div id="historyList"><p style="color:#999;text-align:center;">暂无记录</p></div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const chapters = [
+        { title:'什么是认知症', content:'<p>认知症是一组以认知功能进行性下降为特征的脑部疾病。最常见的类型是阿尔茨海默病（约60-70%）。</p><div class="highlight"><b>核心要点：</b><br>· 认知症不是正常衰老<br>· 不是老人"故意的"或"装的"<br>· 目前无法治愈，但可以延缓和管理<br>· 早发现早干预很重要</div><p><b>常见早期信号：</b><br>· 反复问同一个问题<br>· 忘记刚发生的事<br>· 找不到常用物品<br>· 时间地点搞混<br>· 性格变化（多疑、淡漠）</p>' },
+        { title:'认知症的发展阶段', content:'<p><b>轻度（2-4年）：</b>记忆下降、找词困难、做事效率降低，但基本生活可自理。</p><p><b>中度（2-3年）：</b>需要帮助完成日常活动，可能出现行为问题，认不出熟人。</p><p><b>重度（1-3年）：</b>完全依赖他人照料，语言丧失，吞咽困难，卧床。</p><div class="highlight"><b>提醒：</b>每个人进展速度不同。积极的照护和干预可以延缓进展。</div>' },
+        { title:'如何与认知症老人沟通', content:'<div class="qa"><div class="q">原则一：简单直接</div><div class="a">一次只说一件事，用短句。"来吃饭"比"饭好了你过来坐下吃"更好。</div></div><div class="qa"><div class="q">原则二：不纠正不争论</div><div class="a">他说"我要上班"，不要说"你退休了"。可以说"好的，先吃口东西再去。"</div></div><div class="qa"><div class="q">原则三：关注情感</div><div class="a">回应情感："你看起来不开心。"</div></div><div class="qa"><div class="q">原则四：善用非语言</div><div class="a">微笑、点头、握手比说什么更重要。</div></div><div class="qa"><div class="q">原则五：给选择题</div><div class="a">"喝茶还是喝水？"比"你想喝什么？"更容易回答。</div></div>' },
+        { title:'行为问题的理解与应对', content:'<p>行为问题是认知症的一部分，不是老人"难伺候"。常见原因：</p><div class="highlight">· 身体不适（疼痛、便秘、饥饿）<br>· 环境不适（太吵、太冷、陌生）<br>· 心理需求（孤独、焦虑、无聊）<br>· 被要求做超出能力的事</div><p><b>家属可以做的：</b><br>1. 记录发生的时间和场景<br>2. 寻找规律和诱因<br>3. 调整环境和互动方式<br>4. 不惩罚、不说教<br>5. 与照护团队分享老人的习惯和喜好</p>' },
+        { title:'居家照护小贴士', content:'<p><b>安全：</b><br>· 撤除地毯和门槛<br>· 藏好剪刀、药品、清洁剂<br>· 燃气加装自动关闭<br>· 门上安装感应铃<br>· 随身携带联系卡</p><p><b>日常：</b><br>· 保持固定作息<br>· 简化衣物选择<br>· 一步一步给指令<br>· 给足时间完成动作</p><p><b>营养：</b><br>· 少量多餐<br>· 手指食物（方便抓取）<br>· 颜色鲜艳餐具<br>· 避免催促进食</p>' },
+        { title:'照顾者自我关怀', content:'<p>照顾认知症家人是一场马拉松。照顾者的身心健康同样重要。</p><div class="highlight"><b>倦怠信号：</b><br>· 持续疲惫、睡不好<br>· 对老人失去耐心<br>· 自己的健康下降<br>· 感到孤立无援<br>· 失去生活乐趣</div><p><b>自我关怀：</b><br>1. 允许自己"不完美"<br>2. 接受帮助不是软弱<br>3. 定期给自己放假<br>4. 加入家属互助群<br>5. 必要时心理咨询<br>6. 利用社区资源（日照、喘息服务）</p>' }
+    ];
+    let persons = JSON.parse(localStorage.getItem('bpsd_persons') || '[]');
+    let currentId = '';
+
+    function renderPersons() {
+        const bar = document.getElementById('personBar');
+        bar.innerHTML = '';
+        persons.forEach(p => {
+            const cls = currentId === p.id ? ' active' : '';
+            bar.innerHTML += `<div class="person-tag${cls}" onclick="selectPerson('${p.id}')">${p.name}</div>`;
+        });
+        bar.innerHTML += `<div class="person-tag add" onclick="addPerson()">+ 添加老人</div>`;
+    }
+    function addPerson() {
+        const name = prompt('请输入老人姓名：');
+        if(!name || !name.trim()) return;
+        const id = 'p_' + Date.now();
+        persons.push({ id, name: name.trim() });
+        localStorage.setItem('bpsd_persons', JSON.stringify(persons));
+        selectPerson(id);
+    }
+    function selectPerson(id) {
+        currentId = id;
+        const person = persons.find(p => p.id === id);
+        document.getElementById('currentPerson').textContent = person.name + ' 的家属学习';
+        document.getElementById('mainContent').style.display = 'block';
+        renderPersons();
+        render();
+        renderHistory();
+    }
+    function getKey() { return 'edu_log_' + currentId; }
+    function getRecords() { return JSON.parse(localStorage.getItem(getKey()) || '[]'); }
+
+    function render() {
+        const box = document.getElementById('chapters');
+        const records = getRecords();
+        box.innerHTML = '';
+        chapters.forEach((c, i) => {
+            const readCount = records.filter(r => r.chapter === c.title).length;
+            const readMark = readCount > 0 ? `<span class="read-mark">已学习${readCount}次</span>` : '';
+            box.innerHTML += `<div class="chapter" id="ch${i}"><h3 onclick="toggleCh(${i})">${c.title}${readMark}</h3><div class="chapter-content">${c.content}<button class="read-btn" onclick="event.stopPropagation();markRead(${i})">标记已学习</button></div></div>`;
+        });
+    }
+    function toggleCh(i) {
+        document.getElementById('ch' + i).classList.toggle('open');
+    }
+    function markRead(i) {
+        const records = getRecords();
+        records.unshift({ date: new Date().toISOString().slice(0,10), chapter: chapters[i].title });
+        localStorage.setItem(getKey(), JSON.stringify(records));
+        render();
+        renderHistory();
+        alert('已记录');
+    }
+    function renderHistory() {
+        const records = getRecords();
+        const box = document.getElementById('historyList');
+        if(records.length === 0) { box.innerHTML = '<p style="color:#999;text-align:center;">暂无记录</p>'; return; }
+        box.innerHTML = '';
+        records.forEach(r => {
+            box.innerHTML += `<div class="history-entry"><span class="date">${r.date}</span><span class="result">${r.chapter}</span></div>`;
+        });
+    }
+    renderPersons();
+    </script>
+</body>
+</html>

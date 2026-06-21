@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>认知症友好环境自查</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #16a085; }
+        .person-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+        .person-tag { padding: 10px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 18px; cursor: pointer; }
+        .person-tag.active { border-color: #16a085; background: #e8f8f5; color: #16a085; font-weight: bold; }
+        .person-tag.add { border-style: dashed; color: #999; }
+        .current-person { font-size: 22px; font-weight: bold; color: #16a085; text-align: center; padding: 12px; background: #e8f8f5; border-radius: 10px; margin: 16px 0; }
+        .check-item { background: #f8f9fa; border-radius: 10px; padding: 16px 20px; margin: 10px 0; display: flex; align-items: center; gap: 14px; border-left: 4px solid #ddd; cursor: pointer; }
+        .check-item.checked { border-left-color: #27ae60; background: #e8f8f0; }
+        .check-box { width: 28px; height: 28px; border-radius: 6px; border: 2px solid #bbb; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .check-item.checked .check-box { background: #27ae60; border-color: #27ae60; color: white; }
+        .check-text { font-size: 18px; color: #2c3e50; }
+        .category-title { font-size: 20px; font-weight: bold; color: #16a085; margin: 24px 0 10px; padding: 10px 16px; background: #e8f8f5; border-radius: 8px; }
+        .progress-bar { background: #ecf0f1; border-radius: 10px; height: 24px; margin: 16px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: #27ae60; border-radius: 10px; transition: width 0.3s; }
+        .progress-text { text-align: center; font-size: 20px; font-weight: bold; color: #2c3e50; margin: 10px 0; }
+        .result-box { background: #f8f9fa; border-radius: 12px; padding: 20px; margin: 16px 0; display: none; }
+        .nav-btns { display: flex; gap: 16px; justify-content: center; margin: 20px 0; }
+        .nav-btns button { padding: 14px 40px; border-radius: 10px; font-size: 20px; cursor: pointer; border: none; }
+        .nav-btns .btn-save { background: #16a085; color: white; }
+        .history-entry { background: #f8f9fa; border-radius: 8px; padding: 12px 16px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #16a085; }
+        .history-entry .date { color: #7f8c8d; font-size: 15px; }
+        .history-entry .result { font-weight: bold; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>认知症友好环境自查</h1>
+            <p class="sub">检查老人居住环境是否安全友好</p>
+        </div>
+        <div class="notice">认知症友好环境可减少行为问题、降低跌倒风险、提升老人安全感。</div>
+        <div class="block">
+            <h2>选择老人</h2>
+            <div class="person-bar" id="personBar"></div>
+        </div>
+        <div class="current-person" id="currentPerson">请先选择或添加老人</div>
+        <div id="mainContent" style="display:none;">
+            <div class="progress-text" id="progressText">完成 0/30</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+            <div class="block">
+                <h2>逐项检查</h2>
+                <div id="checkList"></div>
+            </div>
+            <div class="nav-btns">
+                <button class="btn-save" onclick="saveResult()">保存检查结果</button>
+            </div>
+            <div class="result-box" id="resultBox"></div>
+            <div class="block">
+                <h2>历史检查记录</h2>
+                <div id="historyList"><p style="color:#999;text-align:center;">暂无记录</p></div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const categories = [
+        { name:'安全防护', items:['出入口安装隐蔽式安全锁','窗户限位器防止打开过大','地面无高低差和门槛','走廊两侧有连续扶手','卫生间有紧急呼叫按钮','危险物品（清洁剂、刀具）上锁'] },
+        { name:'导视标识', items:['卫生间门口有明显图文标识','房间门有个人照片或特征物','走廊有彩色导引线','关键区域使用图片标识而非文字','避免使用镜面/反光材料'] },
+        { name:'光照与色彩', items:['白天自然光充足','夜间走廊有柔和夜灯','避免强烈明暗对比','地面与墙面颜色有对比度','卫生间马桶与地面颜色区分','避免复杂花纹地板'] },
+        { name:'空间布局', items:['走廊形成回路（可环形散步）','公共区域有明确功能分区','提供安全的室外散步区域','减少死角和隐蔽角落','餐厅可看到食物准备过程'] },
+        { name:'居室环境', items:['床位高度适中便于上下','熟悉的个人物品摆放','简洁整洁不过度堆放','时钟和日历放在显眼处','温度适宜（22-26°C）','噪音控制'] },
+        { name:'感官友好', items:['有花园或绿植可接触','提供不同材质触摸物品','有安静的独处空间'] }
+    ];
+    let checked = {};
+    let total = 0;
+    categories.forEach(c => total += c.items.length);
+    let persons = JSON.parse(localStorage.getItem('bpsd_persons') || '[]');
+    let currentId = '';
+
+    function renderPersons() {
+        const bar = document.getElementById('personBar');
+        bar.innerHTML = '';
+        persons.forEach(p => {
+            const cls = currentId === p.id ? ' active' : '';
+            bar.innerHTML += `<div class="person-tag${cls}" onclick="selectPerson('${p.id}')">${p.name}</div>`;
+        });
+        bar.innerHTML += `<div class="person-tag add" onclick="addPerson()">+ 添加老人</div>`;
+    }
+    function addPerson() {
+        const name = prompt('请输入老人姓名：');
+        if(!name || !name.trim()) return;
+        const id = 'p_' + Date.now();
+        persons.push({ id, name: name.trim() });
+        localStorage.setItem('bpsd_persons', JSON.stringify(persons));
+        selectPerson(id);
+    }
+    function selectPerson(id) {
+        currentId = id;
+        const person = persons.find(p => p.id === id);
+        document.getElementById('currentPerson').textContent = '当前检查：' + person.name + ' 的环境';
+        document.getElementById('mainContent').style.display = 'block';
+        checked = JSON.parse(localStorage.getItem('env_check_' + currentId) || '{}');
+        renderPersons();
+        render();
+        renderHistory();
+    }
+    function getHistKey() { return 'env_history_' + currentId; }
+
+    function render() {
+        const box = document.getElementById('checkList');
+        box.innerHTML = '';
+        let idx = 0;
+        categories.forEach(c => {
+            box.innerHTML += `<div class="category-title">${c.name}</div>`;
+            c.items.forEach(item => {
+                const isChecked = checked[idx] ? ' checked' : '';
+                const mark = checked[idx] ? '✓' : '';
+                box.innerHTML += `<div class="check-item${isChecked}" onclick="toggle(${idx})"><div class="check-box">${mark}</div><div class="check-text">${item}</div></div>`;
+                idx++;
+            });
+        });
+        updateProgress();
+    }
+    function toggle(i) {
+        checked[i] = !checked[i];
+        localStorage.setItem('env_check_' + currentId, JSON.stringify(checked));
+        render();
+    }
+    function updateProgress() {
+        const done = Object.values(checked).filter(v => v).length;
+        document.getElementById('progressText').textContent = `完成 ${done}/${total}`;
+        document.getElementById('progressFill').style.width = (done/total*100) + '%';
+        const rb = document.getElementById('resultBox');
+        if(done === total) { rb.style.display = 'block'; rb.innerHTML = '<h3 style="color:#27ae60;">全部达标！</h3>'; }
+        else if(done >= total*0.8) { rb.style.display = 'block'; rb.innerHTML = `<h3 style="color:#d68910;">已达标${done}项，还有${total-done}项需改善</h3>`; }
+        else { rb.style.display = 'none'; }
+    }
+    function saveResult() {
+        const done = Object.values(checked).filter(v => v).length;
+        const history = JSON.parse(localStorage.getItem(getHistKey()) || '[]');
+        history.unshift({ date: new Date().toISOString().slice(0,10), done: done, total: total });
+        localStorage.setItem(getHistKey(), JSON.stringify(history));
+        renderHistory();
+        alert('已保存');
+    }
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem(getHistKey()) || '[]');
+        const box = document.getElementById('historyList');
+        if(history.length === 0) { box.innerHTML = '<p style="color:#999;text-align:center;">暂无记录</p>'; return; }
+        box.innerHTML = '';
+        history.forEach(h => {
+            box.innerHTML += `<div class="history-entry"><span class="date">${h.date}</span><span class="result">达标 ${h.done}/${h.total} 项</span></div>`;
+        });
+    }
+    renderPersons();
+    </script>
+</body>
+</html>

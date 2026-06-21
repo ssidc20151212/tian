@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>吞咽功能筛查</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #1abc9c; }
+        .q-card { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 14px 0; border-left: 4px solid #1abc9c; }
+        .q-card h4 { font-size: 20px; color: #2c3e50; margin-bottom: 12px; }
+        .q-options { display: flex; flex-wrap: wrap; gap: 10px; }
+        .q-opt { padding: 12px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 17px; cursor: pointer; }
+        .q-opt:active { transform: scale(0.96); }
+        .q-opt.selected { border-color: #1abc9c; background: #e8f8f5; color: #148f77; font-weight: bold; }
+        .score-display { text-align: center; padding: 30px; margin: 20px 0; border-radius: 16px; background: #f8f9fa; display: none; }
+        .score-display .total { font-size: 64px; font-weight: bold; }
+        .score-display .level { font-size: 28px; margin-top: 10px; font-weight: bold; padding: 8px 30px; border-radius: 10px; display: inline-block; }
+        .level-normal { background: #e8f8f0; color: #1e8449; }
+        .level-risk { background: #fef9e7; color: #d68910; }
+        .level-high { background: #fdecea; color: #c0392b; }
+        .suggest-box { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 16px 0; display: none; }
+        .nav-btns { display: flex; gap: 16px; justify-content: center; margin: 20px 0; }
+        .nav-btns button { padding: 14px 40px; border-radius: 10px; font-size: 20px; cursor: pointer; border: none; }
+        .nav-btns .btn-calc { background: #1abc9c; color: white; }
+        .nav-btns .btn-reset { background: #ecf0f1; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>吞咽功能筛查</h1>
+            <p class="sub">识别噎食/误吸风险，保障进食安全</p>
+        </div>
+        <div class="notice">本工具用于吞咽困难初步筛查。如有明显吞咽障碍请转介康复科/言语治疗师。</div>
+        <div class="block">
+            <h2>逐项观察评估</h2>
+            <div id="questions"></div>
+        </div>
+        <div class="nav-btns">
+            <button class="btn-reset" onclick="resetAll()">重新评估</button>
+            <button class="btn-calc" onclick="calcResult()">计算结果</button>
+        </div>
+        <div class="score-display" id="result">
+            <div class="total" id="totalScore">0</div>
+            <div>风险评分（分数越高风险越大）</div>
+            <div class="level" id="levelText"></div>
+        </div>
+        <div class="suggest-box" id="suggestBox"></div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const items = [
+        { title:'1. 进食时是否有咳嗽或呛咳', opts:[{text:'无',score:0},{text:'偶尔',score:1},{text:'经常',score:2}] },
+        { title:'2. 喝水时是否容易呛到', opts:[{text:'无',score:0},{text:'偶尔',score:1},{text:'经常',score:2}] },
+        { title:'3. 吞咽后声音是否变得含糊/湿润', opts:[{text:'无变化',score:0},{text:'偶有',score:1},{text:'明显',score:2}] },
+        { title:'4. 进食时间是否明显延长', opts:[{text:'正常',score:0},{text:'略有延长',score:1},{text:'明显延长（>40分钟）',score:2}] },
+        { title:'5. 是否有食物残留在口腔内', opts:[{text:'无',score:0},{text:'偶尔',score:1},{text:'经常',score:2}] },
+        { title:'6. 是否有不明原因反复发热/肺炎', opts:[{text:'无',score:0},{text:'有过1次',score:1},{text:'反复发生',score:2}] },
+        { title:'7. 近期体重是否下降', opts:[{text:'无',score:0},{text:'轻微下降',score:1},{text:'明显下降',score:2}] },
+        { title:'8. 进食时是否有流涎或食物外溢', opts:[{text:'无',score:0},{text:'偶尔',score:1},{text:'经常',score:2}] },
+        { title:'9. 是否能自主咳嗽清喉', opts:[{text:'能有效咳嗽',score:0},{text:'咳嗽无力',score:1},{text:'不能咳嗽',score:2}] },
+        { title:'10. 意识/认知状态', opts:[{text:'清醒配合',score:0},{text:'嗜睡/注意力差',score:1},{text:'意识模糊',score:2}] }
+    ];
+    const answers = {};
+    function renderQ() {
+        const box = document.getElementById('questions');
+        box.innerHTML = '';
+        items.forEach((q, qi) => {
+            let optsHtml = '';
+            q.opts.forEach((opt, oi) => {
+                const sel = answers[qi] === oi ? ' selected' : '';
+                optsHtml += `<div class="q-opt${sel}" onclick="sel(${qi},${oi})">${opt.text}</div>`;
+            });
+            box.innerHTML += `<div class="q-card"><h4>${q.title}</h4><div class="q-options">${optsHtml}</div></div>`;
+        });
+    }
+    function sel(qi, oi) { answers[qi] = oi; renderQ(); }
+    function calcResult() {
+        let total = 0;
+        items.forEach((q, qi) => { if(answers[qi]!==undefined) total += q.opts[answers[qi]].score; });
+        document.getElementById('totalScore').textContent = total;
+        const el = document.getElementById('levelText');
+        const sb = document.getElementById('suggestBox');
+        if(total <= 3) { el.textContent='低风险'; el.className='level level-normal'; sb.innerHTML='<h3 style="color:#1e8449;">吞咽功能基本正常</h3><p>常规饮食即可，进食时保持坐位，30天后复评。</p>'; }
+        else if(total <= 8) { el.textContent='中等风险'; el.className='level level-risk'; sb.innerHTML='<h3 style="color:#d68910;">中等风险照护建议</h3><p>1. 进食体位：坐位或半坐位（≥60°）<br>2. 食物调整：糊状/软食为主<br>3. 液体增稠处理<br>4. 小口慢咽，每口确认吞下<br>5. 餐后保持坐位30分钟<br>6. 14天后复评</p>'; }
+        else { el.textContent='高风险'; el.className='level level-high'; sb.innerHTML='<h3 style="color:#c0392b;">高风险照护建议</h3><p>1. 转介言语治疗师/康复科评估<br>2. 考虑鼻饲或食物形态调整<br>3. 专人看护进食<br>4. 备好吸引器<br>5. 记录每餐进食量<br>6. 通知家属<br>7. 每周复评</p>'; }
+        document.getElementById('result').style.display = 'block';
+        sb.style.display = 'block';
+    }
+    function resetAll() { Object.keys(answers).forEach(k=>delete answers[k]); document.getElementById('result').style.display='none'; document.getElementById('suggestBox').style.display='none'; renderQ(); }
+    renderQ();
+    </script>
+</body>
+</html>

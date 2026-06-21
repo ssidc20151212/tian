@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>认知症照护专项培训</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #2c3e50; }
+        .person-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+        .person-tag { padding: 10px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 18px; cursor: pointer; }
+        .person-tag.active { border-color: #2c3e50; background: #ebedef; color: #2c3e50; font-weight: bold; }
+        .person-tag.add { border-style: dashed; color: #999; }
+        .current-person { font-size: 22px; font-weight: bold; color: #2c3e50; text-align: center; padding: 12px; background: #ebedef; border-radius: 10px; margin: 16px 0; }
+        .module-card { background: #f8f9fa; border-radius: 12px; padding: 20px; margin: 14px 0; border-left: 4px solid #2c3e50; }
+        .module-card h3 { font-size: 22px; color: #2c3e50; margin-bottom: 8px; }
+        .module-card .duration { color: #7f8c8d; font-size: 15px; margin-bottom: 10px; }
+        .module-card .objectives { font-size: 17px; line-height: 1.8; }
+        .quiz-card { background: white; border-radius: 10px; padding: 20px; margin: 14px 0; border: 2px solid #ecf0f1; }
+        .quiz-card h4 { font-size: 19px; color: #2c3e50; margin-bottom: 12px; }
+        .quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+        .quiz-opt { padding: 12px 16px; border-radius: 8px; border: 2px solid #ddd; font-size: 17px; cursor: pointer; }
+        .quiz-opt:active { transform: scale(0.98); }
+        .quiz-opt.correct { border-color: #27ae60; background: #e8f8f0; color: #1e8449; }
+        .quiz-opt.wrong { border-color: #e74c3c; background: #fdecea; color: #c0392b; }
+        .nav-btns { display: flex; gap: 16px; justify-content: center; margin: 20px 0; }
+        .nav-btns button { padding: 14px 40px; border-radius: 10px; font-size: 20px; cursor: pointer; border: none; background: #2c3e50; color: white; }
+        .history-entry { background: #f8f9fa; border-radius: 8px; padding: 12px 16px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #2c3e50; }
+        .history-entry .date { color: #7f8c8d; font-size: 15px; }
+        .history-entry .result { font-weight: bold; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>认知症照护专项培训</h1>
+            <p class="sub">照护员必备技能考核，记录学习成绩</p>
+        </div>
+        <div class="notice">认知症照护需要专业技能。选择照护员后完成考核。</div>
+        <div class="block">
+            <h2>选择照护员</h2>
+            <div class="person-bar" id="personBar"></div>
+        </div>
+        <div class="current-person" id="currentPerson">请先选择或添加照护员</div>
+        <div id="mainContent" style="display:none;">
+            <div class="block">
+                <h2>培训模块</h2>
+                <div id="modules"></div>
+            </div>
+            <div class="block">
+                <h2>知识考核（10题）</h2>
+                <div id="quizSection"></div>
+                <div class="nav-btns">
+                    <button onclick="submitQuiz()">提交并保存成绩</button>
+                </div>
+                <div id="quizScore" style="text-align:center;font-size:24px;font-weight:bold;margin:20px 0;display:none;"></div>
+            </div>
+            <div class="block">
+                <h2>考核记录</h2>
+                <div id="historyList"><p style="color:#999;text-align:center;">暂无记录</p></div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const modules = [
+        { name:'认知症基础知识', duration:'2课时', obj:'了解认知症类型、分期、核心症状、与正常衰老的区别' },
+        { name:'沟通技巧', duration:'2课时', obj:'掌握与认知症老人沟通的原则：简短指令、不争论、关注情感' },
+        { name:'BPSD识别与应对', duration:'3课时', obj:'识别常见行为问题，掌握非药物应对流程' },
+        { name:'日常照护技术', duration:'2课时', obj:'进食、如厕、洗浴、穿衣等照护中的特殊技巧' },
+        { name:'非药物干预', duration:'2课时', obj:'回忆疗法、音乐疗法、感官刺激、运动操等' },
+        { name:'环境与安全', duration:'1课时', obj:'认知症友好环境要素、走失防控、跌倒预防' },
+        { name:'家属沟通', duration:'1课时', obj:'告知技巧、情绪安抚、共同制定照护目标' },
+        { name:'自我关怀', duration:'1课时', obj:'识别职业倦怠、压力管理、团队支持' }
+    ];
+    const quizzes = [
+        { q:'1. 认知症最常见的类型是？', opts:['血管性认知症','阿尔茨海默病','路易体认知症','额颞叶认知症'], ans:1 },
+        { q:'2. 老人反复问同一问题时，正确做法是？', opts:['告诉他已经问过了','耐心每次回答如初次','忽略不回答','让他自己想'], ans:1 },
+        { q:'3. BPSD是指什么？', opts:['认知功能评分','行为和心理症状','药物不良反应','生活能力评估'], ans:1 },
+        { q:'4. 日落综合征通常发生在什么时候？', opts:['清晨','中午','傍晚','深夜'], ans:2 },
+        { q:'5. 老人说"我要回家上班"，最佳回应是？', opts:['"你退休了"','"好的，先喝杯茶"','"不要乱说"','不理他'], ans:1 },
+        { q:'6. 认知症老人拒绝洗澡时应该？', opts:['强行洗','不洗了','过会再试，换方式引导','通知家属'], ans:2 },
+        { q:'7. 走失高风险最重要的防护是？', opts:['关在房间','GPS+门禁管理','增加药物','限制活动'], ans:1 },
+        { q:'8. 哪项非药物干预适用于所有阶段？', opts:['拼图','计算训练','音乐疗法','读报纸'], ans:2 },
+        { q:'9. 老人攻击行为时首先应？', opts:['约束','确保安全后退一步','大声制止','通知医生'], ans:1 },
+        { q:'10. CDR评分2分代表？', opts:['正常','轻度','中度','重度'], ans:2 }
+    ];
+    let quizAnswers = {};
+    let persons = JSON.parse(localStorage.getItem('train_persons') || '[]');
+    let currentId = '';
+
+    function renderPersons() {
+        const bar = document.getElementById('personBar');
+        bar.innerHTML = '';
+        persons.forEach(p => {
+            const cls = currentId === p.id ? ' active' : '';
+            bar.innerHTML += `<div class="person-tag${cls}" onclick="selectPerson('${p.id}')">${p.name}</div>`;
+        });
+        bar.innerHTML += `<div class="person-tag add" onclick="addPerson()">+ 添加照护员</div>`;
+    }
+    function addPerson() {
+        const name = prompt('请输入照护员姓名：');
+        if(!name || !name.trim()) return;
+        const id = 'p_' + Date.now();
+        persons.push({ id, name: name.trim() });
+        localStorage.setItem('train_persons', JSON.stringify(persons));
+        selectPerson(id);
+    }
+    function selectPerson(id) {
+        currentId = id;
+        const person = persons.find(p => p.id === id);
+        document.getElementById('currentPerson').textContent = '当前考核：' + person.name;
+        document.getElementById('mainContent').style.display = 'block';
+        quizAnswers = {};
+        document.getElementById('quizScore').style.display = 'none';
+        renderPersons();
+        renderModules();
+        renderQuiz();
+        renderHistory();
+    }
+    function getKey() { return 'train_score_' + currentId; }
+    function getRecords() { return JSON.parse(localStorage.getItem(getKey()) || '[]'); }
+
+    function renderModules() {
+        const box = document.getElementById('modules');
+        box.innerHTML = '';
+        modules.forEach(m => {
+            box.innerHTML += `<div class="module-card"><h3>${m.name}</h3><div class="duration">课时：${m.duration}</div><div class="objectives"><b>学习目标：</b>${m.obj}</div></div>`;
+        });
+    }
+    function renderQuiz() {
+        const box = document.getElementById('quizSection');
+        box.innerHTML = '';
+        quizzes.forEach((q, qi) => {
+            let optsHtml = '';
+            q.opts.forEach((opt, oi) => {
+                const cls = quizAnswers[qi] === oi ? (oi === q.ans ? ' correct' : ' wrong') : (quizAnswers[qi] !== undefined && oi === q.ans ? ' correct' : '');
+                optsHtml += `<div class="quiz-opt${cls}" onclick="answer(${qi},${oi})">${opt}</div>`;
+            });
+            box.innerHTML += `<div class="quiz-card"><h4>${q.q}</h4><div class="quiz-opts">${optsHtml}</div></div>`;
+        });
+    }
+    function answer(qi, oi) {
+        if(quizAnswers[qi] !== undefined) return;
+        quizAnswers[qi] = oi;
+        renderQuiz();
+    }
+    function submitQuiz() {
+        if(!currentId) { alert('请先选择照护员'); return; }
+        let correct = 0;
+        quizzes.forEach((q, qi) => { if(quizAnswers[qi] === q.ans) correct++; });
+        const el = document.getElementById('quizScore');
+        el.style.display = 'block';
+        const pass = correct >= 8;
+        if(pass) el.innerHTML = `<span style="color:#27ae60;">得分：${correct}/10 - 合格</span>`;
+        else el.innerHTML = `<span style="color:#e74c3c;">得分：${correct}/10 - 未达标</span>`;
+        const records = getRecords();
+        records.unshift({ date: new Date().toISOString().slice(0,10), score: correct, pass: pass });
+        localStorage.setItem(getKey(), JSON.stringify(records));
+        renderHistory();
+    }
+    function renderHistory() {
+        const records = getRecords();
+        const box = document.getElementById('historyList');
+        if(records.length === 0) { box.innerHTML = '<p style="color:#999;text-align:center;">暂无记录</p>'; return; }
+        box.innerHTML = '';
+        records.forEach(r => {
+            const status = r.pass ? '合格' : '未达标';
+            box.innerHTML += `<div class="history-entry"><span class="date">${r.date}</span><span class="result">${r.score}/10 - ${status}</span></div>`;
+        });
+    }
+    renderPersons();
+    </script>
+</body>
+</html>

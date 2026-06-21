@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPSD应对方案库</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #d35400; }
+        .person-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 16px 0; }
+        .person-tag { padding: 10px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 18px; cursor: pointer; }
+        .person-tag.active { border-color: #d35400; background: #fef5f0; color: #d35400; font-weight: bold; }
+        .person-tag.add { border-style: dashed; color: #999; }
+        .current-person { font-size: 22px; font-weight: bold; color: #d35400; text-align: center; padding: 12px; background: #fef5f0; border-radius: 10px; margin: 16px 0; }
+        .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
+        .plan-card { background: #f8f9fa; border-radius: 12px; padding: 20px; border-left: 4px solid #d35400; cursor: pointer; }
+        .plan-card h3 { font-size: 22px; color: #2c3e50; margin-bottom: 8px; }
+        .plan-card p { color: #7f8c8d; font-size: 16px; }
+        .plan-card:active { transform: scale(0.98); }
+        .plan-card .used { font-size: 14px; color: #d35400; margin-top: 6px; }
+        .detail-panel { display: none; background: white; border-radius: 12px; padding: 24px; margin: 16px 0; border: 2px solid #d35400; }
+        .detail-panel.active { display: block; }
+        .detail-panel h3 { font-size: 24px; color: #d35400; margin-bottom: 16px; }
+        .detail-panel .step { padding: 12px 0; border-bottom: 1px solid #eee; font-size: 18px; }
+        .detail-panel .step:last-child { border-bottom: none; }
+        .detail-panel .warn { background: #fdecea; padding: 12px; border-radius: 8px; margin-top: 12px; color: #c0392b; font-size: 16px; }
+        .detail-panel .tip { background: #e8f8f0; padding: 12px; border-radius: 8px; margin-top: 12px; color: #1e8449; font-size: 16px; }
+        .back-btn { display: inline-block; padding: 10px 20px; background: #ecf0f1; border-radius: 8px; font-size: 18px; cursor: pointer; margin-bottom: 16px; }
+        .use-btn { display: block; margin: 16px auto; padding: 14px 40px; background: #d35400; color: white; border: none; border-radius: 10px; font-size: 20px; cursor: pointer; }
+        .history-entry { background: #f8f9fa; border-radius: 8px; padding: 12px 16px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #d35400; }
+        .history-entry .date { color: #7f8c8d; font-size: 15px; }
+        .history-entry .result { font-weight: bold; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>BPSD应对方案库</h1>
+            <p class="sub">常见行为问题的应对流程，记录使用情况</p>
+        </div>
+        <div class="notice">点击行为类型查看应对步骤，使用后可记录效果。</div>
+        <div class="block">
+            <h2>选择老人</h2>
+            <div class="person-bar" id="personBar"></div>
+        </div>
+        <div class="current-person" id="currentPerson">请先选择或添加老人</div>
+        <div id="mainContent" style="display:none;">
+            <div class="block" id="mainList">
+                <h2>选择行为类型</h2>
+                <div class="card-grid" id="cardGrid"></div>
+            </div>
+            <div class="detail-panel" id="detailPanel"></div>
+            <div class="block">
+                <h2>使用记录</h2>
+                <div id="historyList"><p style="color:#999;text-align:center;">暂无记录</p></div>
+            </div>
+        </div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+    const plans = [
+        { icon:'🚶', title:'游走/徘徊', desc:'反复走动、试图外出', steps:['1. 保持冷静，不强行阻止','2. 陪伴并引导至安全区域','3. 转移注意力（递食物、聊天）','4. 检查是否有未满足需求（如厕、饥饿）','5. 确认门窗安全锁闭','6. 记录发生时间和持续时长'], warn:'切勿从背后突然抓住老人，可能引发攻击行为', tip:'日落时段多发，可提前安排散步活动释放精力' },
+        { icon:'👊', title:'攻击/激越', desc:'打人、踢人、推搡、摔物', steps:['1. 确保自身和周围人安全','2. 后退一步，给予空间','3. 用平静低沉的语调说话','4. 不争论、不说教、不质问','5. 尝试转移注意力','6. 待平静后再提供照护','7. 记录诱因和应对效果'], warn:'如有伤害风险，先保护自己和其他老人，必要时呼叫支援', tip:'多发生在被要求做不想做的事时，可调整照护时间和方式' },
+        { icon:'📢', title:'喊叫/反复发声', desc:'大声叫喊、反复说同一句话', steps:['1. 排除疼痛或身体不适','2. 排除环境过于嘈杂/安静','3. 尝试回应其情感需求','4. 播放其喜欢的音乐','5. 提供感官刺激（触摸、温度）','6. 陪伴在旁，握手安抚'], warn:'持续喊叫可能提示疼痛或不适，注意排查身体问题', tip:'回忆疗法（翻看老照片、聊过去）有时能有效缓解' },
+        { icon:'🍽️', title:'拒食/异食', desc:'拒绝进食或吞食非食物', steps:['1. 排查口腔问题（溃疡、假牙不适）','2. 排查吞咽困难','3. 调整食物形态和温度','4. 营造安静愉快的用餐环境','5. 用熟悉的餐具和食物','6. 少量多次，不强迫','7. 异食行为：移除危险物品'], warn:'持续拒食3天以上须报告医生', tip:'让老人参与备餐过程可提高进食意愿' },
+        { icon:'🌅', title:'日落综合征', desc:'傍晚时分躁动不安加重', steps:['1. 下午增加活动量（散步、做操）','2. 傍晚提前开灯，避免阴影','3. 减少环境刺激（关电视、降噪）','4. 提供温热饮品和小食','5. 固定的傍晚例行程序','6. 安抚性陪伴'], warn:'避免下午睡眠过多', tip:'规律的日间活动和充足光照有助于维持生物钟' },
+        { icon:'🚫', title:'拒绝照护', desc:'拒绝洗澡、换衣、服药等', steps:['1. 不强迫，过一会再试','2. 调整照护时间','3. 分步进行，一次只做一件事','4. 给予选择感','5. 用引导代替命令','6. 保持同一照护者的稳定性'], warn:'强行照护会加重对抗和恐惧', tip:'先自己示范动作，利用镜像效应' },
+        { icon:'👻', title:'幻觉/妄想', desc:'看到不存在的人、怀疑被偷', steps:['1. 不否认也不附和','2. 回应情感："你看起来很担心"','3. 转移注意力到其他活动','4. 检查环境（镜子反光、影子）','5. 被窃妄想：帮助一起"找"','6. 严重时报告医生'], warn:'不要说"没有的事"，会加重焦虑', tip:'减少镜面和玻璃反光，保持适当照明' },
+        { icon:'🌙', title:'睡眠障碍', desc:'夜间不睡、日夜颠倒', steps:['1. 白天增加活动和光照','2. 限制下午3点后小睡','3. 固定就寝时间和程序','4. 睡前避免兴奋活动和饮品','5. 夜间保持微光照明','6. 夜间游走确保环境安全'], warn:'夜间游走时确保地面无障碍物', tip:'温水泡脚、轻音乐有助于入眠' }
+    ];
+    let persons = JSON.parse(localStorage.getItem('bpsd_persons') || '[]');
+    let currentId = '';
+
+    function renderPersons() {
+        const bar = document.getElementById('personBar');
+        bar.innerHTML = '';
+        persons.forEach(p => {
+            const cls = currentId === p.id ? ' active' : '';
+            bar.innerHTML += `<div class="person-tag${cls}" onclick="selectPerson('${p.id}')">${p.name}</div>`;
+        });
+        bar.innerHTML += `<div class="person-tag add" onclick="addPerson()">+ 添加老人</div>`;
+    }
+    function addPerson() {
+        const name = prompt('请输入老人姓名：');
+        if(!name || !name.trim()) return;
+        const id = 'p_' + Date.now();
+        persons.push({ id, name: name.trim() });
+        localStorage.setItem('bpsd_persons', JSON.stringify(persons));
+        selectPerson(id);
+    }
+    function selectPerson(id) {
+        currentId = id;
+        const person = persons.find(p => p.id === id);
+        document.getElementById('currentPerson').textContent = '当前查看：' + person.name;
+        document.getElementById('mainContent').style.display = 'block';
+        renderPersons();
+        renderCards();
+        renderHistory();
+    }
+    function getKey() { return 'bpsd_plan_' + currentId; }
+    function getRecords() { return JSON.parse(localStorage.getItem(getKey()) || '[]'); }
+
+    function renderCards() {
+        const grid = document.getElementById('cardGrid');
+        const records = getRecords();
+        grid.innerHTML = '';
+        plans.forEach((p, i) => {
+            const count = records.filter(r => r.plan === p.title).length;
+            const usedHtml = count > 0 ? `<div class="used">已使用 ${count} 次</div>` : '';
+            grid.innerHTML += `<div class="plan-card" onclick="showDetail(${i})"><h3>${p.icon} ${p.title}</h3><p>${p.desc}</p>${usedHtml}</div>`;
+        });
+    }
+    function showDetail(i) {
+        const p = plans[i];
+        const panel = document.getElementById('detailPanel');
+        let stepsHtml = p.steps.map(s => `<div class="step">${s}</div>`).join('');
+        let warnHtml = p.warn ? `<div class="warn">⚠️ ${p.warn}</div>` : '';
+        let tipHtml = p.tip ? `<div class="tip">💡 ${p.tip}</div>` : '';
+        let btnHtml = `<button class="use-btn" onclick="recordUse(${i})">记录本次使用</button>`;
+        panel.innerHTML = `<div class="back-btn" onclick="hideDetail()">← 返回列表</div><h3>${p.icon} ${p.title}</h3>${stepsHtml}${warnHtml}${tipHtml}${btnHtml}`;
+        panel.className = 'detail-panel active';
+        document.getElementById('mainList').style.display = 'none';
+    }
+    function hideDetail() {
+        document.getElementById('detailPanel').className = 'detail-panel';
+        document.getElementById('mainList').style.display = 'block';
+    }
+    function recordUse(i) {
+        const effect = prompt('效果如何？（有效/部分有效/无效）');
+        if(!effect) return;
+        const records = getRecords();
+        records.unshift({ date: new Date().toISOString().slice(0,10), plan: plans[i].title, effect: effect.trim() });
+        localStorage.setItem(getKey(), JSON.stringify(records));
+        renderCards();
+        renderHistory();
+        hideDetail();
+        alert('已记录');
+    }
+    function renderHistory() {
+        const records = getRecords();
+        const box = document.getElementById('historyList');
+        if(records.length === 0) { box.innerHTML = '<p style="color:#999;text-align:center;">暂无记录</p>'; return; }
+        box.innerHTML = '';
+        records.forEach(r => {
+            box.innerHTML += `<div class="history-entry"><span class="date">${r.date}</span><span class="result">${r.plan} - ${r.effect}</span></div>`;
+        });
+    }
+    renderPersons();
+    </script>
+</body>
+</html>

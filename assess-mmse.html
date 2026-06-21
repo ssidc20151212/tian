@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMSE认知功能筛查</title>
+    <link rel="stylesheet" href="terminal-v2/style.css">
+    <style>
+        .block h2 { border-left-color: #2980b9; }
+        .q-card { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 14px 0; border-left: 4px solid #2980b9; }
+        .q-card h4 { font-size: 20px; color: #2c3e50; margin-bottom: 12px; }
+        .q-options { display: flex; flex-wrap: wrap; gap: 10px; }
+        .q-opt { padding: 12px 18px; border-radius: 8px; border: 2px solid #ddd; background: white; font-size: 17px; cursor: pointer; }
+        .q-opt:active { transform: scale(0.96); }
+        .q-opt.selected { border-color: #2980b9; background: #e8f4fd; color: #2471a3; font-weight: bold; }
+        .score-display { text-align: center; padding: 30px; margin: 20px 0; border-radius: 16px; background: #f8f9fa; display: none; }
+        .score-display .total { font-size: 64px; font-weight: bold; }
+        .score-display .level { font-size: 28px; margin-top: 10px; font-weight: bold; padding: 8px 30px; border-radius: 10px; display: inline-block; }
+        .level-normal { background: #e8f8f0; color: #1e8449; }
+        .level-mild { background: #e8f4fd; color: #2471a3; }
+        .level-moderate { background: #fef9e7; color: #d68910; }
+        .level-severe { background: #fdecea; color: #c0392b; }
+        .suggest-box { background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 16px 0; display: none; }
+        .nav-btns { display: flex; gap: 16px; justify-content: center; margin: 20px 0; }
+        .nav-btns button { padding: 14px 40px; border-radius: 10px; font-size: 20px; cursor: pointer; border: none; }
+        .nav-btns .btn-calc { background: #2980b9; color: white; }
+        .nav-btns .btn-reset { background: #ecf0f1; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <div class="page-header">
+            <h1>MMSE认知功能筛查</h1>
+            <p class="sub">简易精神状态检查，筛查认知障碍程度</p>
+        </div>
+        <div class="notice">本工具用于认知功能初步筛查，不作为认知症诊断依据。确诊需转介医疗机构。</div>
+        <div class="block">
+            <h2>逐项评估（每项答对得分，答错0分）</h2>
+            <div id="questions"></div>
+        </div>
+        <div class="nav-btns">
+            <button class="btn-reset" onclick="resetAll()">重新评估</button>
+            <button class="btn-calc" onclick="calcResult()">计算结果</button>
+        </div>
+        <div class="score-display" id="result">
+            <div class="total" id="totalScore">0</div>
+            <div>总分（满分30分）</div>
+            <div class="level" id="levelText"></div>
+        </div>
+        <div class="suggest-box" id="suggestBox"></div>
+        <div class="page-footer">
+            <a class="footer-btn" href="index.html">返回首页</a>
+            <p class="disclaimer">思德库养老能力支持终端</p>
+        </div>
+    </div>
+    <script>
+        const items = [
+            { title:'1. 时间定向：现在是哪年？', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] },
+            { title:'2. 时间定向：现在是什么季节？', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] },
+            { title:'3. 时间定向：现在是几月？', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] },
+            { title:'4. 时间定向：今天是几号？', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] },
+            { title:'5. 时间定向：今天是星期几？', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] },
+            { title:'6. 地点定向：我们在哪个省/市？', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] },
+            { title:'7. 地点定向：我们在哪个区/县？', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] },
+            { title:'8. 地点定向：我们在哪个街道/乡镇？', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] },
+            { title:'9. 地点定向：这是什么地方（机构名）？', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] },
+            { title:'10. 地点定向：我们在第几层楼？', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] },
+            { title:'11. 即刻记忆：说三个词让老人重复（如：苹果、桌子、硬币）答对几个？', opts:[{text:'3个全对（3分）',score:3},{text:'答对2个（2分）',score:2},{text:'答对1个（1分）',score:1},{text:'全错（0分）',score:0}] },
+            { title:'12. 注意力和计算：100连续减7，答对几次？（93,86,79,72,65）', opts:[{text:'5次全对（5分）',score:5},{text:'答对4次（4分）',score:4},{text:'答对3次（3分）',score:3},{text:'答对2次（2分）',score:2},{text:'答对1次（1分）',score:1},{text:'全错（0分）',score:0}] },
+            { title:'13. 延迟回忆：刚才三个词还记得几个？', opts:[{text:'3个全对（3分）',score:3},{text:'记得2个（2分）',score:2},{text:'记得1个（1分）',score:1},{text:'全忘（0分）',score:0}] },
+            { title:'14. 命名：出示手表和铅笔让其命名，答对几个？', opts:[{text:'2个全对（2分）',score:2},{text:'答对1个（1分）',score:1},{text:'全错（0分）',score:0}] },
+            { title:'15. 复述："四十四只石狮子"', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] },
+            { title:'16. 三步指令：拿纸→对折→放桌上，完成几步？', opts:[{text:'3步全对（3分）',score:3},{text:'完成2步（2分）',score:2},{text:'完成1步（1分）',score:1},{text:'无法完成（0分）',score:0}] },
+            { title:'17. 阅读理解：出示"请闭上您的眼睛"并执行', opts:[{text:'正确执行（1分）',score:1},{text:'未执行（0分）',score:0}] },
+            { title:'18. 书写：写一个完整句子', opts:[{text:'能写出（1分）',score:1},{text:'不能（0分）',score:0}] },
+            { title:'19. 图形描画：模仿画两个交叉五边形', opts:[{text:'正确（1分）',score:1},{text:'错误（0分）',score:0}] }
+        ];
+        const answers = {};
+        function renderQ() {
+            const box = document.getElementById('questions');
+            box.innerHTML = '';
+            items.forEach((q, qi) => {
+                let optsHtml = '';
+                q.opts.forEach((opt, oi) => {
+                    const sel = answers[qi] === oi ? ' selected' : '';
+                    optsHtml += `<div class="q-opt${sel}" onclick="sel(${qi},${oi})">${opt.text}</div>`;
+                });
+                box.innerHTML += `<div class="q-card"><h4>${q.title}</h4><div class="q-options">${optsHtml}</div></div>`;
+            });
+        }
+        function sel(qi, oi) { answers[qi] = oi; renderQ(); }
+        function calcResult() {
+            let total = 0;
+            items.forEach((q, qi) => { if(answers[qi]!==undefined) total += q.opts[answers[qi]].score; });
+            document.getElementById('totalScore').textContent = total;
+            const el = document.getElementById('levelText');
+            const sb = document.getElementById('suggestBox');
+            if(total >= 27) { el.textContent='认知功能正常'; el.className='level level-normal'; sb.innerHTML='<h3 style="color:#1e8449;">正常</h3><p>认知功能未见明显异常。建议每年筛查一次。</p>'; }
+            else if(total >= 21) { el.textContent='轻度认知障碍'; el.className='level level-mild'; sb.innerHTML='<h3 style="color:#2471a3;">轻度认知障碍照护建议</h3><p>1. 建议转介医疗机构进一步确诊<br>2. 增加认知刺激活动<br>3. 关注日常生活能力变化<br>4. 3个月后复评</p>'; }
+            else if(total >= 10) { el.textContent='中度认知障碍'; el.className='level level-moderate'; sb.innerHTML='<h3 style="color:#d68910;">中度认知障碍照护建议</h3><p>1. 建议确诊后制定认知症照护计划<br>2. 进行BPSD行为观察<br>3. 安全防护措施（走失、跌倒）<br>4. 告知家属并沟通照护方案<br>5. 每月复评</p>'; }
+            else { el.textContent='重度认知障碍'; el.className='level level-severe'; sb.innerHTML='<h3 style="color:#c0392b;">重度认知障碍照护建议</h3><p>1. 需要全面照护支持<br>2. 重点关注安全和舒适<br>3. BPSD行为管理<br>4. 家属深度沟通<br>5. 考虑专护方案<br>6. 定期医疗复查</p>'; }
+            document.getElementById('result').style.display = 'block';
+            sb.style.display = 'block';
+        }
+        function resetAll() { Object.keys(answers).forEach(k=>delete answers[k]); document.getElementById('result').style.display='none'; document.getElementById('suggestBox').style.display='none'; renderQ(); }
+        renderQ();
+    </script>
+</body>
+</html>
