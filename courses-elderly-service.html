@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>养老服务师职业课程 — 思德库网络学苑</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(160deg, #1a1a2e 0%, #2d2d44 50%, #1a1a2e 100%);
+            color: #e8e8ec;
+            min-height: 100vh;
+        }
+        .page-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .page-header h1 {
+            font-size: 42px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .page-header .brand {
+            color: #FF8C42;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .page-header .sub {
+            color: rgba(255,255,255,0.7);
+            font-size: 18px;
+        }
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, #FF8C42, #FFD166, #FF8C42);
+            border-radius: 2px;
+            margin: 0 auto 48px;
+            max-width: 400px;
+        }
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 28px;
+        }
+        .course-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,140,66,0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(255,140,66,0.15);
+            border-color: rgba(255,140,66,0.5);
+        }
+        .card-video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #111;
+            display: block;
+        }
+        .card-body {
+            padding: 20px 24px;
+        }
+        .card-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF8C42, #FFD166);
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .card-body h3 {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .card-body p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.7;
+        }
+        .card-audio {
+            padding: 0 24px 20px;
+        }
+        .card-audio audio {
+            width: 100%;
+            height: 36px;
+            border-radius: 18px;
+        }
+        .page-footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .page-footer p {
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #FFD166;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        .back-link:hover { text-decoration: underline; }
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 28px; }
+            .course-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrap">
+        <a href="index.html" class="back-link">← 返回首页</a>
+        <div class="page-header">
+            <p class="brand">思德库网络学苑</p>
+            <h1>养老服务师职业课程</h1>
+            <p class="sub">涵盖初中级全能力模块 · 10门系统课程 · 职业资格备考</p>
+        </div>
+        <div class="divider"></div>
+        <div class="course-grid" id="courseGrid"></div>
+        <div class="page-footer">
+            <p>本课程用于养老服务师职业资格考试备考参考，内容依据国家职业技能标准编制。</p>
+        </div>
+    </div>
+<script>
+const courses = [
+    {
+        num: 1, title: "职业概述与政策法规",
+        desc: "养老服务师职业定义、七大工作任务、初中级等级体系、核心政策法规与职业道德要求。",
+        video: "output/养老服务师视频1-职业概述与政策法规.mp4",
+        audio: "output/养老服务师视频1-职业概述与政策法规.mp3"
+    },
+    {
+        num: 2, title: "综合需求评估",
+        desc: "老年人能力评估四维度、需求评估方法、适老环境评估、常用量表工具与报告撰写。",
+        video: "output/养老服务师视频2-综合需求评估.mp4",
+        audio: "output/养老服务师视频2-综合需求评估.mp3"
+    },
+    {
+        num: 3, title: "照护方案制订与实施",
+        desc: "方案制订流程、SMART目标设定、个案管理模式、居家与机构方案设计、动态调整机制。",
+        video: "output/养老服务师视频3-照护方案制订与实施.mp4",
+        audio: "output/养老服务师视频3-照护方案制订与实施.mp3"
+    },
+    {
+        num: 4, title: "失能照护技术",
+        desc: "失能分级与照护原则、日常生活照料、体位转移、压疮预防、管道护理与安全防护。",
+        video: "output/养老服务师视频4-失能照护技术.mp4",
+        audio: "output/养老服务师视频4-失能照护技术.mp3"
+    },
+    {
+        num: 5, title: "认知障碍照护",
+        desc: "认知障碍分类、失智预防、认知训练技术、BPSD管理、沟通技巧与照护环境设计。",
+        video: "output/养老服务师视频5-认知障碍照护.mp4",
+        audio: "output/养老服务师视频5-认知障碍照护.mp3"
+    },
+    {
+        num: 6, title: "康复服务与健康管理",
+        desc: "康复训练技术、ADL功能训练、慢性病管理、用药安全指导与营养管理。",
+        video: "output/养老服务师视频6-康复服务与健康管理.mp4",
+        audio: "output/养老服务师视频6-康复服务与健康管理.mp3"
+    },
+    {
+        num: 7, title: "心理支持与临终关怀",
+        desc: "老年心理问题识别、心理评估量表、支持技术、临终关怀理念与哀伤辅导。",
+        video: "output/养老服务师视频7-心理支持与临终关怀.mp4",
+        audio: "output/养老服务师视频7-心理支持与临终关怀.mp3"
+    },
+    {
+        num: 8, title: "适老环境与辅具应用",
+        desc: "适老化设计原则、居家与机构环境改造、移动辅具、生活辅具与智能科技产品。",
+        video: "output/养老服务师视频8-适老环境与辅具应用.mp4",
+        audio: "output/养老服务师视频8-适老环境与辅具应用.mp3"
+    },
+    {
+        num: 9, title: "培训指导与质量管理",
+        desc: "培训计划制订、技术指导方法、效果评价、质量指标体系与风险防控机制。",
+        video: "output/养老服务师视频9-培训指导与质量管理.mp4",
+        audio: "output/养老服务师视频9-培训指导与质量管理.mp3"
+    },
+    {
+        num: 10, title: "服务咨询转介与实务研究",
+        desc: "信息咨询服务、资源链接整合、服务转介流程、实务研究方法与照护技术创新推广。",
+        video: "output/养老服务师视频10-服务咨询转介与实务研究.mp4",
+        audio: "output/养老服务师视频10-服务咨询转介与实务研究.mp3"
+    }
+];
+
+const grid = document.getElementById("courseGrid");
+courses.forEach(c => {
+    grid.innerHTML += `
+    <div class="course-card">
+        <video class="card-video" controls preload="metadata" poster="">
+            <source src="${c.video}" type="video/mp4">
+        </video>
+        <div class="card-body">
+            <span class="card-num">第${c.num}课</span>
+            <h3>${c.title}</h3>
+            <p>${c.desc}</p>
+        </div>
+        <div class="card-audio">
+            <audio controls preload="none">
+                <source src="${c.audio}" type="audio/mpeg">
+            </audio>
+        </div>
+    </div>`;
+});
+</script>
+</body>
+</html>
