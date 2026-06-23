@@ -55,12 +55,12 @@
     </div>
     <script>
         const items = [
-            { title:'1. 跌倒史（近3个月内是否跌倒过）', opts:[{text:'无',score:0},{text:'有',score:25}] },
+            { title:'1. 3个月内的跌倒史/视觉障碍', opts:[{text:'无',score:0},{text:'有',score:25}] },
             { title:'2. 医学诊断（是否有2个以上诊断）', opts:[{text:'无',score:0},{text:'有',score:15}] },
-            { title:'3. 行走辅助', opts:[{text:'无需辅助/卧床/有人搀扶',score:0},{text:'使用拐杖/助行器/轮椅',score:15},{text:'扶家具行走',score:30}] },
-            { title:'4. 静脉输液/肝素锁', opts:[{text:'无',score:0},{text:'有',score:20}] },
-            { title:'5. 步态', opts:[{text:'正常/卧床/轮椅',score:0},{text:'步态虚弱',score:10},{text:'步态障碍',score:20}] },
-            { title:'6. 精神状态（对自身活动能力的认知）', opts:[{text:'能正确评估自身能力',score:0},{text:'高估自身能力/忘记限制',score:15}] }
+            { title:'3. 使用助行器具', opts:[{text:'没有需要/完全卧床/照护者扶持',score:0},{text:'丁字形拐杖/手杖/学步车',score:15},{text:'扶家具行走',score:30}] },
+            { title:'4. 静脉治疗/置管/使用药物治疗', opts:[{text:'无',score:0},{text:'有',score:20}] },
+            { title:'5. 步态', opts:[{text:'正常/卧床/轮椅代步',score:0},{text:'乏力/年龄≥65岁/直立性低血压',score:10},{text:'失调及不平衡',score:20}] },
+            { title:'6. 精神状态', opts:[{text:'了解自己的能力',score:0},{text:'忘记自己的限制/意识障碍/躁动不安/沟通障碍/睡眠障碍',score:15}] }
         ];
         const answers = {};
         function renderQ() {
@@ -82,9 +82,9 @@
             document.getElementById('totalScore').textContent = total;
             const el = document.getElementById('levelText');
             const sb = document.getElementById('suggestBox');
-            if(total <= 24) { el.textContent='低风险'; el.className='level level-low'; sb.innerHTML='<h3 style="color:#1e8449;">低风险照护建议</h3><p>维持现有活动方式，常规预防即可。30天后复评。</p>'; }
-            else if(total <= 44) { el.textContent='中风险'; el.className='level level-mid'; sb.innerHTML='<h3 style="color:#d68910;">中风险照护建议</h3><p>1. 落实防跌倒措施（防滑、夜灯、扶手）<br>2. 标识床头"跌倒风险"<br>3. 辅助如厕和转移<br>4. 14天后复评</p>'; }
-            else { el.textContent='高风险'; el.className='level level-high'; sb.innerHTML='<h3 style="color:#c0392b;">高风险照护建议</h3><p>1. 立即制定防跌倒专项方案<br>2. 加强巡查频率<br>3. 考虑辅具配置（助行器、髋部保护裤）<br>4. 环境全面排查<br>5. 通知家属并记录<br>6. 7天后复评</p>'; }
+            if(total < 25) { el.textContent='低度风险'; el.className='level level-low'; sb.innerHTML='<h3 style="color:#1e8449;">低度风险（<25分）照护建议</h3><p>维持现有活动方式，常规预防即可。30天后复评。</p>'; }
+            else if(total <= 45) { el.textContent='中度风险'; el.className='level level-mid'; sb.innerHTML='<h3 style="color:#d68910;">中度风险（25-45分）照护建议</h3><p>1. 落实防跌倒措施（防滑、夜灯、扶手）<br>2. 标识床头"跌倒风险"<br>3. 辅助如厕和转移<br>4. 14天后复评</p>'; }
+            else { el.textContent='高度风险'; el.className='level level-high'; sb.innerHTML='<h3 style="color:#c0392b;">高度风险（>45分）照护建议</h3><p>1. 立即制定防跌倒专项方案<br>2. 加强巡查频率<br>3. 考虑辅具配置（助行器、髋部保护裤）<br>4. 环境全面排查<br>5. 通知家属并记录<br>6. 7天后复评</p>'; }
             document.getElementById('result').style.display = 'block';
             sb.style.display = 'block';
         }
