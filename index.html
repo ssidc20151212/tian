@@ -39,7 +39,7 @@
         .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--text-dark); border-radius: 2px; transition: 0.3s; }
 
         /* Hero */
-        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); padding: 56px 0 48px; text-align: center; color: #fff; }
+        .hero { background: linear-gradient(135deg, #FF6B6B 0%, #FF8C42 30%, #FFD166 60%, #6BCB77 100%); padding: 56px 0 48px; text-align: center; color: #fff; margin: 20px auto 0; max-width: 1200px; border-radius: 28px; box-shadow: 0 12px 40px rgba(255,140,66,0.25); }
         .hero h1 { font-family: 'Noto Serif SC', serif; font-size: 36px; font-weight: 900; margin-bottom: 20px; letter-spacing: 2px; }
         .hero-tags { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
         .hero-tags span { font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 700; letter-spacing: 3px; padding: 8px 24px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.4); }
@@ -77,12 +77,12 @@
         .big-card p { font-size: 14px; color: var(--text-light); }
 
         /* CTA横幅 */
-        .cta-banner { background: linear-gradient(135deg, var(--primary) 0%, #1a3a5c 100%); padding: 60px 0; text-align: center; color: #fff; }
+        .cta-banner { background: linear-gradient(135deg, #FF6B6B 0%, #FF8C42 30%, #FFD166 60%, #6BCB77 100%); padding: 60px 0; text-align: center; color: #fff; margin: 0 auto; max-width: 1200px; border-radius: 28px; box-shadow: 0 12px 40px rgba(255,140,66,0.25); }
         .cta-banner h2 { font-family: 'Noto Serif SC', serif; font-size: 28px; font-weight: 700; margin-bottom: 16px; letter-spacing: 1px; }
         .cta-banner p { font-size: 16px; opacity: 0.85; margin-bottom: 24px; }
 
         /* 页脚 */
-        .footer { background: #1a202c; color: rgba(255,255,255,0.7); padding: 48px 0 32px; }
+        .footer { background: linear-gradient(160deg, #1a1a2e 0%, #2d2d44 50%, #1a1a2e 100%); color: rgba(255,255,255,0.7); padding: 48px 0 32px; margin-top: 40px; }
         .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; margin-bottom: 32px; }
         .footer-brand { font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 8px; letter-spacing: 3px; }
         .footer-links-col h4 { color: #fff; font-size: 15px; margin-bottom: 12px; }
@@ -112,7 +112,7 @@
     <!-- 顶部导航 -->
     <nav class="navbar">
         <div class="container nav-inner">
-            <div class="nav-brand">思德库</div>
+            <div class="nav-brand">思德库 AI指挥官</div>
             <button class="nav-toggle" aria-label="菜单">
                 <span></span><span></span><span></span>
             </button>
@@ -142,26 +142,22 @@
     <!-- 价值主张 -->
     <section class="section section-gray">
         <div class="container">
-            <div class="section-title">
-                <h2>四大核心能力</h2>
-                <p>覆盖养老服务全链路的专业解决方案</p>
-            </div>
             <div class="value-grid">
                 <div class="value-card">
-                    <h3>专业评估</h3>
-                    <p>10项国际标准评估量表，在线使用自动出分</p>
+                    <h3>能展示</h3>
+                    <p>专业形象</p>
                 </div>
                 <div class="value-card">
-                    <h3>认知症全流程</h3>
-                    <p>从评估到干预，12项专业工具一站覆盖</p>
+                    <h3>易使用</h3>
+                    <p>学习系统</p>
                 </div>
                 <div class="value-card">
-                    <h3>在线学习</h3>
-                    <p>护理员、评估师等职业课程系统学习</p>
+                    <h3>会指导</h3>
+                    <p>照护工具</p>
                 </div>
                 <div class="value-card">
-                    <h3>管理赋能</h3>
-                    <p>照护计划、护理记录、机构自查一键完成</p>
+                    <h3>共成长</h3>
+                    <p>机构能力</p>
                 </div>
             </div>
         </div>
@@ -348,6 +344,34 @@
             <h2>开始使用专业工具，让照护更有温度</h2>
             <p>已有百余家养老机构正在使用思德库平台提升照护质量</p>
             <a href="terminal-v2/08-contact.html" class="btn-primary">了解合作方案</a>
+        </div>
+    </section>
+
+    <!-- 四大核心能力 -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>四大核心能力</h2>
+                <p>覆盖养老服务全链路的专业解决方案</p>
+            </div>
+            <div class="value-grid">
+                <div class="value-card">
+                    <h3>专业评估</h3>
+                    <p>10项国际标准评估量表，在线使用自动出分</p>
+                </div>
+                <div class="value-card">
+                    <h3>认知症全流程</h3>
+                    <p>从评估到干预，12项专业工具一站覆盖</p>
+                </div>
+                <div class="value-card">
+                    <h3>在线学习</h3>
+                    <p>护理员、评估师等职业课程系统学习</p>
+                </div>
+                <div class="value-card">
+                    <h3>管理赋能</h3>
+                    <p>照护计划、护理记录、机构自查一键完成</p>
+                </div>
+            </div>
         </div>
     </section>
 

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>长期照护师职业技能培训 — 思德库网络学苑</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        .site-nav { position: sticky; top: 0; background: #1a1a2e; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+        .site-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; height: 60px; justify-content: space-between; }
+        .site-nav-brand { font-size: 22px; font-weight: 900; color: #FF8C42; text-decoration: none; letter-spacing: 3px; }
+        .site-nav-links { display: flex; list-style: none; gap: 6px; align-items: center; }
+        .site-nav-links a { padding: 6px 12px; border-radius: 6px; font-size: 14px; color: rgba(255,255,255,0.75); transition: all 0.2s; text-decoration: none; }
+        .site-nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .nav-cta-btn { background: #FF8C42 !important; color: #1a1a2e !important; font-weight: 600; }
+        .nav-cta-btn:hover { background: #FFD166 !important; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(160deg, #1a1a2e 0%, #2d2d44 50%, #1a1a2e 100%);
+            color: #e8e8ec;
+            min-height: 100vh;
+        }
+        .page-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #FFD166;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .page-header h1 {
+            font-size: 38px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .page-header .brand {
+            color: #FF8C42;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .page-header .sub {
+            color: rgba(255,255,255,0.7);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, #FF8C42, #FFD166, #FF8C42);
+            border-radius: 2px;
+            margin: 0 auto 48px;
+            max-width: 400px;
+        }
+        .module-section {
+            margin-bottom: 56px;
+        }
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .module-title {
+            font-size: 26px;
+            color: #fff;
+        }
+        .module-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF8C42, #FFD166);
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 10px;
+        }
+        .module-outline {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .outline-course {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,140,66,0.15);
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        .outline-course h4 {
+            font-size: 15px;
+            color: #FFD166;
+            margin-bottom: 10px;
+        }
+        .outline-course ul {
+            list-style: none;
+            padding: 0;
+        }
+        .outline-course ul li {
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+            padding: 3px 0;
+        }
+        .outline-course ul li::before {
+            content: "·";
+            color: #FF8C42;
+            margin-right: 6px;
+        }
+        .page-footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .page-footer p {
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 26px; }
+            .module-outline { grid-template-columns: 1fr; }
+            .video-grid { grid-template-columns: 1fr; }
+        }
+        /* 视频课程区 */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        .video-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,140,66,0.2);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .video-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(255,140,66,0.15);
+            border-color: rgba(255,140,66,0.4);
+        }
+        .video-card video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #111;
+            display: block;
+        }
+        .video-card .card-body {
+            padding: 16px 20px;
+        }
+        .video-card .card-body .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF8C42, #FFD166);
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .video-card .card-body h4 {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .video-card .card-body p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+        }
+        .video-card .card-audio {
+            padding: 0 20px 16px;
+        }
+        .video-card .card-audio audio {
+            width: 100%;
+            height: 34px;
+            border-radius: 17px;
+        }
+    </style>
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a href="index.html" class="site-nav-brand">思德库</a><ul class="site-nav-links"><li><a href="index.html#assess">专业评估</a></li><li><a href="index.html#dementia">认知症照护</a></li><li><a href="index.html#management">照护管理</a></li><li><a href="index.html#academy">网络学苑</a></li><li><a href="terminal-v2/06-pricing.html">价格</a></li><li><a href="terminal-v2/08-contact.html" class="nav-cta-btn">联系我们</a></li></ul></div></nav>
+    <div class="page-wrap">
+        <a href="academy.html" class="back-link">← 返回网络学苑</a>
+        <div class="page-header">
+            <p class="brand">思德库网络学苑</p>
+            <h1>长期照护师职业技能培训</h1>
+            <p class="sub">依据国家职业技能标准 · 配套国家统编教材</p>
+        </div>
+        <div class="divider"></div>
+
+        <div id="courseContent"></div>
+
+        <footer class="page-footer">
+            <p>思德库网络学苑 · 思德库养老机构专业化建设终端</p>
+        </footer>
+    </div>
+
+<script>
+const modules = [
+    {
+        num: "职业模块1",
+        title: "生活照护",
+        courses: [
+            { name: "培训课程1 清洁照护", units: ["头、面、手、足部清洁照护","口腔清洁及摘戴义齿照护","洗发照护","洗浴照护","会阴清洁照护","整理和更换床上用品"] },
+            { name: "培训课程2 穿脱衣物", units: ["穿脱衣服、鞋袜","穿戴简易矫形器等辅助器具"] },
+            { name: "培训课程3 饮食照护", units: ["协助长期照护对象进食、进水","常见膳食种类和摄入量需求的评估及异常情况的记录报告"] },
+            { name: "培训课程4 排泄照护", units: ["床上使用便器、协助如厕等照护","更换护理垫、纸尿裤，并倾倒排泄物","排泄物观察、记录与报告"] }
+        ],
+        videos: [
+            { tag: "培训课程1", title: "清洁照护", desc: "头面手足清洁、口腔清洁及义齿、洗发、洗浴、会阴清洁、床上用品更换", video: "output/视频ltc-1-1-清洁照护.mp4", audio: "output/视频ltc-1-1-清洁照护.mp3" },
+            { tag: "培训课程2", title: "穿脱衣物", desc: "穿脱衣服鞋袜、穿戴简易矫形器等辅助器具", video: "output/视频ltc-1-2-穿脱衣物.mp4", audio: "output/视频ltc-1-2-穿脱衣物.mp3" },
+            { tag: "培训课程3", title: "饮食照护", desc: "协助进食进水、膳食种类与摄入量评估及异常记录报告", video: "output/视频ltc-1-3-饮食照护.mp4", audio: "output/视频ltc-1-3-饮食照护.mp3" },
+            { tag: "培训课程4", title: "排泄照护", desc: "床上便器与如厕协助、护理垫纸尿裤更换、排泄物观察记录", video: "output/视频ltc-1-4-排泄照护.mp4", audio: "output/视频ltc-1-4-排泄照护.mp3" }
+        ]
+    },
+    {
+        num: "职业模块2",
+        title: "基础护理",
+        courses: [
+            { name: "培训课程1 生命体征及血糖的测量", units: ["生命体征的测量","血糖的测量"] },
+            { name: "培训课程2 基础感染防控", units: ["保持手卫生和正确使用防护用品"] }
+        ],
+        videos: [
+            { tag: "培训课程1", title: "生命体征及血糖的测量", desc: "体温、脉搏、呼吸、血压测量及血糖监测操作规范", video: "output/视频ltc-2-1-生命体征及血糖测量.mp4", audio: "output/视频ltc-2-1-生命体征及血糖测量.mp3" },
+            { tag: "培训课程2", title: "基础感染防控", desc: "手卫生规范、防护用品正确使用", video: "output/视频ltc-2-2-基础感染防控.mp4", audio: "output/视频ltc-2-2-基础感染防控.mp3" }
+        ]
+    },
+    {
+        num: "职业模块3",
+        title: "应急处置",
+        courses: [
+            { name: "培训课程1 急情识别", units: ["噎食、误吸的识别","呼吸、心跳骤停的识别"] },
+            { name: "培训课程2 应急处理", units: ["噎食、误吸的应急处理","呼吸、心跳骤停的应急处理"] }
+        ],
+        videos: [
+            { tag: "培训课程1", title: "急情识别", desc: "噎食误吸的识别、呼吸心跳骤停的识别", video: "output/视频ltc-3-1-急情识别.mp4", audio: "output/视频ltc-3-1-急情识别.mp3" },
+            { tag: "培训课程2", title: "应急处理", desc: "噎食误吸应急处理、呼吸心跳骤停应急处理（CPR）", video: "output/视频ltc-3-2-应急处理.mp4", audio: "output/视频ltc-3-2-应急处理.mp3" }
+        ]
+    },
+    {
+        num: "职业模块4",
+        title: "功能维护",
+        courses: [
+            { name: "培训课程1 体位管理", units: ["协助翻身","协助安放良肢位","协助完成床上体位转移，床、轮椅转移"] },
+            { name: "培训课程2 日常活动指导", units: ["进食辅具的使用指导","排泄辅具的使用指导","尿便吸收辅具的使用指导"] }
+        ],
+        videos: [
+            { tag: "培训课程1", title: "体位管理", desc: "协助翻身、安放良肢位、床上体位转移及床轮椅转移", video: "output/视频ltc-4-1-体位管理.mp4", audio: "output/视频ltc-4-1-体位管理.mp3" },
+            { tag: "培训课程2", title: "日常活动指导", desc: "进食辅具、排泄辅具、尿便吸收辅具的使用指导", video: "output/视频ltc-4-2-日常活动指导.mp4", audio: "output/视频ltc-4-2-日常活动指导.mp3" }
+        ]
+    }
+];
+
+const container = document.getElementById('courseContent');
+modules.forEach(mod => {
+    let html = '';
+    // 模块标题
+    html += `<div class="module-section">`;
+    html += `<div class="module-header"><span class="module-num">${mod.num}</span><h2 class="module-title">${mod.title}</h2></div>`;
+    // 课程大纲
+    html += `<div class="module-outline">`;
+    mod.courses.forEach(c => {
+        html += `<div class="outline-course"><h4>${c.name}</h4><ul>`;
+        c.units.forEach(u => { html += `<li>${u}</li>`; });
+        html += `</ul></div>`;
+    });
+    html += `</div>`;
+    // 对应视频
+    html += `<div class="video-grid">`;
+    mod.videos.forEach(v => {
+        html += `
+        <div class="video-card">
+            <video controls preload="metadata"><source src="${v.video}" type="video/mp4"></video>
+            <div class="card-body">
+                <span class="tag">${v.tag}</span>
+                <h4>${v.title}</h4>
+                <p>${v.desc}</p>
+            </div>
+            <div class="card-audio">
+                <audio controls preload="none"><source src="${v.audio}" type="audio/mpeg"></audio>
+            </div>
+        </div>`;
+    });
+    html += `</div></div>`;
+    container.innerHTML += html;
+});
+</script>
+</body>
+</html>
