@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思德库网络学苑 — 思德库养老机构专业化建设终端</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(160deg, #1a1a2e 0%, #2d2d44 50%, #1a1a2e 100%);
+            color: #e8e8ec;
+            min-height: 100vh;
+        }
+        .page-wrap {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #FFD166;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .page-header h1 {
+            font-size: 42px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .page-header .brand {
+            color: #FF8C42;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .page-header .sub {
+            color: rgba(255,255,255,0.7);
+            font-size: 18px;
+        }
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, #FF8C42, #FFD166, #FF8C42);
+            border-radius: 2px;
+            margin: 0 auto 48px;
+            max-width: 400px;
+        }
+        /* 两条线导航 */
+        .track-nav {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 56px;
+        }
+        .track-nav-btn {
+            display: block;
+            padding: 28px 32px;
+            border-radius: 16px;
+            text-decoration: none;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .track-nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+        .track-nav-btn.cert {
+            background: linear-gradient(135deg, #1e3a5f, #2c5f8a);
+            border: 2px solid rgba(41,128,185,0.5);
+        }
+        .track-nav-btn.ability {
+            background: linear-gradient(135deg, #3d1f0a, #5c3d1a);
+            border: 2px solid rgba(255,140,66,0.5);
+        }
+        .track-nav-btn h2 {
+            font-size: 26px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .track-nav-btn p {
+            font-size: 15px;
+            color: rgba(255,255,255,0.7);
+        }
+        .track-nav-btn .icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+        /* 业务线区块 */
+        .track-section {
+            margin-bottom: 72px;
+            display: none;
+        }
+        .track-section.active {
+            display: block;
+        }
+        .track-title {
+            font-size: 32px;
+            color: #fff;
+            margin-bottom: 8px;
+            padding-left: 16px;
+            border-left: 4px solid #FF8C42;
+        }
+        .track-desc {
+            font-size: 16px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 32px;
+            padding-left: 20px;
+        }
+        /* 证书课程卡片 */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+        }
+        .cert-card {
+            background: rgba(41,128,185,0.08);
+            border: 1px solid rgba(41,128,185,0.25);
+            border-radius: 14px;
+            padding: 28px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .cert-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(41,128,185,0.2);
+            border-color: rgba(41,128,185,0.5);
+        }
+        .cert-card h3 {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 14px;
+        }
+        .cert-card h3 a {
+            color: #fff;
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(255,255,255,0.4);
+            cursor: pointer;
+        }
+        .cert-card h3 a:hover {
+            color: #FFD166;
+            border-bottom-color: #FFD166;
+        }
+        .cert-card .meta {
+            font-size: 13px;
+            line-height: 2;
+            color: rgba(255,255,255,0.65);
+        }
+        .cert-card .meta span {
+            display: inline-block;
+            background: rgba(41,128,185,0.15);
+            padding: 2px 10px;
+            border-radius: 4px;
+            margin-right: 6px;
+            margin-bottom: 4px;
+        }
+        .cert-tag {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .cert-tag.national {
+            background: #27ae60;
+            color: #fff;
+        }
+        .cert-tag.training {
+            background: #2980b9;
+            color: #fff;
+        }
+        .cert-tag.ssidc {
+            background: #FF8C42;
+            color: #1a1a2e;
+        }
+        /* 能力提升课程模块 */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 28px;
+        }
+        .module-card {
+            background: rgba(255,140,66,0.05);
+            border: 1px solid rgba(255,140,66,0.2);
+            border-radius: 14px;
+            padding: 28px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .module-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(255,140,66,0.12);
+            border-color: rgba(255,140,66,0.4);
+        }
+        .module-card h3 {
+            font-size: 22px;
+            color: #FFD166;
+            margin-bottom: 16px;
+        }
+        .module-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF8C42, #FFD166);
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 3px 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .module-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .module-card ul li {
+            font-size: 15px;
+            color: rgba(255,255,255,0.75);
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .module-card ul li:last-child {
+            border-bottom: none;
+        }
+        .module-card ul li::before {
+            content: "·";
+            color: #FF8C42;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .page-footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .page-footer p {
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 28px; }
+            .track-nav { grid-template-columns: 1fr; }
+            .cert-grid { grid-template-columns: 1fr; }
+            .module-grid { grid-template-columns: 1fr; }
+            .track-nav-btn h2 { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav-inner"><a href="index.html" class="site-nav-brand">思德库</a><ul class="site-nav-links"><li><a href="index.html#assess">专业评估</a></li><li><a href="index.html#dementia">认知症照护</a></li><li><a href="index.html#management">照护管理</a></li><li><a href="index.html#academy">网络学苑</a></li><li><a href="terminal-v2/06-pricing.html">价格</a></li><li><a href="terminal-v2/08-contact.html" class="nav-cta-btn">联系我们</a></li></ul></div></nav>
+    <div class="page-wrap">
+        <a href="index.html" class="back-link">← 返回首页</a>
+        <div class="page-header">
+            <p class="brand">思德库养老机构专业化建设终端</p>
+            <h1>思德库网络学苑</h1>
+            <p class="sub">职业证书认证 · 机构能力提升 · 两条线并行成长</p>
+        </div>
+        <div class="divider"></div>
+
+        <!-- 两条业务线导航 -->
+        <div class="track-nav" id="trackNav">
+            <a href="javascript:void(0)" class="track-nav-btn cert" onclick="toggleTrack('track1')">
+                <div class="icon">🎓</div>
+                <h2>职业证书与认证课程</h2>
+                <p>我可以取得什么证书？——明确发证主体、报名条件、考试方式</p>
+            </a>
+            <a href="javascript:void(0)" class="track-nav-btn ability" onclick="toggleTrack('track2')">
+                <div class="icon">🏠</div>
+                <h2>机构能力提升课程</h2>
+                <p>有证书以后，能不能解决现场问题？——以工作场景分类</p>
+            </a>
+        </div>
+
+        <!-- 第一条线：职业证书与认证课程 -->
+        <section class="track-section" id="track1">
+            <h2 class="track-title">职业证书与认证课程</h2>
+            <p class="track-desc">回答员工最现实的问题：我可以取得什么证书？</p>
+            <div class="cert-grid">
+
+                <div class="cert-card">
+                    <span class="cert-tag training">职业技能培训</span>
+                    <h3><a href="courses-elderly-service.html">养老服务师职业课程</a></h3>
+                    <div class="meta">
+                        <p><span>发证主体</span>人社部门认定的评价机构</p>
+                        <p><span>证书性质</span>职业技能培训证书</p>
+                        <p><span>报名条件</span>从事养老服务相关工作</p>
+                        <p><span>学习时长</span>系统培训，10门课程</p>
+                        <p><span>考试方式</span>理论考试+实务案例</p>
+                        <p><span>证书查询</span>发证机构官网查询</p>
+                        <p><span>线下要求</span>部分环节需线下参与</p>
+                    </div>
+                </div>
+
+                <div class="cert-card">
+                    <span class="cert-tag training">职业技能培训</span>
+                    <h3><a href="courses-ltc.html">长期照护师职业技能培训</a></h3>
+                    <div class="meta">
+                        <p><span>发证主体</span>人社部门认定的第三方评价机构</p>
+                        <p><span>证书性质</span>职业技能等级证书</p>
+                        <p><span>报名条件</span>从事养老照护工作，具备相应工作年限</p>
+                        <p><span>学习时长</span>理论+实操，具体以培训方案为准</p>
+                        <p><span>考试方式</span>理论考试+实操技能鉴定</p>
+                        <p><span>证书查询</span>人社部技能人才评价证书全国联网查询</p>
+                        <p><span>线下要求</span>需参加线下实操培训与技能鉴定</p>
+                    </div>
+                </div>
+
+                <div class="cert-card">
+                    <span class="cert-tag national">国家职业技能</span>
+                    <h3><a href="courses-assess.html">老年人能力评估师职业课程</a></h3>
+                    <div class="meta">
+                        <p><span>发证主体</span>人社部门认定的第三方评价机构</p>
+                        <p><span>证书性质</span>国家职业技能等级证书</p>
+                        <p><span>报名条件</span>相关专业或从事评估工作满规定年限</p>
+                        <p><span>学习时长</span>系统培训课程，分级设置</p>
+                        <p><span>考试方式</span>理论考试+案例分析+实操评估</p>
+                        <p><span>证书查询</span>人社部技能人才评价证书全国联网查询</p>
+                        <p><span>线下要求</span>需参加线下实操鉴定考试</p>
+                    </div>
+                </div>
+
+                <div class="cert-card">
+                    <span class="cert-tag national">国家职业技能</span>
+                    <h3><a href="courses.html">养老护理员职业课程</a></h3>
+                    <div class="meta">
+                        <p><span>发证主体</span>人社部门认定的第三方评价机构</p>
+                        <p><span>证书性质</span>国家职业技能等级证书（五级至一级）</p>
+                        <p><span>报名条件</span>从事养老护理相关工作，逐级申报</p>
+                        <p><span>学习时长</span>按等级设置，初级至高级技师</p>
+                        <p><span>考试方式</span>理论知识考试+技能操作考核</p>
+                        <p><span>证书查询</span>人社部技能人才评价证书全国联网查询</p>
+                        <p><span>线下要求</span>需参加线下技能操作考核</p>
+                    </div>
+                </div>
+
+                <div class="cert-card">
+                    <span class="cert-tag training">职业技能培训</span>
+                    <h3>健康照护相关课程</h3>
+                    <div class="meta">
+                        <p><span>发证主体</span>卫健委认定机构或行业协会</p>
+                        <p><span>证书性质</span>培训合格证书/专项能力证书</p>
+                        <p><span>报名条件</span>具备护理或照护基础工作经验</p>
+                        <p><span>学习时长</span>按模块设定，通常40-80学时</p>
+                        <p><span>考试方式</span>理论+实操，部分模块在线考核</p>
+                        <p><span>证书查询</span>发证机构官网查询</p>
+                        <p><span>线下要求</span>部分模块需线下实操培训</p>
+                    </div>
+                </div>
+
+                <div class="cert-card">
+                    <span class="cert-tag training">职业技能培训</span>
+                    <h3>养老经纪人专业课程</h3>
+                    <div class="meta">
+                        <p><span>发证主体</span>思德库联合行业机构</p>
+                        <p><span>证书性质</span>培训证书/专项能力证书</p>
+                        <p><span>报名条件</span>从事养老服务咨询或营销相关工作</p>
+                        <p><span>学习时长</span>系统培训课程</p>
+                        <p><span>考试方式</span>理论+案例分析</p>
+                        <p><span>证书查询</span>发证机构官网查询</p>
+                        <p><span>线下要求</span>部分环节需线下参与</p>
+                    </div>
+                </div>
+
+                <div class="cert-card">
+                    <span class="cert-tag ssidc">思德库专业认证</span>
+                    <h3>机构管理者专业认证</h3>
+                    <div class="meta">
+                        <p><span>发证主体</span>思德库</p>
+                        <p><span>证书性质</span>思德库专业认证证书</p>
+                        <p><span>报名条件</span>养老机构在职管理人员</p>
+                        <p><span>学习时长</span>系统学习+实践作业</p>
+                        <p><span>考试方式</span>理论+案例答辩+实践成果评审</p>
+                        <p><span>证书查询</span>思德库官方平台查询</p>
+                        <p><span>线下要求</span>需提交机构实践成果</p>
+                    </div>
+                </div>
+
+                <div class="cert-card">
+                    <span class="cert-tag ssidc">思德库专业认证</span>
+                    <h3>评估师骨干专业认证</h3>
+                    <div class="meta">
+                        <p><span>发证主体</span>思德库</p>
+                        <p><span>证书性质</span>思德库专业认证证书</p>
+                        <p><span>报名条件</span>已取得评估师职业资格，实际从事评估</p>
+                        <p><span>学习时长</span>进阶课程+督导实践</p>
+                        <p><span>考试方式</span>案例评估实操+偏差分析+答辩</p>
+                        <p><span>证书查询</span>思德库官方平台查询</p>
+                        <p><span>线下要求</span>需完成规定数量的实际评估案例</p>
+                    </div>
+                </div>
+
+                <div class="cert-card">
+                    <span class="cert-tag ssidc">思德库专业认证</span>
+                    <h3>照护骨干专业认证</h3>
+                    <div class="meta">
+                        <p><span>发证主体</span>思德库</p>
+                        <p><span>证书性质</span>思德库专业认证证书</p>
+                        <p><span>报名条件</span>已取得护理员职业资格，工作满2年</p>
+                        <p><span>学习时长</span>进阶课程+案例实践</p>
+                        <p><span>考试方式</span>照护方案设计+现场实操+案例讨论</p>
+                        <p><span>证书查询</span>思德库官方平台查询</p>
+                        <p><span>线下要求</span>需完成规定照护案例和带教记录</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 第二条线：机构能力提升课程 -->
+        <section class="track-section" id="track2">
+            <h2 class="track-title">机构能力提升课程</h2>
+            <p class="track-desc">回答机构真正需要的问题：员工有证书以后，能不能解决现场问题？——课程以机构工作场景分类，不以考证为目的</p>
+            <div class="module-grid">
+
+                <div class="module-card">
+                    <span class="module-num">模块一</span>
+                    <h3>新员工必修</h3>
+                    <ul>
+                        <li>认识养老机构</li>
+                        <li>职业伦理与老人尊严</li>
+                        <li>老人安全基础</li>
+                        <li>交接班规范</li>
+                        <li>紧急事件报告</li>
+                        <li>与老人和家属沟通</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <span class="module-num">模块二</span>
+                    <h3>照护基础</h3>
+                    <ul>
+                        <li>进食与吞咽观察</li>
+                        <li>排泄支持</li>
+                        <li>移位与体位管理</li>
+                        <li>压疮风险</li>
+                        <li>跌倒风险</li>
+                        <li>睡眠支持</li>
+                        <li>疼痛观察</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <span class="module-num">模块三</span>
+                    <h3>认知症友好</h3>
+                    <ul>
+                        <li>什么是BPSD</li>
+                        <li>老人为什么拒绝照护</li>
+                        <li>重复询问如何回应</li>
+                        <li>"我要回家"的真正含义</li>
+                        <li>游走与夜间起床</li>
+                        <li>攻击、喊叫和抵抗</li>
+                        <li>如何理解破碎表达</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <span class="module-num">模块四</span>
+                    <h3>评估与能力支持</h3>
+                    <ul>
+                        <li>如何理解老年人能力</li>
+                        <li>国家标准量表的使用逻辑</li>
+                        <li>评估误差与常见错误</li>
+                        <li>从评估结果到照护计划</li>
+                        <li>中度失能断裂带</li>
+                        <li>能力保持与过度照护</li>
+                        <li>环境支持评估</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <span class="module-num">模块五</span>
+                    <h3>管理人员课程</h3>
+                    <ul>
+                        <li>如何建立照护质量体系</li>
+                        <li>如何组织案例讨论</li>
+                        <li>风险事件复盘</li>
+                        <li>家属投诉分析</li>
+                        <li>员工能力地图</li>
+                        <li>机构认知症友好建设</li>
+                        <li>评估—计划—执行—复评闭环</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <span class="module-num">模块六</span>
+                    <h3>思德库理念课程</h3>
+                    <ul>
+                        <li>人何以值得</li>
+                        <li>照护能力与照护逻辑</li>
+                        <li>评估能力与评估逻辑</li>
+                        <li>人不是量表结果</li>
+                        <li>从替代照护到能力支持</li>
+                        <li>认知症老人仍然是不是主体</li>
+                        <li>技术如何进入照护而不取代关系</li>
+                        <li>什么是照护社会</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <p>思德库网络学苑 · 思德库养老机构专业化建设终端</p>
+        </footer>
+    </div>
+    <script>
+    function toggleTrack(id) {
+        var section = document.getElementById(id);
+        var isActive = section.classList.contains('active');
+        // 先关闭所有
+        document.querySelectorAll('.track-section').forEach(function(s) {
+            s.classList.remove('active');
+        });
+        // 如果之前没展开，则展开当前
+        if (!isActive) {
+            section.classList.add('active');
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+    </script>
+</body>
+</html>
