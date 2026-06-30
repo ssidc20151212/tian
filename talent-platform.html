@@ -413,6 +413,7 @@
         <a href="index.html" class="brand">思德库 评估师平台</a>
         <div class="nav-links">
             <a href="#talent-entry" data-nav="assessor,admin">人才录入</a>
+            <a href="#org-info" data-nav="org,admin">机构信息</a>
             <a href="#talent-search" data-nav="org,admin">人才查询</a>
             <a href="#talent-dispatch" data-nav="org,admin">人才派遣</a>
             <a href="#income" data-nav="assessor,admin">收入中心</a>
@@ -827,6 +828,110 @@
         <p class="section-desc">多维度展示评估师专业能力、资质认证与服务记录</p>
         <div class="talent-grid" id="profileGrid"></div>
     </section>
+    <!-- 机构信息录入 -->
+    <section id="org-info" class="section" data-role="org,admin">
+        <h2 class="section-title">机构信息</h2>
+        <p class="section-desc">完善机构信息，提交评估需求后系统将智能匹配合适的评估师</p>
+        <div class="dispatch-panel">
+            <div class="dispatch-form">
+                <div class="form-group">
+                    <label>机构名称 *</label>
+                    <input type="text" id="orgName" placeholder="如：阳光养老院">
+                </div>
+                <div class="form-group">
+                    <label>机构类型 *</label>
+                    <select id="orgType">
+                        <option value="">请选择</option>
+                        <option value="nursing_home">养老院/护理院</option>
+                        <option value="community">社区日间照料中心</option>
+                        <option value="home_care">居家养老服务中心</option>
+                        <option value="hospital">医院老年科/康复科</option>
+                        <option value="insurance">长护险经办机构</option>
+                        <option value="government">民政/卫健部门</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>联系人 *</label>
+                    <input type="text" id="orgContact" placeholder="负责人姓名">
+                </div>
+                <div class="form-group">
+                    <label>联系电话 *</label>
+                    <input type="tel" id="orgPhone" placeholder="手机号或座机">
+                </div>
+                <div class="form-group">
+                    <label>所在区域 *</label>
+                    <select id="orgRegion">
+                        <option value="">请选择</option>
+                        <option value="北京市">北京市</option>
+                        <option value="上海市">上海市</option>
+                        <option value="广州市">广州市</option>
+                        <option value="深圳市">深圳市</option>
+                        <option value="成都市">成都市</option>
+                        <option value="杭州市">杭州市</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>机构规模（床位数）</label>
+                    <select id="orgScale">
+                        <option value="">请选择</option>
+                        <option value="small">50床以下</option>
+                        <option value="medium">50-200床</option>
+                        <option value="large">200-500床</option>
+                        <option value="xlarge">500床以上</option>
+                    </select>
+                </div>
+                <div class="form-group" style="grid-column:1/-1;">
+                    <label>评估需求描述</label>
+                    <textarea id="orgNeed" placeholder="描述您的评估需求，如：每月需要入住评估约30人次，需认知症评估专长的高级评估师"></textarea>
+                </div>
+            </div>
+            <button class="dispatch-btn" onclick="saveOrgInfo()">保存机构信息</button>
+        </div>
+
+        <!-- 服务套餐与权限 -->
+        <div style="margin-top:32px;">
+            <h4 style="font-size:16px; color:var(--text-dark); margin-bottom:16px; border-left:3px solid var(--accent); padding-left:10px;">服务套餐</h4>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:16px;">
+                <div id="planFree" class="plan-card" style="background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px solid #e2e8f0;">
+                    <h5 style="font-size:16px;color:var(--text-dark);margin-bottom:8px;">基础版（免费）</h5>
+                    <p style="font-size:24px;font-weight:700;color:var(--text-dark);margin-bottom:12px;">¥0<span style="font-size:13px;font-weight:400;color:var(--text-light);">/月</span></p>
+                    <ul style="list-style:none;font-size:13px;color:var(--text-body);line-height:2;">
+                        <li>✓ 发布派遣需求</li>
+                        <li>✓ 查看评估师列表（仅姓名/等级）</li>
+                        <li>✗ <span style="color:var(--text-light);">查看详细画像</span></li>
+                        <li>✗ <span style="color:var(--text-light);">智能匹配推荐</span></li>
+                        <li>✗ <span style="color:var(--text-light);">评估师联系方式</span></li>
+                    </ul>
+                </div>
+                <div id="planPro" class="plan-card" style="background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px solid var(--accent);">
+                    <h5 style="font-size:16px;color:var(--accent);margin-bottom:8px;">专业版（推荐）</h5>
+                    <p style="font-size:24px;font-weight:700;color:var(--accent);margin-bottom:12px;">¥299<span style="font-size:13px;font-weight:400;color:var(--text-light);">/月</span></p>
+                    <ul style="list-style:none;font-size:13px;color:var(--text-body);line-height:2;">
+                        <li>✓ 发布派遣需求</li>
+                        <li>✓ 查看评估师完整画像</li>
+                        <li>✓ 智能匹配推荐 Top3</li>
+                        <li>✓ 查看评估师联系方式</li>
+                        <li>✗ <span style="color:var(--text-light);">专属客服</span></li>
+                    </ul>
+                    <button class="dispatch-btn" style="margin-top:16px;padding:10px 24px;font-size:14px;" onclick="activatePlan('pro')">开通专业版</button>
+                </div>
+                <div id="planVip" class="plan-card" style="background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px solid var(--primary);">
+                    <h5 style="font-size:16px;color:var(--primary);margin-bottom:8px;">旗舰版</h5>
+                    <p style="font-size:24px;font-weight:700;color:var(--primary);margin-bottom:12px;">¥899<span style="font-size:13px;font-weight:400;color:var(--text-light);">/月</span></p>
+                    <ul style="list-style:none;font-size:13px;color:var(--text-body);line-height:2;">
+                        <li>✓ 专业版全部功能</li>
+                        <li>✓ 无限次智能匹配</li>
+                        <li>✓ 优先派遣响应</li>
+                        <li>✓ 专属客服1对1</li>
+                        <li>✓ 年度评估报告</li>
+                    </ul>
+                    <button class="dispatch-btn" style="margin-top:16px;padding:10px 24px;font-size:14px;background:var(--primary);" onclick="activatePlan('vip')">开通旗舰版</button>
+                </div>
+            </div>
+            <p id="currentPlanTip" style="margin-top:16px;font-size:13px;color:var(--text-light);"></p>
+        </div>
+    </section>
     <!-- 人才查询 -->
     <section id="talent-search" class="section" data-role="org,admin" style="background: var(--bg-gray); max-width: 100%; padding-left: calc((100% - 1200px)/2 + 24px); padding-right: calc((100% - 1200px)/2 + 24px);">
         <h2 class="section-title">人才查询</h2>
@@ -1163,6 +1268,87 @@
         }
     })();
 
+    // ========== 机构信息与套餐 ==========
+    const STORE_KEY_ORG = 'sdk_org_info';
+    const STORE_KEY_PLAN = 'sdk_org_plan';
+
+    function loadOrgInfo() {
+        try { return JSON.parse(localStorage.getItem(STORE_KEY_ORG)) || null; }
+        catch(e) { return null; }
+    }
+    function getOrgPlan() {
+        return localStorage.getItem(STORE_KEY_PLAN) || 'free';
+    }
+
+    function saveOrgInfo() {
+        const name = document.getElementById('orgName').value.trim();
+        const type = document.getElementById('orgType').value;
+        const contact = document.getElementById('orgContact').value.trim();
+        const phone = document.getElementById('orgPhone').value.trim();
+        const region = document.getElementById('orgRegion').value;
+
+        if (!name || !type || !contact || !phone || !region) {
+            alert('请填写所有必填项');
+            return;
+        }
+
+        const info = {
+            name, type, contact, phone, region,
+            scale: document.getElementById('orgScale').value,
+            need: document.getElementById('orgNeed').value.trim(),
+            savedAt: new Date().toISOString()
+        };
+        localStorage.setItem(STORE_KEY_ORG, JSON.stringify(info));
+        alert('机构信息已保存！');
+        restoreOrgForm();
+    }
+
+    function restoreOrgForm() {
+        const info = loadOrgInfo();
+        if (!info) return;
+        document.getElementById('orgName').value = info.name || '';
+        document.getElementById('orgType').value = info.type || '';
+        document.getElementById('orgContact').value = info.contact || '';
+        document.getElementById('orgPhone').value = info.phone || '';
+        document.getElementById('orgRegion').value = info.region || '';
+        document.getElementById('orgScale').value = info.scale || '';
+        document.getElementById('orgNeed').value = info.need || '';
+    }
+
+    function activatePlan(plan) {
+        const planNames = { pro: '专业版', vip: '旗舰版' };
+        const prices = { pro: 299, vip: 899 };
+        if (confirm(`确认开通${planNames[plan]}？（¥${prices[plan]}/月）\n\n演示环境直接开通，无需实际付款。`)) {
+            localStorage.setItem(STORE_KEY_PLAN, plan);
+            applyOrgPlan();
+            alert(`${planNames[plan]}已开通！现在可以查看完整画像和智能匹配推荐。`);
+        }
+    }
+
+    function applyOrgPlan() {
+        const plan = getOrgPlan();
+        const tip = document.getElementById('currentPlanTip');
+        if (tip) {
+            const labels = { free: '基础版（免费）', pro: '专业版', vip: '旗舰版' };
+            tip.textContent = `当前套餐：${labels[plan] || '基础版'}`;
+            tip.style.color = plan === 'free' ? 'var(--text-light)' : 'var(--success)';
+        }
+        // 人才画像区域：免费只看基础，付费看完整
+        const profileSection = document.getElementById('talent-profile');
+        if (profileSection && currentUser && currentUser.role === 'org') {
+            if (plan === 'free') {
+                profileSection.querySelector('.section-desc').textContent = '升级套餐后可查看评估师完整画像、证书及能力维度';
+            } else {
+                profileSection.querySelector('.section-desc').textContent = '多维度展示评估师专业能力、资质认证与服务记录';
+            }
+        }
+        // 匹配面板权限
+        const matchPanel = document.getElementById('matchPanel');
+        if (matchPanel && currentUser && currentUser.role === 'org' && plan === 'free') {
+            matchPanel.classList.add('hidden');
+        }
+    }
+
     // 年份
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -1291,8 +1477,14 @@
 
         alert(`派遣工单 ${order.id} 已创建！等待评估师接单。`);
 
-        // 触发智能匹配
-        showMatchResults(order);
+        // 触发智能匹配（付费用户才展示）
+        if (currentUser && (currentUser.role === 'admin' || getOrgPlan() !== 'free')) {
+            showMatchResults(order);
+        } else {
+            const mp = document.getElementById('matchPanel');
+            mp.classList.remove('hidden');
+            document.getElementById('matchResults').innerHTML = '<div style="background:#fff;border-radius:12px;padding:24px;text-align:center;grid-column:1/-1;"><p style="font-size:15px;color:var(--text-body);margin-bottom:12px;">智能匹配推荐需开通专业版或旗舰版</p><button class="dispatch-btn" style="padding:10px 24px;font-size:14px;" onclick="document.getElementById(\'org-info\').scrollIntoView({behavior:\'smooth\'})">去开通</button></div>';
+        }
     }
 
     // 渲染派遣工单列表
@@ -1490,6 +1682,13 @@
     function showProfile(name) {
         const t = talentData.find(x => x.name === name);
         if (!t) return;
+
+        // 机构免费用户权限检查
+        if (currentUser && currentUser.role === 'org' && getOrgPlan() === 'free') {
+            alert('查看评估师完整画像需开通专业版或旗舰版套餐。\n\n请在"机构信息"页面选择服务套餐。');
+            return;
+        }
+
         const modal = document.getElementById('profileModal');
         const body = document.getElementById('profileBody');
 
@@ -1708,6 +1907,8 @@
         renderDispatchOrders();
         renderIncomeRecords();
         renderMyOrders();
+        restoreOrgForm();
+        applyOrgPlan();
     });
 
     // 渲染人才画像卡片
