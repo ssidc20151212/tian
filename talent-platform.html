@@ -242,6 +242,57 @@
         }
         .user-info .logout-btn:hover { border-color: var(--danger); color: var(--danger); }
         .hidden { display: none !important; }
+        /* 画像弹窗 */
+        #profileModal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); z-index: 8000;
+            display: none; align-items: center; justify-content: center;
+        }
+        #profileModal.show { display: flex; }
+        .profile-content {
+            background: #fff; border-radius: 16px; padding: 36px;
+            max-width: 600px; width: 90vw; max-height: 85vh;
+            overflow-y: auto; position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .profile-close {
+            position: absolute; top: 16px; right: 20px;
+            font-size: 24px; cursor: pointer; color: var(--text-light);
+            background: none; border: none; line-height: 1;
+        }
+        .profile-close:hover { color: var(--danger); }
+        .profile-header {
+            display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+        }
+        .profile-avatar {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 26px; font-weight: 700;
+        }
+        .profile-section { margin-bottom: 20px; }
+        .profile-section h4 {
+            font-size: 14px; color: var(--primary); margin-bottom: 10px;
+            border-left: 3px solid var(--primary); padding-left: 8px;
+        }
+        .profile-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .profile-cert {
+            padding: 6px 12px; background: var(--bg-gray); border-radius: 6px;
+            font-size: 13px; color: var(--text-body);
+        }
+        .profile-bar-group { display: flex; flex-direction: column; gap: 8px; }
+        .profile-bar-item {
+            display: flex; align-items: center; gap: 10px; font-size: 13px;
+        }
+        .profile-bar-item .bar-label { width: 80px; color: var(--text-body); }
+        .profile-bar-item .bar-track {
+            flex: 1; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;
+        }
+        .profile-bar-item .bar-fill {
+            height: 100%; border-radius: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+        .profile-bar-item .bar-val { width: 30px; text-align: right; font-weight: 600; color: var(--primary); }
         /* 人才录入/导入 */
         .entry-panel {
             background: #fff; border-radius: 12px; padding: 32px;
@@ -350,6 +401,11 @@
                 管理员：admin / 123456
             </div>
         </div>
+    </div>
+
+    <!-- 画像弹窗 -->
+    <div id="profileModal">
+        <div class="profile-content" id="profileBody"></div>
     </div>
 
     <!-- 导航栏 -->
@@ -769,78 +825,7 @@
     <section id="talent-profile" class="section" data-role="org,admin">
         <h2 class="section-title">评估师能力画像</h2>
         <p class="section-desc">多维度展示评估师专业能力、资质认证与服务记录</p>
-        <div class="talent-grid">
-            <div class="talent-card">
-                <div class="card-header">
-                    <div class="avatar">王</div>
-                    <div class="info">
-                        <h3>王美华</h3>
-                        <div class="subtitle">高级评估师 · 北京市</div>
-                    </div>
-                </div>
-                <div class="tags">
-                    <span class="tag gold">金牌评估师</span>
-                    <span class="tag">认知症评估</span>
-                    <span class="tag">失能评估</span>
-                    <span class="tag">居家评估</span>
-                </div>
-                <div class="metrics">
-                    <div class="metric"><div class="val">4.9</div><div class="lbl">评分</div></div>
-                    <div class="metric"><div class="val">1,280</div><div class="lbl">评估次数</div></div>
-                    <div class="metric"><div class="val">8年</div><div class="lbl">从业年限</div></div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn-sm btn-primary">查看画像</button>
-                    <button class="btn-sm btn-accent">立即派遣</button>
-                </div>
-            </div>
-            <div class="talent-card">
-                <div class="card-header">
-                    <div class="avatar">李</div>
-                    <div class="info">
-                        <h3>李建国</h3>
-                        <div class="subtitle">中级评估师 · 上海市</div>
-                    </div>
-                </div>
-                <div class="tags">
-                    <span class="tag">日常生活评估</span>
-                    <span class="tag">精神状态评估</span>
-                    <span class="tag">机构评估</span>
-                </div>
-                <div class="metrics">
-                    <div class="metric"><div class="val">4.7</div><div class="lbl">评分</div></div>
-                    <div class="metric"><div class="val">856</div><div class="lbl">评估次数</div></div>
-                    <div class="metric"><div class="val">5年</div><div class="lbl">从业年限</div></div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn-sm btn-primary">查看画像</button>
-                    <button class="btn-sm btn-accent">立即派遣</button>
-                </div>
-            </div>
-            <div class="talent-card">
-                <div class="card-header">
-                    <div class="avatar">张</div>
-                    <div class="info">
-                        <h3>张秀芬</h3>
-                        <div class="subtitle">高级评估师 · 广州市</div>
-                    </div>
-                </div>
-                <div class="tags">
-                    <span class="tag gold">金牌评估师</span>
-                    <span class="tag">感知觉评估</span>
-                    <span class="tag">社会参与评估</span>
-                </div>
-                <div class="metrics">
-                    <div class="metric"><div class="val">4.8</div><div class="lbl">评分</div></div>
-                    <div class="metric"><div class="val">1,056</div><div class="lbl">评估次数</div></div>
-                    <div class="metric"><div class="val">6年</div><div class="lbl">从业年限</div></div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn-sm btn-primary">查看画像</button>
-                    <button class="btn-sm btn-accent">立即派遣</button>
-                </div>
-            </div>
-        </div>
+        <div class="talent-grid" id="profileGrid"></div>
     </section>
     <!-- 人才查询 -->
     <section id="talent-search" class="section" data-role="org,admin" style="background: var(--bg-gray); max-width: 100%; padding-left: calc((100% - 1200px)/2 + 24px); padding-right: calc((100% - 1200px)/2 + 24px);">
@@ -1163,6 +1148,12 @@
 
     // 页面加载时检查登录状态
     (function checkLogin() {
+        // 如果URL有?logout参数，清除登录
+        if (location.search.includes('logout')) {
+            localStorage.removeItem('sdk_current_user');
+            history.replaceState(null, '', location.pathname);
+            return;
+        }
         const saved = localStorage.getItem('sdk_current_user');
         if (saved) {
             try {
@@ -1177,12 +1168,12 @@
 
     // 模拟人才数据
     const talentData = [
-        { name: '王美华', region: 'beijing', level: 'senior', skills: ['cognitive', 'disability'], score: 4.9, count: 1280, years: 8, badge: '金牌评估师' },
-        { name: '李建国', region: 'shanghai', level: 'mid', skills: ['daily', 'mental'], score: 4.7, count: 856, years: 5, badge: '' },
-        { name: '张秀芬', region: 'guangzhou', level: 'senior', skills: ['social', 'cognitive'], score: 4.8, count: 1056, years: 6, badge: '金牌评估师' },
-        { name: '赵丽萍', region: 'shenzhen', level: 'mid', skills: ['disability', 'daily'], score: 4.6, count: 620, years: 4, badge: '' },
-        { name: '陈志强', region: 'chengdu', level: 'senior', skills: ['mental', 'social'], score: 4.8, count: 980, years: 7, badge: '金牌评估师' },
-        { name: '刘晓燕', region: 'hangzhou', level: 'junior', skills: ['daily', 'disability'], score: 4.5, count: 320, years: 2, badge: '' },
+        { name: '王美华', region: 'beijing', level: 'senior', skills: ['cognitive', 'disability'], score: 4.9, count: 1280, years: 8, badge: '金牌评估师', isTrainer: true, bio: '北京师范大学老年学硕士，国家二级心理咨询师', certs: ['老年人能力评估师（高级）', '认知症照护专项证书', '心理咨询师二级'] },
+        { name: '李建国', region: 'shanghai', level: 'mid', skills: ['daily', 'mental'], score: 4.7, count: 856, years: 5, badge: '', isTrainer: false, bio: '社会工作专业本科，擅长日常生活能力和精神状态评估', certs: ['老年人能力评估师（中级）', '社会工作者职业资格'] },
+        { name: '张秀芬', region: 'guangzhou', level: 'senior', skills: ['social', 'cognitive'], score: 4.8, count: 1056, years: 6, badge: '金牌评估师', isTrainer: true, bio: '中山大学社会工作硕士，广东省养老服务协会专家委员', certs: ['老年人能力评估师（高级）', '社会参与评估专项证书', '养老护理员考评员'] },
+        { name: '赵丽萍', region: 'shenzhen', level: 'mid', skills: ['disability', 'daily'], score: 4.6, count: 620, years: 4, badge: '', isTrainer: false, bio: '护理学本科，具有丰富的失能老人照护评估经验', certs: ['老年人能力评估师（中级）', '护士执业资格证'] },
+        { name: '陈志强', region: 'chengdu', level: 'senior', skills: ['mental', 'social'], score: 4.8, count: 980, years: 7, badge: '金牌评估师', isTrainer: true, bio: '四川大学华西医学院老年医学博士，多次参与国家标准制定', certs: ['老年人能力评估师（高级）', '精神科主治医师', '老年医学专科证书'] },
+        { name: '刘晓燕', region: 'hangzhou', level: 'junior', skills: ['daily', 'disability'], score: 4.5, count: 320, years: 2, badge: '', isTrainer: false, bio: '养老服务管理专业，浙江省第一批持证评估师', certs: ['老年人能力评估师（初级）', '养老护理员证书'] },
     ];
 
     const skillMap = { cognitive: '认知症评估', disability: '失能评估', daily: '日常生活评估', mental: '精神状态评估', social: '社会参与评估' };
@@ -1209,7 +1200,7 @@
             container.innerHTML = '<p style="text-align:center;color:var(--text-light);padding:40px;">未找到符合条件的评估师，请调整筛选条件</p>';
             return;
         }
-        container.innerHTML = results.map(t => `
+        container.innerHTML = results.map((t, idx) => `
             <div class="talent-card">
                 <div class="card-header">
                     <div class="avatar">${t.name[0]}</div>
@@ -1220,6 +1211,7 @@
                 </div>
                 <div class="tags">
                     ${t.badge ? `<span class="tag gold">${t.badge}</span>` : ''}
+                    ${t.isTrainer ? `<span class="tag" style="background:#f0e6ff;color:#8e44ad;">讲师</span>` : ''}
                     ${t.skills.map(s => `<span class="tag">${skillMap[s]}</span>`).join('')}
                 </div>
                 <div class="metrics">
@@ -1228,7 +1220,7 @@
                     <div class="metric"><div class="val">${t.years}年</div><div class="lbl">从业年限</div></div>
                 </div>
                 <div class="card-actions">
-                    <button class="btn-sm btn-primary">查看画像</button>
+                    <button class="btn-sm btn-primary" onclick="showProfile('${t.name}')">查看画像</button>
                     <button class="btn-sm btn-accent">立即派遣</button>
                 </div>
             </div>
@@ -1494,6 +1486,93 @@
         }).join('');
     }
 
+    // ========== 画像弹窗 ==========
+    function showProfile(name) {
+        const t = talentData.find(x => x.name === name);
+        if (!t) return;
+        const modal = document.getElementById('profileModal');
+        const body = document.getElementById('profileBody');
+
+        // 能力维度（如果有abilities数据则用，否则模拟）
+        const dims = t.abilities || { ethics: 4, knowledge: 3, practice: 4, communication: 3, research: 3, selfdev: 3 };
+        const dimLabels = { ethics: '职业伦理', knowledge: '专业知识', practice: '实务技能', communication: '沟通协调', research: '研究评估', selfdev: '自我发展' };
+
+        let html = `<button class="profile-close" onclick="closeProfile()">&times;</button>`;
+        html += `<div class="profile-header">
+            <div class="profile-avatar">${t.name[0]}</div>
+            <div>
+                <h3 style="font-size:20px;color:var(--text-dark);margin-bottom:4px;">${t.name}</h3>
+                <div style="font-size:14px;color:var(--text-light);">${levelMap[t.level]} · ${regionMap[t.region]} · ${t.years}年从业</div>
+                <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                    ${t.badge ? `<span class="tag gold" style="padding:2px 8px;border-radius:8px;font-size:11px;background:#fff8e1;color:#f59e0b;">${t.badge}</span>` : ''}
+                    ${t.isTrainer ? `<span style="padding:2px 8px;border-radius:8px;font-size:11px;background:#f0e6ff;color:#8e44ad;">讲师</span>` : ''}
+                </div>
+            </div>
+        </div>`;
+
+        html += `<div class="profile-section">
+            <h4>个人简介</h4>
+            <p style="font-size:14px;color:var(--text-body);line-height:1.7;">${t.bio || '暂无简介'}</p>
+        </div>`;
+
+        html += `<div class="profile-section">
+            <h4>专长方向</h4>
+            <div class="profile-tags">
+                ${t.skills.map(s => `<span class="profile-cert" style="background:#e8f4fd;color:var(--primary-light);">${skillMap[s]}</span>`).join('')}
+            </div>
+        </div>`;
+
+        html += `<div class="profile-section">
+            <h4>持有证书</h4>
+            <div class="profile-tags">
+                ${(t.certs || []).map(c => `<span class="profile-cert">${c}</span>`).join('')}
+                ${(!t.certs || t.certs.length === 0) ? '<span style="color:var(--text-light);font-size:13px;">暂未录入</span>' : ''}
+            </div>
+        </div>`;
+
+        html += `<div class="profile-section">
+            <h4>服务数据</h4>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+                <div style="text-align:center;padding:12px;background:var(--bg-gray);border-radius:8px;">
+                    <div style="font-size:20px;font-weight:700;color:var(--primary);">${t.score}</div>
+                    <div style="font-size:12px;color:var(--text-light);">综合评分</div>
+                </div>
+                <div style="text-align:center;padding:12px;background:var(--bg-gray);border-radius:8px;">
+                    <div style="font-size:20px;font-weight:700;color:var(--accent);">${t.count.toLocaleString()}</div>
+                    <div style="font-size:12px;color:var(--text-light);">累计评估</div>
+                </div>
+                <div style="text-align:center;padding:12px;background:var(--bg-gray);border-radius:8px;">
+                    <div style="font-size:20px;font-weight:700;color:var(--success);">${t.years}年</div>
+                    <div style="font-size:12px;color:var(--text-light);">从业年限</div>
+                </div>
+            </div>
+        </div>`;
+
+        html += `<div class="profile-section">
+            <h4>能力维度评估</h4>
+            <div class="profile-bar-group">`;
+        Object.entries(dims).forEach(([key, val]) => {
+            const pct = (val / 5) * 100;
+            html += `<div class="profile-bar-item">
+                <span class="bar-label">${dimLabels[key] || key}</span>
+                <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+                <span class="bar-val">${val}/5</span>
+            </div>`;
+        });
+        html += `</div></div>`;
+
+        body.innerHTML = html;
+        modal.classList.add('show');
+    }
+
+    function closeProfile() {
+        document.getElementById('profileModal').classList.remove('show');
+    }
+    // 点击弹窗外部关闭
+    document.getElementById('profileModal').addEventListener('click', function(e) {
+        if (e.target === this) closeProfile();
+    });
+
     // 收入类型切换联动
     function updateIncomeFields() {
         const type = document.getElementById('incomeType').value;
@@ -1625,10 +1704,42 @@
     // 页面加载时初始化
     window.addEventListener('DOMContentLoaded', function() {
         searchTalent();
+        renderProfileGrid();
         renderDispatchOrders();
         renderIncomeRecords();
         renderMyOrders();
     });
+
+    // 渲染人才画像卡片
+    function renderProfileGrid() {
+        const grid = document.getElementById('profileGrid');
+        if (!grid) return;
+        grid.innerHTML = talentData.map(t => `
+            <div class="talent-card">
+                <div class="card-header">
+                    <div class="avatar">${t.name[0]}</div>
+                    <div class="info">
+                        <h3>${t.name}</h3>
+                        <div class="subtitle">${levelMap[t.level]} · ${regionMap[t.region]}</div>
+                    </div>
+                </div>
+                <div class="tags">
+                    ${t.badge ? `<span class="tag gold">${t.badge}</span>` : ''}
+                    ${t.isTrainer ? `<span class="tag" style="background:#f0e6ff;color:#8e44ad;">讲师</span>` : ''}
+                    ${t.skills.map(s => `<span class="tag">${skillMap[s]}</span>`).join('')}
+                </div>
+                <div class="metrics">
+                    <div class="metric"><div class="val">${t.score}</div><div class="lbl">评分</div></div>
+                    <div class="metric"><div class="val">${t.count.toLocaleString()}</div><div class="lbl">评估次数</div></div>
+                    <div class="metric"><div class="val">${t.years}年</div><div class="lbl">从业年限</div></div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-sm btn-primary" onclick="showProfile('${t.name}')">查看画像</button>
+                    <button class="btn-sm btn-accent">立即派遣</button>
+                </div>
+            </div>
+        `).join('');
+    }
 
     // Tab切换
     function switchTab(tab) {
