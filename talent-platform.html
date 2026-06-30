@@ -881,6 +881,17 @@
                         <option value="xlarge">500床以上</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label>评估需求类型</label>
+                    <select id="orgNeedType">
+                        <option value="">请选择</option>
+                        <option value="入住评估">入住评估</option>
+                        <option value="定期复评">定期复评</option>
+                        <option value="居家上门评估">居家上门评估</option>
+                        <option value="状态变化评估">状态变化评估</option>
+                        <option value="长护险评估">长护险评估</option>
+                    </select>
+                </div>
                 <div class="form-group" style="grid-column:1/-1;">
                     <label>评估需求描述</label>
                     <textarea id="orgNeed" placeholder="描述您的评估需求，如：每月需要入住评估约30人次，需认知症评估专长的高级评估师"></textarea>
@@ -930,6 +941,22 @@
                 </div>
             </div>
             <p id="currentPlanTip" style="margin-top:16px;font-size:13px;color:var(--text-light);"></p>
+        </div>
+
+        <!-- 智能匹配推荐结果（付费后展示） -->
+        <div id="orgMatchSection" style="margin-top:32px; display:none;">
+            <h4 style="font-size:16px; color:var(--text-dark); margin-bottom:8px; border-left:3px solid var(--success); padding-left:10px;">为您推荐的评估师</h4>
+            <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">基于您的机构需求，系统智能匹配以下评估师</p>
+            <div id="orgMatchResults" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:16px;"></div>
+        </div>
+        <!-- 未付费提示 -->
+        <div id="orgMatchLocked" style="margin-top:32px; display:none;">
+            <div style="background:#fff;border-radius:12px;padding:32px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+                <div style="font-size:40px;margin-bottom:12px;">&#128274;</div>
+                <h4 style="font-size:16px;color:var(--text-dark);margin-bottom:8px;">开通服务后查看匹配推荐</h4>
+                <p style="font-size:14px;color:var(--text-light);margin-bottom:16px;">保存机构信息并开通专业版/旗舰版后，系统将根据您的需求智能推荐合适的评估师</p>
+                <button class="dispatch-btn" style="padding:10px 24px;font-size:14px;" onclick="document.querySelector('.plan-card:nth-child(2) button').click()">立即开通</button>
+            </div>
         </div>
     </section>
     <!-- 人才查询 -->
@@ -1295,12 +1322,14 @@
         const info = {
             name, type, contact, phone, region,
             scale: document.getElementById('orgScale').value,
+            needType: document.getElementById('orgNeedType').value,
             need: document.getElementById('orgNeed').value.trim(),
             savedAt: new Date().toISOString()
         };
         localStorage.setItem(STORE_KEY_ORG, JSON.stringify(info));
-        alert('机构信息已保存！');
+        alert('机构信息已保存！系统将根据您的需求推荐评估师。');
         restoreOrgForm();
+        renderOrgMatch();
     }
 
     function restoreOrgForm() {
@@ -1312,6 +1341,7 @@
         document.getElementById('orgPhone').value = info.phone || '';
         document.getElementById('orgRegion').value = info.region || '';
         document.getElementById('orgScale').value = info.scale || '';
+        document.getElementById('orgNeedType').value = info.needType || '';
         document.getElementById('orgNeed').value = info.need || '';
     }
 
@@ -1347,6 +1377,102 @@
         if (matchPanel && currentUser && currentUser.role === 'org' && plan === 'free') {
             matchPanel.classList.add('hidden');
         }
+        // 机构页面推荐区域
+        const orgMatchSection = document.getElementById('orgMatchSection');
+        const orgMatchLocked = document.getElementById('orgMatchLocked');
+        if (orgMatchSection && orgMatchLocked) {
+            const hasOrgInfo = !!loadOrgInfo();
+            if (!hasOrgInfo) {
+                orgMatchSection.style.display = 'none';
+                orgMatchLocked.style.display = 'none';
+            } else if (plan === 'free') {
+                orgMatchSection.style.display = 'none';
+                orgMatchLocked.style.display = 'block';
+            } else {
+                orgMatchSection.style.display = 'block';
+                orgMatchLocked.style.display = 'none';
+                renderOrgMatch();
+            }
+        }
+    }
+
+    // 机构需求智能匹配推荐
+    function renderOrgMatch() {
+        const info = loadOrgInfo();
+        const plan = getOrgPlan();
+        const section = document.getElementById('orgMatchSection');
+        const container = document.getElementById('orgMatchResults');
+        if (!info || !section || !container) return;
+        if (plan === 'free' && currentUser && currentUser.role !== 'admin') {
+            section.style.display = 'none';
+            return;
+        }
+        section.style.display = 'block';
+
+        // 从需求类型和描述中提取关键词匹配技能
+        const needText = ((info.needType || '') + ' ' + (info.need || '')).toLowerCase();
+        const keywordSkillMap = {
+            '认知': 'cognitive', '失能': 'disability', '日常': 'daily',
+            '精神': 'mental', '社会': 'social', '入住': 'daily',
+            '长护险': 'disability', '居家': 'daily', '状态变化': 'cognitive'
+        };
+        const neededSkills = [];
+        Object.entries(keywordSkillMap).forEach(([kw, sk]) => {
+            if (needText.includes(kw) && !neededSkills.includes(sk)) neededSkills.push(sk);
+        });
+
+        // 区域映射
+        const regionReverse = { '北京市':'beijing','上海市':'shanghai','广州市':'guangzhou','深圳市':'shenzhen','成都市':'chengdu','杭州市':'hangzhou' };
+        const orgRegionKey = regionReverse[info.region] || '';
+
+        // 打分
+        const scored = talentData.map(t => {
+            let score = 0;
+            if (t.region === orgRegionKey) score += 30;
+            if (neededSkills.length > 0) {
+                const match = neededSkills.filter(s => t.skills.includes(s)).length;
+                score += (match / neededSkills.length) * 25;
+            } else {
+                score += 12;
+            }
+            if (t.level === 'senior') score += 20;
+            else if (t.level === 'mid') score += 12;
+            else score += 5;
+            if (t.abilities) {
+                const dims = Object.values(t.abilities);
+                const avg = dims.reduce((s,v) => s+v, 0) / dims.length;
+                score += (avg / 5) * 25;
+            } else {
+                score += (t.score / 5) * 25;
+            }
+            score += Math.min(t.years, 10);
+            return { ...t, matchScore: Math.round(score) };
+        });
+        scored.sort((a, b) => b.matchScore - a.matchScore);
+        const top = scored.slice(0, plan === 'vip' ? 6 : 3);
+
+        container.innerHTML = top.map((t, i) => {
+            const pct = Math.min(Math.round(t.matchScore / 1.1), 99);
+            return `<div style="background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);position:relative;overflow:hidden;">
+                <div style="position:absolute;top:0;right:0;background:${i===0?'var(--accent)':'var(--primary-light)'};color:#fff;padding:4px 12px;border-radius:0 0 0 12px;font-size:12px;font-weight:600;">匹配度 ${pct}%</div>
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                    <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">${t.name[0]}</div>
+                    <div>
+                        <div style="font-weight:600;color:var(--text-dark);">${t.name}</div>
+                        <div style="font-size:12px;color:var(--text-light);">${levelMap[t.level]} · ${regionMap[t.region]} · ${t.years}年经验</div>
+                    </div>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;">
+                    ${t.isTrainer ? `<span style="padding:2px 8px;border-radius:8px;font-size:11px;background:#f0e6ff;color:#8e44ad;">讲师</span>` : ''}
+                    ${t.skills.map(s => `<span style="padding:2px 8px;background:#e8f4fd;border-radius:8px;font-size:11px;color:var(--primary-light);">${skillMap[s]}</span>`).join('')}
+                </div>
+                <div style="font-size:13px;color:var(--text-light);margin-bottom:10px;">评分 ${t.score} · 累计评估 ${t.count.toLocaleString()} 次</div>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn-sm btn-primary" onclick="showProfile('${t.name}')" style="flex:1;padding:8px;text-align:center;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;">查看画像</button>
+                    <button class="btn-sm btn-accent" onclick="document.getElementById('talent-dispatch').scrollIntoView({behavior:'smooth'})" style="flex:1;padding:8px;text-align:center;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;">发起派遣</button>
+                </div>
+            </div>`;
+        }).join('');
     }
 
     // 年份
