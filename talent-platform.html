@@ -182,6 +182,66 @@
         .income-item:last-child { border-bottom: none; }
         .income-item .amount { font-weight: 700; color: var(--success); }
         .income-item .amount.pending { color: var(--accent); }
+        /* 登录遮罩 */
+        #loginOverlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, #1a5276 0%, #2980b9 50%, #FF8C42 100%);
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
+        }
+        #loginOverlay.hidden { display: none; }
+        .login-box {
+            background: #fff; border-radius: 16px; padding: 48px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 380px; max-width: 90vw;
+        }
+        .login-box h2 {
+            font-family: 'Noto Serif SC', serif; font-size: 24px;
+            color: var(--text-dark); text-align: center; margin-bottom: 8px;
+        }
+        .login-box .login-subtitle {
+            text-align: center; color: var(--text-light); font-size: 14px; margin-bottom: 28px;
+        }
+        .login-box .login-field {
+            margin-bottom: 16px;
+        }
+        .login-box .login-field label {
+            display: block; font-size: 13px; font-weight: 600;
+            color: var(--text-dark); margin-bottom: 6px;
+        }
+        .login-box .login-field input {
+            width: 100%; padding: 12px 16px; border: 1px solid #e2e8f0;
+            border-radius: 8px; font-size: 15px; outline: none;
+        }
+        .login-box .login-field input:focus { border-color: var(--primary-light); }
+        .login-box .login-btn {
+            width: 100%; padding: 14px; background: var(--primary);
+            color: #fff; border: none; border-radius: 8px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+            margin-top: 8px; transition: 0.2s;
+        }
+        .login-box .login-btn:hover { background: var(--primary-light); }
+        .login-box .login-hint {
+            margin-top: 20px; padding: 12px; background: var(--bg-gray);
+            border-radius: 8px; font-size: 12px; color: var(--text-light);
+        }
+        .login-box .login-error {
+            color: var(--danger); font-size: 13px; margin-top: 8px; display: none;
+        }
+        /* 用户信息栏 */
+        .user-info {
+            display: flex; align-items: center; gap: 8px; font-size: 13px;
+        }
+        .user-info .user-role {
+            padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 600;
+        }
+        .user-info .role-admin { background: #fef3e7; color: #e67e22; }
+        .user-info .role-org { background: #eaf4fd; color: #2980b9; }
+        .user-info .role-assessor { background: #e8f8f0; color: #27ae60; }
+        .user-info .logout-btn {
+            padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px;
+            font-size: 12px; cursor: pointer; background: #fff; color: var(--text-body);
+        }
+        .user-info .logout-btn:hover { border-color: var(--danger); color: var(--danger); }
+        .hidden { display: none !important; }
         /* 人才录入/导入 */
         .entry-panel {
             background: #fff; border-radius: 12px; padding: 32px;
@@ -268,15 +328,43 @@
     </style>
 </head>
 <body>
+    <!-- 登录遮罩层 -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2>思德库评估师平台</h2>
+            <p class="login-subtitle">请选择角色登录</p>
+            <div class="login-field">
+                <label>账号</label>
+                <input type="text" id="loginUser" placeholder="请输入账号">
+            </div>
+            <div class="login-field">
+                <label>密码</label>
+                <input type="password" id="loginPass" placeholder="请输入密码">
+            </div>
+            <div class="login-error" id="loginError">账号或密码错误</div>
+            <button class="login-btn" onclick="doLogin()">登 录</button>
+            <div class="login-hint">
+                测试账号：<br>
+                评估师：assessor / 123456<br>
+                机构方：org / 123456<br>
+                管理员：admin / 123456
+            </div>
+        </div>
+    </div>
+
     <!-- 导航栏 -->
     <nav class="navbar">
         <a href="index.html" class="brand">思德库 评估师平台</a>
         <div class="nav-links">
-            <a href="#talent-entry">人才录入</a>
-            <a href="#talent-search">人才查询</a>
-            <a href="#talent-dispatch">人才派遣</a>
-            <a href="#income">收入中心</a>
-            <a href="index.html" class="btn-cta">返回首页</a>
+            <a href="#talent-entry" data-nav="assessor,admin">人才录入</a>
+            <a href="#talent-search" data-nav="org,admin">人才查询</a>
+            <a href="#talent-dispatch" data-nav="org,admin">人才派遣</a>
+            <a href="#income" data-nav="assessor,admin">收入中心</a>
+            <div class="user-info" id="userInfo" style="display:none;">
+                <span id="userName"></span>
+                <span class="user-role" id="userRole"></span>
+                <button class="logout-btn" onclick="doLogout()">退出</button>
+            </div>
         </div>
     </nav>
 
@@ -291,7 +379,7 @@
     </section>
 
     <!-- 数据概览 -->
-    <section id="stats">
+    <section id="stats" data-role="admin">
         <div class="stats">
             <div class="stat-card">
                 <div class="num">2,386</div>
@@ -312,7 +400,7 @@
         </div>
     </section>
     <!-- 人才录入与导入 -->
-    <section id="talent-entry" class="section">
+    <section id="talent-entry" class="section" data-role="assessor,admin">
         <h2 class="section-title">人才录入</h2>
         <p class="section-desc">支持单个录入或批量导入 Excel 表单，快速建立评估师人才库</p>
         <div class="entry-panel">
@@ -678,7 +766,7 @@
         </div>
     </section>
     <!-- 人才画像 -->
-    <section id="talent-profile" class="section">
+    <section id="talent-profile" class="section" data-role="org,admin">
         <h2 class="section-title">评估师能力画像</h2>
         <p class="section-desc">多维度展示评估师专业能力、资质认证与服务记录</p>
         <div class="talent-grid">
@@ -755,7 +843,7 @@
         </div>
     </section>
     <!-- 人才查询 -->
-    <section id="talent-search" class="section" style="background: var(--bg-gray); max-width: 100%; padding-left: calc((100% - 1200px)/2 + 24px); padding-right: calc((100% - 1200px)/2 + 24px);">
+    <section id="talent-search" class="section" data-role="org,admin" style="background: var(--bg-gray); max-width: 100%; padding-left: calc((100% - 1200px)/2 + 24px); padding-right: calc((100% - 1200px)/2 + 24px);">
         <h2 class="section-title">人才查询</h2>
         <p class="section-desc">按区域、专长、等级快速查找合适的评估师</p>
         <div class="search-bar">
@@ -788,7 +876,7 @@
         <div id="searchResults" class="talent-grid"></div>
     </section>
     <!-- 人才派遣 -->
-    <section id="talent-dispatch" class="section">
+    <section id="talent-dispatch" class="section" data-role="org,admin">
         <h2 class="section-title">人才派遣</h2>
         <p class="section-desc">发布评估需求，系统智能匹配合适的评估师并完成派遣</p>
         <div class="dispatch-panel">
@@ -849,9 +937,22 @@
                 <p style="color:var(--text-light); font-size:14px; padding:20px; text-align:center; background:#fff; border-radius:8px;">暂无派遣工单，提交需求后将显示在此处</p>
             </div>
         </div>
+        <!-- 智能匹配建议 -->
+        <div style="margin-top:32px;" id="matchPanel" class="hidden">
+            <h4 style="font-size:16px; color:var(--text-dark); margin-bottom:16px; border-left:3px solid var(--accent); padding-left:10px;">智能匹配推荐</h4>
+            <div id="matchResults" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:16px;"></div>
+        </div>
+    </section>
+    <!-- 评估师-我的工单 -->
+    <section id="my-orders" class="section" data-role="assessor,admin">
+        <h2 class="section-title">我的工单</h2>
+        <p class="section-desc">查看需要接单的派遣任务，接单后完成服务即可获得收入</p>
+        <div id="myOrdersList" style="display:grid; gap:12px;">
+            <p style="color:var(--text-light); font-size:14px; padding:24px; text-align:center; background:#fff; border-radius:8px;">暂无可接工单</p>
+        </div>
     </section>
     <!-- 收入中心 -->
-    <section id="income" class="section" style="background: var(--bg-gray); max-width: 100%; padding-left: calc((100% - 1200px)/2 + 24px); padding-right: calc((100% - 1200px)/2 + 24px);">
+    <section id="income" class="section" data-role="assessor,admin" style="background: var(--bg-gray); max-width: 100%; padding-left: calc((100% - 1200px)/2 + 24px); padding-right: calc((100% - 1200px)/2 + 24px);">
         <h2 class="section-title">收入中心</h2>
         <p class="section-desc">录入服务收入、查看结算记录，派遣完成后自动生成收入流水</p>
 
@@ -989,6 +1090,88 @@
     </footer>
 
     <script>
+    // ========== 账号系统 ==========
+    const ACCOUNTS = {
+        assessor: { pass: '123456', role: 'assessor', name: '评估师账号' },
+        org: { pass: '123456', role: 'org', name: '机构账号' },
+        admin: { pass: '123456', role: 'admin', name: '超级管理员' }
+    };
+    const ROLE_LABELS = {
+        admin: '管理员', org: '机构', assessor: '评估师'
+    };
+
+    let currentUser = null;
+
+    function doLogin() {
+        const user = document.getElementById('loginUser').value.trim();
+        const pass = document.getElementById('loginPass').value;
+        const errEl = document.getElementById('loginError');
+
+        if (!ACCOUNTS[user] || ACCOUNTS[user].pass !== pass) {
+            errEl.style.display = 'block';
+            return;
+        }
+        errEl.style.display = 'none';
+        currentUser = { username: user, ...ACCOUNTS[user] };
+        localStorage.setItem('sdk_current_user', JSON.stringify(currentUser));
+        applyRole();
+    }
+
+    // 回车登录
+    document.getElementById('loginPass').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doLogin();
+    });
+
+    function doLogout() {
+        localStorage.removeItem('sdk_current_user');
+        currentUser = null;
+        document.getElementById('loginOverlay').classList.remove('hidden');
+        document.getElementById('loginUser').value = '';
+        document.getElementById('loginPass').value = '';
+    }
+
+    function applyRole() {
+        if (!currentUser) return;
+        const role = currentUser.role;
+
+        // 隐藏登录遮罩
+        document.getElementById('loginOverlay').classList.add('hidden');
+
+        // 显示用户信息
+        const userInfo = document.getElementById('userInfo');
+        userInfo.style.display = 'flex';
+        document.getElementById('userName').textContent = currentUser.name;
+        const roleEl = document.getElementById('userRole');
+        roleEl.textContent = ROLE_LABELS[role];
+        roleEl.className = 'user-role role-' + role;
+
+        // 控制导航链接显示
+        document.querySelectorAll('.nav-links a[data-nav]').forEach(a => {
+            const allowed = a.dataset.nav.split(',');
+            a.style.display = (role === 'admin' || allowed.includes(role)) ? '' : 'none';
+        });
+
+        // 控制section显示
+        document.querySelectorAll('section[data-role]').forEach(sec => {
+            const allowed = sec.dataset.role.split(',');
+            sec.style.display = (role === 'admin' || allowed.includes(role)) ? '' : 'none';
+        });
+
+        // Hero对所有人可见
+        document.getElementById('hero').style.display = '';
+    }
+
+    // 页面加载时检查登录状态
+    (function checkLogin() {
+        const saved = localStorage.getItem('sdk_current_user');
+        if (saved) {
+            try {
+                currentUser = JSON.parse(saved);
+                applyRole();
+            } catch(e) { /* ignore */ }
+        }
+    })();
+
     // 年份
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -1115,6 +1298,9 @@
         document.getElementById('dispatchNote').value = '';
 
         alert(`派遣工单 ${order.id} 已创建！等待评估师接单。`);
+
+        // 触发智能匹配
+        showMatchResults(order);
     }
 
     // 渲染派遣工单列表
@@ -1204,6 +1390,108 @@
         renderDispatchOrders();
 
         alert(`服务已完成！已自动生成收入记录 ¥${total}（实得 ¥${actual}）`);
+        renderMyOrders();
+    }
+
+    // ========== 智能匹配算法 ==========
+    function showMatchResults(order) {
+        const panel = document.getElementById('matchPanel');
+        const container = document.getElementById('matchResults');
+        panel.classList.remove('hidden');
+
+        // 评估类型到skills的映射
+        const typeSkillMap = {
+            '入住评估': ['daily', 'disability'],
+            '定期复评': ['daily', 'cognitive'],
+            '状态变化评估': ['cognitive', 'mental'],
+            '居家上门评估': ['daily', 'social']
+        };
+        const regionSkillMap = {
+            '北京市': 'beijing', '上海市': 'shanghai', '广州市': 'guangzhou',
+            '深圳市': 'shenzhen', '成都市': 'chengdu', '杭州市': 'hangzhou'
+        };
+        const levelWeight = { '高级评估师': 'senior', '中级评估师': 'mid', '初级评估师': 'junior' };
+        const levelOrder = { senior: 3, mid: 2, junior: 1 };
+
+        const neededSkills = typeSkillMap[order.type] || [];
+        const neededRegion = regionSkillMap[order.region] || '';
+        const neededLevel = levelWeight[order.level] || '';
+
+        // 计算每个评估师的匹配分
+        const scored = talentData.map(t => {
+            let score = 0;
+            // 区域匹配 +30
+            if (t.region === neededRegion) score += 30;
+            // 专长匹配 +25
+            const skillMatch = neededSkills.filter(s => t.skills.includes(s)).length;
+            score += (skillMatch / Math.max(neededSkills.length, 1)) * 25;
+            // 等级匹配 +20
+            if (!neededLevel || levelOrder[t.level] >= (levelOrder[neededLevel] || 0)) {
+                score += 20;
+            }
+            // 能力评分 +25（如果有abilities数据）
+            if (t.abilities) {
+                const dims = Object.values(t.abilities);
+                const avg = dims.reduce((s,v) => s+v, 0) / dims.length;
+                score += (avg / 5) * 25;
+            } else {
+                score += (t.score / 5) * 25;
+            }
+            // 经验加分（最多+10）
+            score += Math.min(t.years, 10);
+            return { ...t, matchScore: Math.round(score) };
+        });
+
+        scored.sort((a, b) => b.matchScore - a.matchScore);
+        const top3 = scored.slice(0, 3);
+
+        container.innerHTML = top3.map((t, i) => {
+            const pct = Math.min(Math.round(t.matchScore / 1.1), 99);
+            return `<div style="background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);position:relative;overflow:hidden;">
+                <div style="position:absolute;top:0;right:0;background:${i===0?'var(--accent)':'var(--primary-light)'};color:#fff;padding:4px 12px;border-radius:0 0 0 12px;font-size:12px;font-weight:600;">匹配度 ${pct}%</div>
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                    <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">${t.name[0]}</div>
+                    <div>
+                        <div style="font-weight:600;color:var(--text-dark);">${t.name}</div>
+                        <div style="font-size:12px;color:var(--text-light);">${levelMap[t.level]} · ${regionMap[t.region]} · ${t.years}年经验</div>
+                    </div>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;">
+                    ${t.skills.map(s => `<span style="padding:2px 8px;background:#e8f4fd;border-radius:8px;font-size:11px;color:var(--primary-light);">${skillMap[s]}</span>`).join('')}
+                </div>
+                <div style="font-size:13px;color:var(--text-light);">评分 ${t.score} · 累计评估 ${t.count.toLocaleString()} 次</div>
+            </div>`;
+        }).join('');
+    }
+
+    // ========== 评估师-我的工单 ==========
+    function renderMyOrders() {
+        const container = document.getElementById('myOrdersList');
+        if (!container) return;
+        // 评估师看到所有未完成的工单
+        const available = dispatchOrders.filter(o => o.status !== 'completed');
+        if (available.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-light);font-size:14px;padding:24px;text-align:center;background:#fff;border-radius:8px;">暂无可接工单</p>';
+            return;
+        }
+        container.innerHTML = available.map(o => {
+            const st = statusConfig[o.status];
+            let actions = '';
+            if (o.status === 'pending') {
+                actions = `<button onclick="acceptOrder('${o.id}');renderMyOrders();" style="background:var(--primary-light);color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;">接单</button>`;
+            } else if (o.status === 'accepted') {
+                actions = `<button onclick="startOrder('${o.id}');renderMyOrders();" style="background:#8e44ad;color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;">开始服务</button>`;
+            } else if (o.status === 'inProgress') {
+                actions = `<button onclick="completeOrder('${o.id}');" style="background:var(--success);color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;">完成服务</button>`;
+            }
+            return `<div style="background:#fff;border-radius:10px;padding:16px 20px;box-shadow:0 2px 8px rgba(0,0,0,0.04);display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+                <span style="background:${st.bg};color:${st.color};padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;">${st.label}</span>
+                <span style="font-weight:600;color:var(--text-dark);">${o.org}</span>
+                <span style="color:var(--text-body);font-size:14px;">${o.type} · ${o.region}</span>
+                <span style="color:var(--text-light);font-size:13px;">${o.date} · ${o.count}人</span>
+                <span style="margin-left:auto;">${actions}</span>
+            </div>`;
+        }).join('');
     }
 
     // 收入类型切换联动
@@ -1339,6 +1627,7 @@
         searchTalent();
         renderDispatchOrders();
         renderIncomeRecords();
+        renderMyOrders();
     });
 
     // Tab切换
