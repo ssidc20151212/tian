@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>评估师能力画像平台 - 思德库</title>
+    <title>老年人能力评估师专区 - 思德库养老专业能力平台</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -410,12 +410,12 @@
 
     <!-- 导航栏 -->
     <nav class="navbar">
-        <a href="index.html" class="brand">思德库 评估师平台</a>
+        <a href="capability-platform.html" class="brand">思德库 · 评估师专区</a>
         <div class="nav-links">
-            <a href="#talent-entry" data-nav="assessor,admin">人才录入</a>
+            <a href="#talent-entry" data-nav="assessor,admin">我的能力账户</a>
             <a href="#org-info" data-nav="org,admin">机构信息</a>
-            <a href="#talent-search" data-nav="org,admin">人才查询</a>
-            <a href="#talent-dispatch" data-nav="org,admin">人才派遣</a>
+            <a href="#talent-search" data-nav="org,admin">查找专业人员</a>
+            <a href="#talent-dispatch" data-nav="org,admin">发布专业任务</a>
             <a href="#income" data-nav="assessor,admin">收入中心</a>
             <div class="user-info" id="userInfo" style="display:none;">
                 <span id="userName"></span>
@@ -427,11 +427,12 @@
 
     <!-- Hero区 -->
     <section id="hero" class="hero">
-        <h1>老年人能力评估师 · 能力画像平台</h1>
-        <p>汇聚专业评估人才，智能匹配派遣需求，让每一位评估师的专业价值被看见</p>
+        <h1>老年人能力评估师专区</h1>
+        <p style="font-size:15px; opacity:0.8; margin-bottom:4px;">思德库养老专业能力平台 · 首个试点职业模块</p>
+        <p>能力建档 · 证书管理 · 任务匹配 · 收入管理</p>
         <div class="hero-actions">
             <a href="#talent-search" class="btn btn-white">查询人才</a>
-            <a href="#talent-dispatch" class="btn btn-outline">发布派遣需求</a>
+            <a href="#talent-dispatch" class="btn btn-outline">发布专业任务</a>
         </div>
     </section>
 
@@ -456,9 +457,9 @@
             </div>
         </div>
     </section>
-    <!-- 人才录入与导入 -->
+    <!-- 我的能力账户 -->
     <section id="talent-entry" class="section" data-role="assessor,admin">
-        <h2 class="section-title">人才录入</h2>
+        <h2 class="section-title">我的能力账户</h2>
         <p class="section-desc">支持单个录入或批量导入 Excel 表单，快速建立评估师人才库</p>
         <div class="entry-panel">
             <div class="entry-tabs">
@@ -822,9 +823,9 @@
             </div>
         </div>
     </section>
-    <!-- 人才画像 -->
+    <!-- 专业能力画像 -->
     <section id="talent-profile" class="section" data-role="org,admin">
-        <h2 class="section-title">评估师能力画像</h2>
+        <h2 class="section-title">专业能力画像</h2>
         <p class="section-desc">多维度展示评估师专业能力、资质认证与服务记录</p>
         <div class="talent-grid" id="profileGrid"></div>
     </section>
@@ -908,7 +909,7 @@
                     <h5 style="font-size:16px;color:var(--text-dark);margin-bottom:8px;">基础版（免费）</h5>
                     <p style="font-size:24px;font-weight:700;color:var(--text-dark);margin-bottom:12px;">¥0<span style="font-size:13px;font-weight:400;color:var(--text-light);">/月</span></p>
                     <ul style="list-style:none;font-size:13px;color:var(--text-body);line-height:2;">
-                        <li>✓ 发布派遣需求</li>
+                        <li>✓ 发布任务需求</li>
                         <li>✓ 查看评估师列表（仅姓名/等级）</li>
                         <li>✗ <span style="color:var(--text-light);">查看详细画像</span></li>
                         <li>✗ <span style="color:var(--text-light);">智能匹配推荐</span></li>
@@ -919,7 +920,7 @@
                     <h5 style="font-size:16px;color:var(--accent);margin-bottom:8px;">专业版（推荐）</h5>
                     <p style="font-size:24px;font-weight:700;color:var(--accent);margin-bottom:12px;">¥299<span style="font-size:13px;font-weight:400;color:var(--text-light);">/月</span></p>
                     <ul style="list-style:none;font-size:13px;color:var(--text-body);line-height:2;">
-                        <li>✓ 发布派遣需求</li>
+                        <li>✓ 发布任务需求</li>
                         <li>✓ 查看评估师完整画像</li>
                         <li>✓ 智能匹配推荐 Top3</li>
                         <li>✓ 查看评估师联系方式</li>
@@ -933,7 +934,7 @@
                     <ul style="list-style:none;font-size:13px;color:var(--text-body);line-height:2;">
                         <li>✓ 专业版全部功能</li>
                         <li>✓ 无限次智能匹配</li>
-                        <li>✓ 优先派遣响应</li>
+                        <li>✓ 优先任务响应</li>
                         <li>✓ 专属客服1对1</li>
                         <li>✓ 年度评估报告</li>
                     </ul>
@@ -959,9 +960,9 @@
             </div>
         </div>
     </section>
-    <!-- 人才查询 -->
+    <!-- 查找专业人员 -->
     <section id="talent-search" class="section" data-role="org,admin" style="background: var(--bg-gray); max-width: 100%; padding-left: calc((100% - 1200px)/2 + 24px); padding-right: calc((100% - 1200px)/2 + 24px);">
-        <h2 class="section-title">人才查询</h2>
+        <h2 class="section-title">查找专业人员</h2>
         <p class="section-desc">按区域、专长、等级快速查找合适的评估师</p>
         <div class="search-bar">
             <input type="text" placeholder="输入评估师姓名或关键词..." id="searchInput">
@@ -992,10 +993,10 @@
         </div>
         <div id="searchResults" class="talent-grid"></div>
     </section>
-    <!-- 人才派遣 -->
+    <!-- 发布专业任务 -->
     <section id="talent-dispatch" class="section" data-role="org,admin">
-        <h2 class="section-title">人才派遣</h2>
-        <p class="section-desc">发布评估需求，系统智能匹配合适的评估师并完成派遣</p>
+        <h2 class="section-title">发布专业任务</h2>
+        <p class="section-desc">发布评估需求，系统智能匹配合适的评估师</p>
         <div class="dispatch-panel">
             <div class="dispatch-form">
                 <div class="form-group">
@@ -1045,13 +1046,13 @@
                     <textarea id="dispatchNote" placeholder="如有特殊要求请在此说明，如：需要认知症专长评估师、需携带特定评估工具等"></textarea>
                 </div>
             </div>
-            <button class="dispatch-btn" onclick="submitDispatch()">提交派遣需求</button>
+            <button class="dispatch-btn" onclick="submitDispatch()">提交任务需求</button>
         </div>
-        <!-- 派遣工单列表 -->
+        <!-- 任务列表 -->
         <div style="margin-top:32px;">
-            <h4 style="font-size:16px; color:var(--text-dark); margin-bottom:16px; border-left:3px solid var(--success); padding-left:10px;">派遣工单（<span id="orderCount">0</span> 条）</h4>
+            <h4 style="font-size:16px; color:var(--text-dark); margin-bottom:16px; border-left:3px solid var(--success); padding-left:10px;">专业任务（<span id="orderCount">0</span> 条）</h4>
             <div id="dispatchOrders" style="display:grid; gap:12px;">
-                <p style="color:var(--text-light); font-size:14px; padding:20px; text-align:center; background:#fff; border-radius:8px;">暂无派遣工单，提交需求后将显示在此处</p>
+                <p style="color:var(--text-light); font-size:14px; padding:20px; text-align:center; background:#fff; border-radius:8px;">暂无任务，提交需求后将显示在此处</p>
             </div>
         </div>
         <!-- 智能匹配建议 -->
@@ -1060,18 +1061,18 @@
             <div id="matchResults" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:16px;"></div>
         </div>
     </section>
-    <!-- 评估师-我的工单 -->
+    <!-- 评估师-我的任务 -->
     <section id="my-orders" class="section" data-role="assessor,admin">
-        <h2 class="section-title">我的工单</h2>
-        <p class="section-desc">查看需要接单的派遣任务，接单后完成服务即可获得收入</p>
+        <h2 class="section-title">我的任务</h2>
+        <p class="section-desc">查看需要接单的任务，接单后完成服务即可获得收入</p>
         <div id="myOrdersList" style="display:grid; gap:12px;">
-            <p style="color:var(--text-light); font-size:14px; padding:24px; text-align:center; background:#fff; border-radius:8px;">暂无可接工单</p>
+            <p style="color:var(--text-light); font-size:14px; padding:24px; text-align:center; background:#fff; border-radius:8px;">暂无可接任务</p>
         </div>
     </section>
     <!-- 收入中心 -->
     <section id="income" class="section" data-role="assessor,admin" style="background: var(--bg-gray); max-width: 100%; padding-left: calc((100% - 1200px)/2 + 24px); padding-right: calc((100% - 1200px)/2 + 24px);">
         <h2 class="section-title">收入中心</h2>
-        <p class="section-desc">录入服务收入、查看结算记录，派遣完成后自动生成收入流水</p>
+        <p class="section-desc">录入服务收入、查看结算记录，任务完成后自动生成收入流水</p>
 
         <!-- 收入录入（置顶） -->
         <div style="margin-bottom:32px;">
@@ -1163,7 +1164,7 @@
         <div style="margin-bottom:32px;">
             <h4 style="font-size:16px; color:var(--text-dark); margin-bottom:16px; border-left:3px solid var(--success); padding-left:10px;">收入流水（<span id="incomeCount">0</span> 条）</h4>
             <div id="incomeRecords" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.06);">
-                <p style="color:var(--text-light); font-size:14px; padding:24px; text-align:center;">暂无收入记录，录入或完成派遣后自动生成</p>
+                <p style="color:var(--text-light); font-size:14px; padding:24px; text-align:center;">暂无收入记录，录入或完成任务后自动生成</p>
             </div>
         </div>
 
@@ -1197,7 +1198,7 @@
     </section>
     <footer id="footer" class="footer">
         <div class="footer-inner">
-            <div class="brand-footer">思德库 · 评估师能力画像平台</div>
+            <div class="brand-footer">思德库 · 老年人能力评估师专区</div>
             <p>汇聚养老评估专业人才，赋能机构精准服务</p>
             <div class="footer-disclaimer">
                 <p>本平台数据仅供参考，评估师资质以官方认证为准。</p>
@@ -1284,6 +1285,12 @@
         if (location.search.includes('logout')) {
             localStorage.removeItem('sdk_current_user');
             history.replaceState(null, '', location.pathname);
+            // 如果从门户跳转带了角色提示，自动填入账号
+            const quickRole = localStorage.getItem('sdk_quick_role');
+            if (quickRole) {
+                document.getElementById('loginUser').value = quickRole;
+                localStorage.removeItem('sdk_quick_role');
+            }
             return;
         }
         const saved = localStorage.getItem('sdk_current_user');
@@ -1363,7 +1370,7 @@
             tip.textContent = `当前套餐：${labels[plan] || '基础版'}`;
             tip.style.color = plan === 'free' ? 'var(--text-light)' : 'var(--success)';
         }
-        // 人才画像区域：免费只看基础，付费看完整
+        // 专业能力画像区域：免费只看基础，付费看完整
         const profileSection = document.getElementById('talent-profile');
         if (profileSection && currentUser && currentUser.role === 'org') {
             if (plan === 'free') {
@@ -1469,7 +1476,7 @@
                 <div style="font-size:13px;color:var(--text-light);margin-bottom:10px;">评分 ${t.score} · 累计评估 ${t.count.toLocaleString()} 次</div>
                 <div style="display:flex;gap:8px;">
                     <button class="btn-sm btn-primary" onclick="showProfile('${t.name}')" style="flex:1;padding:8px;text-align:center;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;">查看画像</button>
-                    <button class="btn-sm btn-accent" onclick="document.getElementById('talent-dispatch').scrollIntoView({behavior:'smooth'})" style="flex:1;padding:8px;text-align:center;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;">发起派遣</button>
+                    <button class="btn-sm btn-accent" onclick="document.getElementById('talent-dispatch').scrollIntoView({behavior:'smooth'})" style="flex:1;padding:8px;text-align:center;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;">发起任务</button>
                 </div>
             </div>`;
         }).join('');
@@ -1533,7 +1540,7 @@
                 </div>
                 <div class="card-actions">
                     <button class="btn-sm btn-primary" onclick="showProfile('${t.name}')">查看画像</button>
-                    <button class="btn-sm btn-accent">立即派遣</button>
+                    <button class="btn-sm btn-accent">发起任务</button>
                 </div>
             </div>
         `).join('');
@@ -1565,7 +1572,7 @@
         completed: { label: '已完成', color: '#27ae60', bg: '#e8f8f0' }
     };
 
-    // ========== 派遣工单逻辑 ==========
+    // ========== 任务逻辑 ==========
     function submitDispatch() {
         const org = document.getElementById('dispatchOrg').value.trim();
         const region = document.getElementById('dispatchRegion').value;
@@ -1601,7 +1608,7 @@
         document.getElementById('dispatchLevel').value = '';
         document.getElementById('dispatchNote').value = '';
 
-        alert(`派遣工单 ${order.id} 已创建！等待评估师接单。`);
+        alert(`任务 ${order.id} 已创建！等待评估师接单。`);
 
         // 触发智能匹配（付费用户才展示）
         if (currentUser && (currentUser.role === 'admin' || getOrgPlan() !== 'free')) {
@@ -1613,12 +1620,12 @@
         }
     }
 
-    // 渲染派遣工单列表
+    // 渲染任务列表
     function renderDispatchOrders() {
         const container = document.getElementById('dispatchOrders');
         document.getElementById('orderCount').textContent = dispatchOrders.length;
         if (dispatchOrders.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-light); font-size:14px; padding:20px; text-align:center; background:#fff; border-radius:8px;">暂无派遣工单，提交需求后将显示在此处</p>';
+            container.innerHTML = '<p style="color:var(--text-light); font-size:14px; padding:20px; text-align:center; background:#fff; border-radius:8px;">暂无任务，提交需求后将显示在此处</p>';
             return;
         }
         container.innerHTML = dispatchOrders.map(o => {
@@ -1691,7 +1698,7 @@
             total: total,
             share: share,
             actual: actual,
-            source: `派遣工单 ${o.id}`,
+            source: `任务 ${o.id}`,
             createdAt: new Date().toISOString()
         };
         incomeRecords.unshift(income);
@@ -1774,14 +1781,14 @@
         }).join('');
     }
 
-    // ========== 评估师-我的工单 ==========
+    // ========== 评估师-我的任务 ==========
     function renderMyOrders() {
         const container = document.getElementById('myOrdersList');
         if (!container) return;
-        // 评估师看到所有未完成的工单
+        // 评估师看到所有未完成的任务
         const available = dispatchOrders.filter(o => o.status !== 'completed');
         if (available.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-light);font-size:14px;padding:24px;text-align:center;background:#fff;border-radius:8px;">暂无可接工单</p>';
+            container.innerHTML = '<p style="color:var(--text-light);font-size:14px;padding:24px;text-align:center;background:#fff;border-radius:8px;">暂无可接任务</p>';
             return;
         }
         container.innerHTML = available.map(o => {
@@ -2062,7 +2069,7 @@
                 </div>
                 <div class="card-actions">
                     <button class="btn-sm btn-primary" onclick="showProfile('${t.name}')">查看画像</button>
-                    <button class="btn-sm btn-accent">立即派遣</button>
+                    <button class="btn-sm btn-accent">发起任务</button>
                 </div>
             </div>
         `).join('');

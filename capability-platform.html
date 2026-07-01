@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思德库养老专业能力平台 - 中国养老专业能力交易与验证平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1a5276;
+            --primary-light: #2980b9;
+            --accent: #FF8C42;
+            --accent-light: #FFD166;
+            --bg-white: #ffffff;
+            --bg-gray: #f7f8fa;
+            --text-dark: #1a202c;
+            --text-body: #4a5568;
+            --text-light: #718096;
+            --success: #6BCB77;
+            --radius: 12px;
+            --shadow: 0 2px 12px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            color: var(--text-body); line-height: 1.6; background: var(--bg-white);
+        }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* 导航 */
+        .navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .nav-inner {
+            display: flex; align-items: center; height: 64px;
+            justify-content: space-between; max-width: 1200px;
+            margin: 0 auto; padding: 0 24px;
+        }
+        .nav-brand {
+            font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 8px; align-items: center; list-style: none; }
+        .nav-links a {
+            padding: 8px 14px; border-radius: 6px; font-size: 14px;
+            color: var(--text-body); transition: 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); background: var(--bg-gray); }
+        .nav-cta {
+            background: var(--primary) !important; color: #fff !important;
+            font-weight: 600;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #1a5276 0%, #2980b9 40%, #FF8C42 100%);
+            padding: 80px 24px 60px; text-align: center; color: #fff;
+        }
+        .hero h1 {
+            font-family: 'Noto Serif SC', serif; font-size: 38px;
+            font-weight: 900; margin-bottom: 12px; letter-spacing: 2px;
+        }
+        .hero .subtitle {
+            font-size: 20px; opacity: 0.9; margin-bottom: 8px;
+        }
+        .hero .sub-desc {
+            font-size: 15px; opacity: 0.7; max-width: 600px; margin: 0 auto 36px;
+        }
+        .hero-stats {
+            display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;
+        }
+        .hero-stats .stat {
+            text-align: center;
+        }
+        .hero-stats .stat .num {
+            font-size: 32px; font-weight: 700;
+            font-family: 'Noto Serif SC', serif;
+        }
+        .hero-stats .stat .lbl {
+            font-size: 13px; opacity: 0.8;
+        }
+
+        /* 三大价值入口 */
+        .entries { padding: 80px 24px; max-width: 1200px; margin: 0 auto; }
+        .entries-title {
+            text-align: center; margin-bottom: 48px;
+        }
+        .entries-title h2 {
+            font-family: 'Noto Serif SC', serif; font-size: 28px;
+            color: var(--text-dark); margin-bottom: 8px;
+        }
+        .entries-title p { color: var(--text-light); font-size: 15px; }
+        .entry-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+        }
+        .entry-card {
+            background: #fff; border-radius: 16px; padding: 40px 32px;
+            box-shadow: var(--shadow); border: 1px solid #edf2f7;
+            transition: all 0.3s; text-align: center; position: relative; overflow: hidden;
+        }
+        .entry-card:hover {
+            transform: translateY(-6px); box-shadow: var(--shadow-hover);
+            border-color: var(--primary-light);
+        }
+        .entry-card .card-icon {
+            width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center; font-size: 32px;
+        }
+        .entry-card h3 {
+            font-family: 'Noto Serif SC', serif; font-size: 20px;
+            color: var(--text-dark); margin-bottom: 12px; font-weight: 700;
+        }
+        .entry-card p {
+            font-size: 14px; color: var(--text-light); line-height: 1.8; margin-bottom: 20px;
+        }
+        .entry-card .card-btn {
+            display: inline-block; padding: 12px 28px; border-radius: 8px;
+            font-size: 15px; font-weight: 600; transition: 0.2s; border: none; cursor: pointer;
+        }
+        .entry-card .card-btn:hover { transform: translateY(-2px); }
+        .btn-org { background: var(--primary); color: #fff; }
+        .btn-talent { background: var(--accent); color: #fff; }
+        .btn-find { background: var(--success); color: #fff; }
+
+        /* 职业专区 */
+        .zones { padding: 64px 24px; background: var(--bg-gray); }
+        .zones-inner { max-width: 1200px; margin: 0 auto; }
+        .zones-title { text-align: center; margin-bottom: 36px; }
+        .zones-title h2 {
+            font-family: 'Noto Serif SC', serif; font-size: 24px; color: var(--text-dark);
+        }
+        .zones-title p { font-size: 14px; color: var(--text-light); margin-top: 6px; }
+        .zone-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 20px; }
+        .zone-card {
+            background: #fff; border-radius: 12px; padding: 28px 24px;
+            box-shadow: var(--shadow); border: 1px solid #edf2f7; transition: 0.3s;
+        }
+        .zone-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+        .zone-card .zone-badge {
+            display: inline-block; padding: 3px 10px; border-radius: 10px;
+            font-size: 11px; font-weight: 600; margin-bottom: 12px;
+        }
+        .zone-card h4 { font-size: 16px; color: var(--text-dark); margin-bottom: 6px; }
+        .zone-card p { font-size: 13px; color: var(--text-light); margin-bottom: 14px; }
+        .zone-card .zone-btn {
+            display: inline-block; padding: 8px 18px; border-radius: 6px;
+            font-size: 13px; font-weight: 600; color: var(--primary); background: #eaf4fd;
+            transition: 0.2s;
+        }
+        .zone-card .zone-btn:hover { background: var(--primary); color: #fff; }
+
+        /* 信任背书 */
+        .trust { padding: 64px 24px; max-width: 1200px; margin: 0 auto; }
+        .trust-title { text-align: center; margin-bottom: 36px; }
+        .trust-title h2 { font-family: 'Noto Serif SC', serif; font-size: 24px; color: var(--text-dark); }
+        .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .trust-item { text-align: center; padding: 24px 16px; }
+        .trust-item .t-num {
+            font-size: 28px; font-weight: 700; color: var(--primary);
+            font-family: 'Noto Serif SC', serif;
+        }
+        .trust-item .t-lbl { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+
+        /* 页脚 */
+        .footer {
+            background: linear-gradient(160deg, #1a1a2e 0%, #2d2d44 50%, #1a1a2e 100%);
+            color: rgba(255,255,255,0.7); padding: 48px 24px 32px;
+        }
+        .footer-inner {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px;
+            margin-bottom: 32px;
+        }
+        .footer-brand {
+            font-family: 'Noto Serif SC', serif; font-size: 20px;
+            font-weight: 900; color: #fff; margin-bottom: 8px;
+        }
+        .footer-links h4 { color: #fff; font-size: 14px; margin-bottom: 10px; }
+        .footer-links a {
+            display: block; font-size: 13px; padding: 3px 0;
+            color: rgba(255,255,255,0.6); transition: 0.2s;
+        }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-bottom {
+            max-width: 1200px; margin: 0 auto;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px; font-size: 12px; text-align: center;
+            color: rgba(255,255,255,0.4);
+        }
+
+        @media (max-width: 768px) {
+            .entry-grid { grid-template-columns: 1fr; }
+            .trust-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero h1 { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航 -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="capability-platform.html" class="nav-brand">思德库</a>
+            <div class="nav-links">
+                <a href="#entries">能力入口</a>
+                <a href="#zones">职业专区</a>
+                <a href="index.html">返回首页</a>
+                <a href="talent-platform.html?logout" class="nav-cta">进入专区</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>思德库养老专业能力平台</h1>
+        <p class="subtitle">中国养老专业能力交易与验证平台</p>
+        <p class="sub-desc">连接养老机构与专业人才，让能力可被验证、可被定价、可被信赖</p>
+        <div class="hero-stats">
+            <div class="stat"><div class="num">1,200+</div><div class="lbl">持证评估师</div></div>
+            <div class="stat"><div class="num">86</div><div class="lbl">合作机构</div></div>
+            <div class="stat"><div class="num">15,000+</div><div class="lbl">完成评估</div></div>
+            <div class="stat"><div class="num">6</div><div class="lbl">能力维度认证</div></div>
+        </div>
+    </section>
+
+    <!-- 三大价值入口 -->
+    <section class="entries" id="entries">
+        <div class="entries-title">
+            <h2>您想做什么？</h2>
+            <p>根据您的角色选择入口，平台将为您提供对应的专业服务</p>
+        </div>
+        <div class="entry-grid">
+            <!-- 入口1：机构 -->
+            <div class="entry-card">
+                <div class="card-icon" style="background:#eaf4fd;">&#127979;</div>
+                <h3>我要提升机构能力</h3>
+                <p>寻找经过验证的养老专业人才，快速补齐机构评估能力短板，满足等级评定与长护险要求</p>
+                <a href="talent-platform.html?logout" class="card-btn btn-org" onclick="localStorage.setItem('sdk_quick_role','org')">机构入口</a>
+            </div>
+            <!-- 入口2：人才 -->
+            <div class="entry-card">
+                <div class="card-icon" style="background:#fef3e7;">&#128188;</div>
+                <h3>我要用专业能力挣钱</h3>
+                <p>建立个人能力档案，获取专业任务、培训授课、咨询服务等多元收入机会</p>
+                <a href="talent-platform.html?logout" class="card-btn btn-talent" onclick="localStorage.setItem('sdk_quick_role','assessor')">评估师入口</a>
+            </div>
+            <!-- 入口3：找人 -->
+            <div class="entry-card">
+                <div class="card-icon" style="background:#e8f8f0;">&#128269;</div>
+                <h3>我要找到可信赖的专业力量</h3>
+                <p>按区域、专长、等级查询评估师，查看能力画像与服务记录，选择最合适的专业人员</p>
+                <a href="talent-platform.html?logout" class="card-btn btn-find" onclick="localStorage.setItem('sdk_quick_role','org')">查找人才</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 职业专区 -->
+    <section class="zones" id="zones">
+        <div class="zones-inner">
+            <div class="zones-title">
+                <h2>职业专区</h2>
+                <p>平台按职业分类建设能力专区，首个试点模块已上线</p>
+            </div>
+            <div class="zone-grid">
+                <div class="zone-card">
+                    <span class="zone-badge" style="background:#e8f8f0;color:#27ae60;">已上线</span>
+                    <h4>老年人能力评估师</h4>
+                    <p>思德库养老专业能力平台首个试点职业模块，覆盖能力建档、任务匹配、收入管理全流程</p>
+                    <a href="talent-platform.html?logout" class="zone-btn">进入专区 →</a>
+                </div>
+                <div class="zone-card">
+                    <span class="zone-badge" style="background:#fef3e7;color:#e67e22;">规划中</span>
+                    <h4>养老护理员</h4>
+                    <p>护理技能认证、分级培训记录、照护服务匹配</p>
+                    <span style="font-size:13px;color:var(--text-light);">即将开放</span>
+                </div>
+                <div class="zone-card">
+                    <span class="zone-badge" style="background:#fef3e7;color:#e67e22;">规划中</span>
+                    <h4>养老机构管理师</h4>
+                    <p>运营能力认证、管理咨询匹配、行业标准对标</p>
+                    <span style="font-size:13px;color:var(--text-light);">即将开放</span>
+                </div>
+                <div class="zone-card">
+                    <span class="zone-badge" style="background:#f4ecf7;color:#8e44ad;">筹备中</span>
+                    <h4>康复治疗师</h4>
+                    <p>康复技术认证、治疗方案设计、居家康复指导</p>
+                    <span style="font-size:13px;color:var(--text-light);">敬请期待</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 信任背书 -->
+    <section class="trust">
+        <div class="trust-title">
+            <h2>平台能力保障</h2>
+        </div>
+        <div class="trust-grid">
+            <div class="trust-item">
+                <div class="t-num">6维</div>
+                <div class="t-lbl">能力评估体系<br>参照社会工作者能力标准</div>
+            </div>
+            <div class="trust-item">
+                <div class="t-num">100%</div>
+                <div class="t-lbl">证书可追溯<br>持证上岗，来源可查</div>
+            </div>
+            <div class="trust-item">
+                <div class="t-num">85%</div>
+                <div class="t-lbl">评估师分成比例<br>行业领先收入保障</div>
+            </div>
+            <div class="trust-item">
+                <div class="t-num">2h</div>
+                <div class="t-lbl">任务响应时效<br>智能匹配快速对接</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div>
+                <div class="footer-brand">思德库</div>
+                <p style="font-size:13px;">养老专业能力交易与验证平台</p>
+            </div>
+            <div class="footer-links">
+                <h4>平台服务</h4>
+                <a href="talent-platform.html?logout">评估师专区</a>
+                <a href="index.html">机构能力支持</a>
+                <a href="#">能力认证标准</a>
+            </div>
+            <div class="footer-links">
+                <h4>关于</h4>
+                <a href="#">平台介绍</a>
+                <a href="#">服务协议</a>
+                <a href="talent-platform.html?logout" style="font-size:11px;opacity:0.4;">管理后台</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>本平台数据仅供参考，专业人员资质以官方认证为准。</p>
+            <p>&copy; <span id="year"></span> 思德库养老专业能力平台 版权所有</p>
+        </div>
+    </footer>
+    <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
