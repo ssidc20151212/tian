@@ -1401,18 +1401,21 @@
 
     // 页面加载时检查登录状态
     (function checkLogin() {
-        // 如果URL有?logout参数，清除登录
+        let forceLogin = false;
+        // 如果URL有?logout参数，清除登录并强制弹登录框
         if (location.search.includes('logout')) {
             localStorage.removeItem('sdk_current_user');
             history.replaceState(null, '', location.pathname);
-            const quickRole = localStorage.getItem('sdk_quick_role');
-            if (quickRole) {
-                document.getElementById('loginUser').value = quickRole;
-                localStorage.removeItem('sdk_quick_role');
-            }
+            forceLogin = true;
+        }
+        const quickRole = localStorage.getItem('sdk_quick_role');
+        if (quickRole) {
+            document.getElementById('loginUser').value = quickRole;
+            localStorage.removeItem('sdk_quick_role');
+            forceLogin = true;
         }
         const saved = localStorage.getItem('sdk_current_user');
-        if (saved) {
+        if (saved && !forceLogin) {
             try {
                 currentUser = JSON.parse(saved);
                 applyRole();
@@ -1433,6 +1436,10 @@
             // 显示导航栏登录按钮
             const navLogin = document.getElementById('navLoginBtn');
             if (navLogin) navLogin.style.display = '';
+            // 从机构/评估师入口跳过来 → 弹登录框；仅点"查找人才"不弹
+            if (forceLogin) {
+                document.getElementById('loginOverlay').classList.remove('hidden');
+            }
         }
     })();
 
