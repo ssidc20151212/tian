@@ -642,9 +642,9 @@
                 </div>
                 <button type="button" class="btn-sm btn-outline-sm" style="padding:8px 16px;" onclick="addCaseRow()">+ 添加更多案例</button>
 
-                <!-- 能力擅长维度 -->
-                <h4 style="margin:32px 0 16px; color:var(--text-dark); font-size:16px; border-left:3px solid #9b59b6; padding-left:10px;">能力擅长维度（参照社工胜任力模型）</h4>
-                <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">参照CSWE社会工作者核心能力框架与国内社工职业标准，请根据自身实际水平自评（1-5分）</p>
+                <!-- 专业能力认证条件 -->
+                <h4 style="margin:32px 0 16px; color:var(--text-dark); font-size:16px; border-left:3px solid #9b59b6; padding-left:10px;">专业能力认证体系</h4>
+                <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">能力认证分为两层：第一层为个人自评（立即可用），第二层为平台验证（逐步开放）。自评分数仅供参考，不代表平台认证结论。</p>
                 <div class="ability-dimensions">
                     <div class="entry-form">
                         <div class="form-group full-width">
@@ -660,140 +660,96 @@
                         </div>
                     </div>
 
-                    <!-- 维度一：专业伦理与价值观 -->
-                    <div style="margin-top:24px; padding:16px; border:1px solid #e8e8e8; border-radius:10px;">
-                        <h5 style="font-size:14px; color:var(--primary); margin-bottom:12px;">一、专业伦理与价值观</h5>
-                        <p style="font-size:12px; color:var(--text-light); margin-bottom:12px;">伦理决策、保密义务、服务对象自决权、职业操守</p>
-                        <div class="ability-ratings" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px;">
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">伦理决策能力</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="ethics_decision" style="width:100%;">
+                    <!-- 6项认证条件展示 -->
+                    <div style="margin-top:24px; display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:12px;">
+                        <div style="background:var(--bg-gray);border-radius:10px;padding:16px;display:flex;align-items:center;gap:12px;">
+                            <span style="font-size:20px;">&#9989;</span>
+                            <div><strong style="font-size:14px;color:var(--text-dark);">证书已核验</strong><p style="font-size:12px;color:var(--text-light);margin:0;">上传证书后由平台人工核验真实性</p></div>
+                        </div>
+                        <div style="background:var(--bg-gray);border-radius:10px;padding:16px;display:flex;align-items:center;gap:12px;">
+                            <span style="font-size:20px;">&#9989;</span>
+                            <div><strong style="font-size:14px;color:var(--text-dark);">课程已完成</strong><p style="font-size:12px;color:var(--text-light);margin:0;">完成平台指定的专业课程学习</p></div>
+                        </div>
+                        <div style="background:var(--bg-gray);border-radius:10px;padding:16px;display:flex;align-items:center;gap:12px;">
+                            <span style="font-size:20px;">&#9989;</span>
+                            <div><strong style="font-size:14px;color:var(--text-dark);">提交3个困难案例</strong><p style="font-size:12px;color:var(--text-light);margin:0;">真实案例经专家审核通过</p></div>
+                        </div>
+                        <div style="background:var(--bg-gray);border-radius:10px;padding:16px;display:flex;align-items:center;gap:12px;">
+                            <span style="font-size:20px;">&#9989;</span>
+                            <div><strong style="font-size:14px;color:var(--text-dark);">完成12次真实任务</strong><p style="font-size:12px;color:var(--text-light);margin:0;">通过平台派遣并获得机构确认</p></div>
+                        </div>
+                        <div style="background:var(--bg-gray);border-radius:10px;padding:16px;display:flex;align-items:center;gap:12px;">
+                            <span style="font-size:20px;">&#9989;</span>
+                            <div><strong style="font-size:14px;color:var(--text-dark);">2家机构给出评价</strong><p style="font-size:12px;color:var(--text-light);margin:0;">服务过的机构对工作质量做出书面评价</p></div>
+                        </div>
+                        <div style="background:var(--bg-gray);border-radius:10px;padding:16px;display:flex;align-items:center;gap:12px;">
+                            <span style="font-size:20px;">&#9989;</span>
+                            <div><strong style="font-size:14px;color:var(--text-dark);">思德库审核为"可独立承担任务"</strong><p style="font-size:12px;color:var(--text-light);margin:0;">平台综合审核后授予独立执业资格</p></div>
+                        </div>
+                    </div>
+
+                    <!-- 第一层：个人自评 -->
+                    <div style="margin-top:28px; padding:20px; border:2px solid #f0e6ff; border-radius:12px; background:#faf7ff;">
+                        <h5 style="font-size:15px; color:#7c3aed; margin-bottom:4px;">第一层：个人自评</h5>
+                        <p style="font-size:12px; color:var(--text-light); margin-bottom:16px; padding:6px 10px; background:#fff3cd; border-radius:6px; display:inline-block;">&#9888; 自评分数仅供个人参考，不作为平台对外展示的能力认证依据</p>
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px;">
+                            <div class="ability-item" style="background:#fff; border-radius:8px; padding:12px;">
+                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">专业伦理与价值观</label>
+                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="ethics" style="width:100%;">
                                 <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
                             </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">隐私保护与保密</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="ethics_privacy" style="width:100%;">
+                            <div class="ability-item" style="background:#fff; border-radius:8px; padding:12px;">
+                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">专业知识</label>
+                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="knowledge" style="width:100%;">
                                 <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
                             </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">尊重服务对象自决权</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="ethics_autonomy" style="width:100%;">
+                            <div class="ability-item" style="background:#fff; border-radius:8px; padding:12px;">
+                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">实务技能</label>
+                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="skills" style="width:100%;">
+                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
+                            </div>
+                            <div class="ability-item" style="background:#fff; border-radius:8px; padding:12px;">
+                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">沟通与关系建立</label>
+                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="communication" style="width:100%;">
+                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
+                            </div>
+                            <div class="ability-item" style="background:#fff; border-radius:8px; padding:12px;">
+                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">研究与持续发展</label>
+                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="research" style="width:100%;">
                                 <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 维度二：专业知识 -->
-                    <div style="margin-top:16px; padding:16px; border:1px solid #e8e8e8; border-radius:10px;">
-                        <h5 style="font-size:14px; color:var(--primary); margin-bottom:12px;">二、专业知识</h5>
-                        <p style="font-size:12px; color:var(--text-light); margin-bottom:12px;">老年学、社会政策法规、人类发展理论、养老服务体系</p>
-                        <div class="ability-ratings" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px;">
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">老年学与老年医学知识</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="know_gerontology" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
+                    <!-- 第二层：平台验证（逐步开放） -->
+                    <div style="margin-top:20px; padding:20px; border:2px solid #e0f2fe; border-radius:12px; background:#f0f9ff;">
+                        <h5 style="font-size:15px; color:#0284c7; margin-bottom:8px;">第二层：平台验证（逐步开放）</h5>
+                        <p style="font-size:12px; color:var(--text-light); margin-bottom:14px;">平台以以下客观证据作为对外能力认证依据，逐步替代自评结论</p>
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px;">
+                            <div style="background:#fff; border:1px dashed #cbd5e1; border-radius:8px; padding:12px;">
+                                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">&#128196; 证书验证</div>
+                                <p style="font-size:11px; color:var(--text-light); margin-top:4px;">上传证书 → 平台核验真实性</p>
+                                <span style="display:inline-block; margin-top:6px; padding:2px 8px; background:#fef3c7; color:#d97706; border-radius:10px; font-size:10px;">即将开放</span>
                             </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">养老政策与法规</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="know_policy" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
+                            <div style="background:#fff; border:1px dashed #cbd5e1; border-radius:8px; padding:12px;">
+                                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">&#127891; 课程验证</div>
+                                <p style="font-size:11px; color:var(--text-light); margin-top:4px;">完成指定专业课程学习</p>
+                                <span style="display:inline-block; margin-top:6px; padding:2px 8px; background:#fef3c7; color:#d97706; border-radius:10px; font-size:10px;">即将开放</span>
                             </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">评估工具与标准掌握</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="know_tools" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
+                            <div style="background:#fff; border:1px dashed #cbd5e1; border-radius:8px; padding:12px;">
+                                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">&#128221; 案例验证</div>
+                                <p style="font-size:11px; color:var(--text-light); margin-top:4px;">提交3个案例经专家审核</p>
+                                <span style="display:inline-block; margin-top:6px; padding:2px 8px; background:#fef3c7; color:#d97706; border-radius:10px; font-size:10px;">即将开放</span>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- 维度三：实务技能 -->
-                    <div style="margin-top:16px; padding:16px; border:1px solid #e8e8e8; border-radius:10px;">
-                        <h5 style="font-size:14px; color:var(--primary); margin-bottom:12px;">三、实务技能</h5>
-                        <p style="font-size:12px; color:var(--text-light); margin-bottom:12px;">个案评估、照护计划制定、危机干预、小组活动策划</p>
-                        <div class="ability-ratings" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px;">
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">需求评估与个案管理</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="skill_case" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
+                            <div style="background:#fff; border:1px dashed #cbd5e1; border-radius:8px; padding:12px;">
+                                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">&#128737; 任务验证</div>
+                                <p style="font-size:11px; color:var(--text-light); margin-top:4px;">通过平台完成真实任务</p>
+                                <span style="display:inline-block; margin-top:6px; padding:2px 8px; background:#dcfce7; color:#16a34a; border-radius:10px; font-size:10px;">已开放</span>
                             </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">照护计划制定能力</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="skill_careplan" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
-                            </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">危机识别与干预</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="skill_crisis" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 维度四：沟通与关系建立 -->
-                    <div style="margin-top:16px; padding:16px; border:1px solid #e8e8e8; border-radius:10px;">
-                        <h5 style="font-size:14px; color:var(--primary); margin-bottom:12px;">四、沟通与关系建立</h5>
-                        <p style="font-size:12px; color:var(--text-light); margin-bottom:12px;">共情倾听、多元文化敏感性、家属沟通、跨专业协作</p>
-                        <div class="ability-ratings" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px;">
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">共情与倾听能力</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="comm_empathy" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
-                            </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">家属沟通与协调</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="comm_family" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
-                            </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">跨专业团队协作</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="comm_team" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 维度五：研究与评估 -->
-                    <div style="margin-top:16px; padding:16px; border:1px solid #e8e8e8; border-radius:10px;">
-                        <h5 style="font-size:14px; color:var(--primary); margin-bottom:12px;">五、研究与评估</h5>
-                        <p style="font-size:12px; color:var(--text-light); margin-bottom:12px;">循证实践、服务效果评估、数据分析、持续质量改进</p>
-                        <div class="ability-ratings" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px;">
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">循证实践能力</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="research_evidence" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
-                            </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">服务效果评估与报告</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="research_report" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
-                            </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">数据收集与分析</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="research_data" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 维度六：自我管理与发展 -->
-                    <div style="margin-top:16px; padding:16px; border:1px solid #e8e8e8; border-radius:10px;">
-                        <h5 style="font-size:14px; color:var(--primary); margin-bottom:12px;">六、自我管理与发展</h5>
-                        <p style="font-size:12px; color:var(--text-light); margin-bottom:12px;">自我觉察、情绪管理、抗压与自我照护、持续学习</p>
-                        <div class="ability-ratings" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px;">
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">自我觉察与反思</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="self_awareness" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
-                            </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">抗压与情绪管理</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="self_stress" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
-                            </div>
-                            <div class="ability-item" style="background:var(--bg-gray); border-radius:8px; padding:12px;">
-                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:6px;">持续学习与督导参与</label>
-                                <input type="range" min="1" max="5" value="3" class="ability-score" data-dim="self_learning" style="width:100%;">
-                                <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-light);"><span>1-了解</span><span>3-熟练</span><span>5-精通</span></div>
+                            <div style="background:#fff; border:1px dashed #cbd5e1; border-radius:8px; padding:12px;">
+                                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">&#128101; 专家评审</div>
+                                <p style="font-size:11px; color:var(--text-light); margin-top:4px;">思德库专家委员会终审</p>
+                                <span style="display:inline-block; margin-top:6px; padding:2px 8px; background:#fef3c7; color:#d97706; border-radius:10px; font-size:10px;">即将开放</span>
                             </div>
                         </div>
                     </div>
@@ -901,7 +857,63 @@
             <button class="dispatch-btn" onclick="saveOrgInfo()">保存机构信息</button>
         </div>
 
-        <!-- 服务套餐与权限 -->
+        <!-- 机构能力诊断 -->
+        <div style="margin-top:32px;">
+            <h4 style="font-size:16px; color:var(--text-dark); margin-bottom:8px; border-left:3px solid #8b5cf6; padding-left:10px;">机构能力快速诊断</h4>
+            <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">填写以下简化信息，系统将自动生成您机构的能力分析报告</p>
+            <div class="dispatch-form" style="margin-bottom:16px;">
+                <div class="form-group">
+                    <label>在岗评估人员数</label>
+                    <input type="number" id="diagStaff" placeholder="如：3" min="0">
+                </div>
+                <div class="form-group">
+                    <label>是否有标准评估流程</label>
+                    <select id="diagProcess">
+                        <option value="">请选择</option>
+                        <option value="yes">有，且执行良好</option>
+                        <option value="partial">有，但执行不全</option>
+                        <option value="no">暂无标准流程</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>评估结果是否转化为照护计划</label>
+                    <select id="diagCarePlan">
+                        <option value="">请选择</option>
+                        <option value="yes">是，全部转化</option>
+                        <option value="partial">部分转化</option>
+                        <option value="no">未转化</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>认知症行为风险识别能力</label>
+                    <select id="diagCognitive">
+                        <option value="">请选择</option>
+                        <option value="good">有专人负责，识别到位</option>
+                        <option value="partial">有意识但不系统</option>
+                        <option value="weak">识别不足</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>员工培训记录完整度</label>
+                    <select id="diagTraining">
+                        <option value="">请选择</option>
+                        <option value="complete">完整记录</option>
+                        <option value="partial">部分记录</option>
+                        <option value="none">无系统记录</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>是否设有养老信息官</label>
+                    <select id="diagInfoOfficer">
+                        <option value="">请选择</option>
+                        <option value="yes">有</option>
+                        <option value="no">无</option>
+                    </select>
+                </div>
+            </div>
+            <button class="dispatch-btn" style="background:#8b5cf6;" onclick="runDiagnosis()">生成诊断报告</button>
+            <div id="diagResult" style="display:none; margin-top:20px;"></div>
+        </div>
         <div style="margin-top:32px;">
             <h4 style="font-size:16px; color:var(--text-dark); margin-bottom:16px; border-left:3px solid var(--accent); padding-left:10px;">服务套餐</h4>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:16px;">
@@ -1015,13 +1027,17 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>评估类型 *</label>
+                    <label>任务类型 *</label>
                     <select id="dispatchType">
                         <option value="">请选择</option>
                         <option value="入住评估">入住评估</option>
                         <option value="定期复评">定期复评</option>
                         <option value="状态变化评估">状态变化评估</option>
                         <option value="居家上门评估">居家上门评估</option>
+                        <option value="评估质量复核任务">评估质量复核任务</option>
+                        <option value="机构内训任务">机构内训任务</option>
+                        <option value="认知症案例指导任务">认知症案例指导任务</option>
+                        <option value="机构能力诊断任务">机构能力诊断任务</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -1352,6 +1368,73 @@
         document.getElementById('orgNeed').value = info.need || '';
     }
 
+    // ========== 机构能力诊断 ==========
+    function runDiagnosis() {
+        const staff = parseInt(document.getElementById('diagStaff').value) || 0;
+        const process = document.getElementById('diagProcess').value;
+        const carePlan = document.getElementById('diagCarePlan').value;
+        const cognitive = document.getElementById('diagCognitive').value;
+        const training = document.getElementById('diagTraining').value;
+        const infoOfficer = document.getElementById('diagInfoOfficer').value;
+
+        if (!process || !carePlan || !cognitive || !training || !infoOfficer) {
+            alert('请填写所有诊断项目');
+            return;
+        }
+
+        // 生成优势
+        const strengths = [];
+        if (staff >= 2) strengths.push(`已有${staff}名评估人员`);
+        if (process === 'yes') strengths.push('评估流程标准且执行良好');
+        else if (process === 'partial') strengths.push('基本流程完整');
+        if (carePlan === 'yes') strengths.push('评估结果已全面转化为照护计划');
+        if (cognitive === 'good') strengths.push('认知症风险识别体系完善');
+        if (training === 'complete') strengths.push('员工培训记录完整');
+        if (infoOfficer === 'yes') strengths.push('已设置养老信息官');
+        if (strengths.length === 0) strengths.push('机构具有提升意愿');
+
+        // 生成短板
+        const weaknesses = [];
+        if (staff < 2) weaknesses.push('评估人员配置不足');
+        if (process === 'no') weaknesses.push('缺少标准评估流程');
+        if (carePlan === 'no') weaknesses.push('评估结果没有转化为照护计划');
+        else if (carePlan === 'partial') weaknesses.push('评估结果仅部分转化为照护计划');
+        if (cognitive === 'weak') weaknesses.push('认知症行为风险识别不足');
+        else if (cognitive === 'partial') weaknesses.push('认知症风险识别不够系统');
+        if (training === 'none') weaknesses.push('员工培训记录不完整');
+        else if (training === 'partial') weaknesses.push('员工培训记录有待完善');
+        if (infoOfficer === 'no') weaknesses.push('未设置养老信息官');
+
+        // 生成建议行动
+        const actions = [];
+        let actionIdx = 1;
+        if (carePlan !== 'yes') actions.push(`${actionIdx++}. 完成评估质量复核，建立评估→照护计划转化机制`);
+        if (cognitive !== 'good') actions.push(`${actionIdx++}. 开展认知症案例训练，提升行为风险识别能力`);
+        if (infoOfficer === 'no') actions.push(`${actionIdx++}. 指定一名养老信息官，统筹数据与流程管理`);
+        if (training !== 'complete') actions.push(`${actionIdx++}. 建立系统性培训档案，确保记录完整可追溯`);
+        if (staff < 3) actions.push(`${actionIdx++}. 推荐补充${3 - staff}名评估师（平台可推荐合适人选）`);
+        if (process !== 'yes') actions.push(`${actionIdx++}. 建立或优化标准评估流程`);
+
+        const resultDiv = document.getElementById('diagResult');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `
+            <div style="background:#f8fafc;border-radius:12px;padding:24px;border:1px solid #e2e8f0;">
+                <h5 style="font-size:16px;color:var(--text-dark);margin-bottom:16px;">&#128202; 机构能力诊断报告</h5>
+                <div style="margin-bottom:16px;padding:14px;background:#ecfdf5;border-radius:8px;border-left:4px solid #10b981;">
+                    <strong style="color:#065f46;">您的优势：</strong>
+                    <p style="margin:6px 0 0;font-size:14px;color:#047857;">${strengths.join('；')}。</p>
+                </div>
+                <div style="margin-bottom:16px;padding:14px;background:#fef2f2;border-radius:8px;border-left:4px solid #ef4444;">
+                    <strong style="color:#991b1b;">主要短板：</strong>
+                    <p style="margin:6px 0 0;font-size:14px;color:#b91c1c;">${weaknesses.join('；')}。</p>
+                </div>
+                <div style="padding:14px;background:#eff6ff;border-radius:8px;border-left:4px solid #3b82f6;">
+                    <strong style="color:#1e40af;">建议行动：</strong>
+                    <div style="margin-top:8px;font-size:14px;color:#1d4ed8;line-height:2;">${actions.join('<br>')}</div>
+                </div>
+            </div>`;
+    }
+
     function activatePlan(plan) {
         const planNames = { pro: '专业版', vip: '旗舰版' };
         const prices = { pro: 299, vip: 899 };
@@ -1583,7 +1666,7 @@
         const note = document.getElementById('dispatchNote').value.trim();
 
         if (!org || !region || !type || !date) {
-            alert('请填写必填项（需求机构、区域、评估类型、期望日期）');
+            alert('请填写必填项（需求机构、区域、任务类型、期望日期）');
             return;
         }
 
@@ -1826,8 +1909,8 @@
         const body = document.getElementById('profileBody');
 
         // 能力维度（如果有abilities数据则用，否则模拟）
-        const dims = t.abilities || { ethics: 4, knowledge: 3, practice: 4, communication: 3, research: 3, selfdev: 3 };
-        const dimLabels = { ethics: '职业伦理', knowledge: '专业知识', practice: '实务技能', communication: '沟通协调', research: '研究评估', selfdev: '自我发展' };
+        const dims = t.abilities || { ethics: 4, knowledge: 3, skills: 4, communication: 3, research: 3 };
+        const dimLabels = { ethics: '专业伦理与价值观', knowledge: '专业知识', skills: '实务技能', communication: '沟通与关系建立', research: '研究与持续发展', practice: '实务技能', selfdev: '自我发展' };
 
         let html = `<button class="profile-close" onclick="closeProfile()">&times;</button>`;
         html += `<div class="profile-header">
@@ -1881,7 +1964,8 @@
         </div>`;
 
         html += `<div class="profile-section">
-            <h4>能力维度评估</h4>
+            <h4>能力维度评估 <span style="font-size:11px;font-weight:400;padding:2px 8px;background:#fff3cd;color:#856404;border-radius:10px;margin-left:6px;">个人自评</span></h4>
+            <p style="font-size:12px;color:var(--text-light);margin-bottom:10px;">以下评分为评估师本人自评，仅供参考。平台验证（证书/课程/案例/任务/专家评审）将逐步覆盖此数据。</p>
             <div class="profile-bar-group">`;
         Object.entries(dims).forEach(([key, val]) => {
             const pct = (val / 5) * 100;
