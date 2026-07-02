@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>可信专业力量 - 思德库养老专业能力平台</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+    --primary:#1a5276; --primary-light:#2980b9;
+    --accent:#FF8C42; --accent-light:#FFD166;
+    --bg-white:#ffffff; --bg-gray:#f7f8fa;
+    --text-dark:#1a202c; --text-body:#4a5568; --text-light:#718096;
+    --success:#6BCB77;
+    --shadow:0 2px 12px rgba(0,0,0,0.08);
+    --shadow-hover:0 8px 30px rgba(0,0,0,0.12);
+}
+body {
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
+    color:var(--text-body); line-height:1.6; background:var(--bg-white);
+}
+a { text-decoration:none; color:inherit; }
+
+/* 导航 */
+.navbar { position:sticky; top:0; z-index:100; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+.nav-inner { display:flex; align-items:center; height:64px; justify-content:space-between; max-width:1200px; margin:0 auto; padding:0 24px; }
+.nav-brand {
+    font-family:'Noto Serif SC',serif; font-size:22px; font-weight:900;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.nav-links { display:flex; gap:8px; align-items:center; }
+.nav-links a { padding:8px 14px; border-radius:6px; font-size:14px; color:var(--text-body); transition:0.2s; }
+.nav-links a:hover { color:var(--primary); background:var(--bg-gray); }
+.nav-login { background:var(--primary); color:#fff !important; }
+.nav-login:hover { background:var(--primary-light) !important; }
+
+/* Hero */
+.hero {
+    background:linear-gradient(135deg,#1a5276 0%,#2980b9 40%,#FF8C42 100%);
+    padding:48px 24px; text-align:center; color:#fff;
+}
+.hero h1 { font-family:'Noto Serif SC',serif; font-size:32px; font-weight:900; margin-bottom:8px; letter-spacing:2px; }
+.hero p { font-size:15px; opacity:0.9; max-width:600px; margin:0 auto; }
+
+/* 搜索区 */
+.search-section { padding:32px 24px; background:var(--bg-gray); }
+.search-bar {
+    max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns:2fr 1fr 1fr 1.2fr auto; gap:12px;
+    background:#fff; padding:16px; border-radius:12px; box-shadow:var(--shadow);
+}
+.search-bar input, .search-bar select {
+    padding:10px 14px; border:1px solid #e2e8f0; border-radius:8px;
+    font-size:14px; outline:none; background:#fff;
+}
+.search-bar input:focus, .search-bar select:focus { border-color:var(--primary-light); }
+.btn-search {
+    padding:10px 24px; background:var(--primary); color:#fff;
+    border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer;
+}
+.btn-search:hover { background:var(--primary-light); }
+
+/* 结果 */
+.results-section { padding:32px 24px 64px; max-width:1200px; margin:0 auto; }
+.talent-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; }
+.talent-card { background:#fff; border-radius:12px; padding:20px; box-shadow:var(--shadow); border:1px solid #edf2f7; transition:0.25s; }
+.talent-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-hover); }
+.card-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.avatar { width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--primary-light)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; }
+.info h3 { font-size:16px; color:var(--text-dark); margin-bottom:2px; }
+.info .subtitle { font-size:12px; color:var(--text-light); }
+.tags { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:12px; min-height:24px; }
+.tag { padding:2px 8px; background:#e8f4fd; color:var(--primary-light); border-radius:8px; font-size:11px; }
+.tag.gold { background:#fff8e1; color:#f59e0b; }
+.metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:12px 0; border-top:1px solid #f0f0f0; border-bottom:1px solid #f0f0f0; margin-bottom:12px; }
+.metric { text-align:center; }
+.metric .val { font-weight:700; color:var(--primary); font-size:16px; }
+.metric .lbl { font-size:11px; color:var(--text-light); }
+.card-actions { display:flex; gap:8px; }
+.card-actions button { flex:1; padding:8px; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; transition:0.2s; }
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { background:var(--primary-light); }
+.btn-accent { background:var(--accent); color:#fff; }
+.btn-accent:hover { opacity:0.85; }
+
+.empty { text-align:center; color:var(--text-light); padding:60px; font-size:14px; }
+
+/* 页脚 */
+.footer { background:linear-gradient(160deg,#1a1a2e 0%,#2d2d44 50%,#1a1a2e 100%); color:rgba(255,255,255,0.7); padding:32px 24px; text-align:center; font-size:12px; }
+.footer a { color:var(--accent); }
+
+@media (max-width:768px) { .search-bar { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-inner">
+        <a href="capability-platform.html" class="nav-brand">思德库</a>
+        <div class="nav-links">
+            <a href="capability-platform.html">首页</a>
+            <a href="find-talent.html">可信专业力量</a>
+            <a href="login.html" class="nav-login">登录</a>
+        </div>
+    </div>
+</nav>
+<section class="hero">
+    <h1>可信专业力量</h1>
+    <p>按地区、任务类型、能力等级筛选，查看公开专业卡片。查看完整画像或邀请合作需登录机构账号。</p>
+</section>
+<section class="search-section">
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="输入评估师姓名或关键词...">
+        <select id="searchRegion"><option value="">选择区域</option></select>
+        <select id="searchLevel"><option value="">评估师等级</option></select>
+        <select id="searchSkill"><option value="">任务类型</option></select>
+        <button class="btn-search" onclick="doSearch()">搜索</button>
+    </div>
+</section>
+<section class="results-section">
+    <div id="searchResults" class="talent-grid"></div>
+</section>
+<footer class="footer">
+    <p>本平台数据仅供参考，专业人员资质以官方认证为准。</p>
+    <p>&copy; <span id="year"></span> 思德库养老专业能力平台</p>
+</footer>
+<script src="find-talent.js"></script>
+</body>
+</html>

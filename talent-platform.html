@@ -412,7 +412,7 @@
     <nav class="navbar">
         <a href="capability-platform.html" class="brand">思德库 · 评估师专区</a>
         <div class="nav-links">
-            <a href="#talent-search" data-nav="public,org,admin">可信专业力量</a>
+            <a href="find-talent.html" data-nav="public,org,admin">可信专业力量</a>
             <a href="#talent-entry" data-nav="assessor,admin">我的能力账户</a>
             <a href="#org-info" data-nav="org,admin">机构信息</a>
             <a href="#talent-dispatch" data-nav="org,admin">发布专业任务</a>
@@ -432,7 +432,7 @@
         <p style="font-size:15px; opacity:0.8; margin-bottom:4px;">思德库养老专业能力平台 · 首个试点职业模块</p>
         <p>能力建档 · 证书管理 · 任务匹配 · 收入管理</p>
         <div class="hero-actions">
-            <a href="#talent-search" class="btn btn-white">查看可信专业力量</a>
+            <a href="find-talent.html" class="btn btn-white">查看可信专业力量</a>
             <a href="javascript:void(0)" onclick="if(!currentUser){openLogin('org')}else{document.getElementById('talent-dispatch').scrollIntoView({behavior:'smooth'})}" class="btn btn-outline">发布专业任务</a>
         </div>
     </section>
@@ -1041,43 +1041,6 @@
             </div>
         </div>
     </section>
-    <!-- 查找专业人员 -->
-    <section id="talent-search" class="section" data-role="public" style="background: var(--bg-gray); max-width: 100%; padding-left: calc((100% - 1200px)/2 + 24px); padding-right: calc((100% - 1200px)/2 + 24px);">
-        <h2 class="section-title">可信专业力量</h2>
-        <p class="section-desc">按地区、任务类型、能力等级筛选，查看公开专业卡片</p>
-        <div class="search-bar">
-            <input type="text" placeholder="输入评估师姓名或关键词..." id="searchInput">
-            <select id="searchRegion">
-                <option value="">选择区域</option>
-                <option value="beijing">北京市</option>
-                <option value="shanghai">上海市</option>
-                <option value="guangzhou">广州市</option>
-                <option value="shenzhen">深圳市</option>
-                <option value="chengdu">成都市</option>
-                <option value="hangzhou">杭州市</option>
-            </select>
-            <select id="searchLevel">
-                <option value="">评估师等级</option>
-                <option value="senior">高级评估师</option>
-                <option value="mid">中级评估师</option>
-                <option value="junior">初级评估师</option>
-            </select>
-            <select id="searchSkill">
-                <option value="">任务类型</option>
-                <option value="routine_assess">常规老年人能力评估</option>
-                <option value="complex_case">复杂案例评估</option>
-                <option value="result_review">评估结果复核</option>
-                <option value="dispute">评估争议处理</option>
-                <option value="family_comm">家属沟通与结果解释</option>
-                <option value="quality_ctrl">评估质量控制</option>
-                <option value="training">评估师培训与督导</option>
-                <option value="proj_mgmt">评估项目组织管理</option>
-                <option value="data_report">评估数据分析与报告</option>
-            </select>
-            <button class="btn-search" onclick="searchTalent()">搜索</button>
-        </div>
-        <div id="searchResults" class="talent-grid"></div>
-    </section>
     <!-- 发布专业任务 -->
     <section id="talent-dispatch" class="section" data-role="org,admin">
         <h2 class="section-title">发布专业任务</h2>
@@ -1344,20 +1307,7 @@
     function doLogout() {
         localStorage.removeItem('sdk_current_user');
         currentUser = null;
-        document.getElementById('loginUser').value = '';
-        document.getElementById('loginPass').value = '';
-        // 回到公开视图
-        document.getElementById('userInfo').style.display = 'none';
-        document.getElementById('navLoginBtn').style.display = '';
-        document.querySelectorAll('section[data-role]').forEach(sec => {
-            const allowed = sec.dataset.role.split(',');
-            sec.style.display = allowed.includes('public') ? '' : 'none';
-        });
-        document.querySelectorAll('.nav-links a[data-nav]').forEach(a => {
-            const allowed = a.dataset.nav.split(',');
-            a.style.display = allowed.includes('public') ? '' : 'none';
-        });
-        document.getElementById('hero').style.display = '';
+        location.href = 'login.html';
     }
 
     function applyRole() {
@@ -1401,45 +1351,16 @@
 
     // 页面加载时检查登录状态
     (function checkLogin() {
-        let forceLogin = false;
-        // 如果URL有?logout参数，清除登录并强制弹登录框
-        if (location.search.includes('logout')) {
-            localStorage.removeItem('sdk_current_user');
-            history.replaceState(null, '', location.pathname);
-            forceLogin = true;
-        }
-        const quickRole = localStorage.getItem('sdk_quick_role');
-        if (quickRole) {
-            document.getElementById('loginUser').value = quickRole;
-            localStorage.removeItem('sdk_quick_role');
-            forceLogin = true;
-        }
         const saved = localStorage.getItem('sdk_current_user');
-        if (saved && !forceLogin) {
+        if (saved) {
             try {
                 currentUser = JSON.parse(saved);
                 applyRole();
             } catch(e) { /* ignore */ }
         }
         if (!currentUser) {
-            // 未登录：显示公开 section，隐藏其他
-            document.querySelectorAll('section[data-role]').forEach(sec => {
-                const allowed = sec.dataset.role.split(',');
-                sec.style.display = allowed.includes('public') ? '' : 'none';
-            });
-            document.getElementById('hero').style.display = '';
-            // 导航链接：只显示公开链接
-            document.querySelectorAll('.nav-links a[data-nav]').forEach(a => {
-                const allowed = a.dataset.nav.split(',');
-                a.style.display = allowed.includes('public') ? '' : 'none';
-            });
-            // 显示导航栏登录按钮
-            const navLogin = document.getElementById('navLoginBtn');
-            if (navLogin) navLogin.style.display = '';
-            // 从机构/评估师入口跳过来 → 弹登录框；仅点"查找人才"不弹
-            if (forceLogin) {
-                document.getElementById('loginOverlay').classList.remove('hidden');
-            }
+            // 未登录 → 跳转登录页
+            location.href = 'login.html';
         }
     })();
 
@@ -1707,52 +1628,8 @@
     const levelMap = { senior: '高级评估师', mid: '中级评估师', junior: '初级评估师' };
     const regionMap = { beijing: '北京市', shanghai: '上海市', guangzhou: '广州市', shenzhen: '深圳市', chengdu: '成都市', hangzhou: '杭州市' };
 
-    // 搜索人才
-    function searchTalent() {
-        const keyword = document.getElementById('searchInput').value.trim();
-        const region = document.getElementById('searchRegion').value;
-        const level = document.getElementById('searchLevel').value;
-        const skill = document.getElementById('searchSkill').value;
-
-        let results = talentData.filter(t => {
-            if (keyword && !t.name.includes(keyword)) return false;
-            if (region && t.region !== region) return false;
-            if (level && t.level !== level) return false;
-            if (skill && !(t.skills || []).includes(skill) && !(t.tasks || []).includes(skill)) return false;
-            return true;
-        });
-
-        const container = document.getElementById('searchResults');
-        if (results.length === 0) {
-            container.innerHTML = '<p style="text-align:center;color:var(--text-light);padding:40px;">未找到符合条件的评估师，请调整筛选条件</p>';
-            return;
-        }
-        container.innerHTML = results.map((t, idx) => `
-            <div class="talent-card">
-                <div class="card-header">
-                    <div class="avatar">${t.name[0]}</div>
-                    <div class="info">
-                        <h3>${t.name}</h3>
-                        <div class="subtitle">${levelMap[t.level]} · ${regionMap[t.region]}</div>
-                    </div>
-                </div>
-                <div class="tags">
-                    ${t.badge ? `<span class="tag gold">${t.badge}</span>` : ''}
-                    ${t.isTrainer ? `<span class="tag" style="background:#f0e6ff;color:#8e44ad;">讲师</span>` : ''}
-                    ${t.skills.map(s => `<span class="tag">${skillMap[s]}</span>`).join('')}
-                </div>
-                <div class="metrics">
-                    <div class="metric"><div class="val">${t.score}</div><div class="lbl">评分</div></div>
-                    <div class="metric"><div class="val">${t.count.toLocaleString()}</div><div class="lbl">评估次数</div></div>
-                    <div class="metric"><div class="val">${t.years}年</div><div class="lbl">从业年限</div></div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn-sm btn-primary" onclick="showProfile('${t.name}')">查看完整画像</button>
-                    <button class="btn-sm btn-accent" onclick="inviteCooperate('${t.name}')">邀请合作</button>
-                </div>
-            </div>
-        `).join('');
-    }
+    // 搜索人才（已移至 find-talent.html，此处保留空函数避免报错）
+    function searchTalent() { return; }
 
     // ========== 数据持久化 ==========
     const STORE_KEY_ORDERS = 'sdk_dispatch_orders';
@@ -2094,17 +1971,8 @@
         completeOrder(id);
     }
 
-    // ========== 邀请合作（未登录跳登录） ==========
+    // ========== 邀请合作 ==========
     function inviteCooperate(name) {
-        if (!currentUser) {
-            if (confirm(`邀请「${name}」合作需先登录。\n\n点击"确定"进入登录，或"取消"返回。`)) {
-                localStorage.setItem('sdk_pending_invite', name);
-                document.getElementById('loginOverlay').classList.remove('hidden');
-                document.getElementById('loginUser').value = 'org';
-            }
-            return;
-        }
-        // 已登录：跳到发布任务
         document.getElementById('talent-dispatch').scrollIntoView({behavior:'smooth'});
         setTimeout(() => {
             const note = document.getElementById('dispatchNote');
@@ -2119,9 +1987,8 @@
 
         // 未登录：提示登录
         if (!currentUser) {
-            if (confirm('查看评估师完整画像需先登录。\n\n是否前往登录？')) {
-                document.getElementById('loginOverlay').classList.remove('hidden');
-                document.getElementById('loginUser').value = 'org';
+            if (confirm('查看评估师完整画像需先登录。\n\n点击"确定"前往登录页。')) {
+                location.href = 'login.html?role=org';
             }
             return;
         }
