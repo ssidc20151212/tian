@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>提交专业需求 · CareProof AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+.page-wrap { max-width:720px; margin:0 auto; padding:40px 24px; }
+.page-title { font-family:'Noto Serif SC',serif; font-size:26px; color:var(--cp-text-dark);
+  margin-bottom:8px; font-weight:700; }
+.page-desc { font-size:14px; color:var(--cp-text-light); margin-bottom:32px; line-height:1.7; }
+.form-card { background:#fff; border-radius:var(--cp-radius-lg); padding:32px;
+  box-shadow:var(--cp-shadow); border:1px solid var(--cp-bg-soft); }
+.submit-row { margin-top:24px; display:flex; gap:12px; justify-content:flex-end; }
+.result-box { margin-top:32px; display:none; }
+.result-box h3 { font-family:'Noto Serif SC',serif; font-size:20px; color:var(--cp-text-dark); margin-bottom:16px; }
+.match-card {
+  background:#fff; border-radius:12px; padding:20px; margin-bottom:14px;
+  box-shadow:var(--cp-shadow); border:1px solid var(--cp-bg-soft);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.match-card .info h4 { font-size:15px; color:var(--cp-text-dark); margin-bottom:4px; }
+.match-card .info p { font-size:12px; color:var(--cp-text-light); }
+.match-score { font-size:28px; font-weight:700; color:var(--cp-primary); }
+</style>
+</head>
+<body>
+<script src="data-model.js"></script>
+<script>
+CP.boot();
+if (!CP.requireRole('institution')) {}
+</script>
+<nav class="cp-navbar">
+  <div class="cp-nav-inner">
+    <a href="capability-platform.html" class="cp-nav-brand">思德库</a>
+    <div class="cp-nav-links">
+      <a href="institution-workspace.html">工作台</a>
+      <a href="institution-need.html" style="color:var(--cp-primary);font-weight:600;">提交需求</a>
+      <button class="cp-nav-logout" onclick="CP.logout()">退出</button>
+    </div>
+  </div>
+</nav>
+<div class="page-wrap">
+  <h1 class="page-title">提交专业需求</h1>
+  <p class="page-desc">描述您机构遇到的专业问题，AI 将从经过能力验证的人才档案中为您匹配最合适的专业力量。</p>
+  <div class="form-card">
+    <div class="cp-form-group">
+      <label class="cp-form-label">问题分类<span class="required">*</span></label>
+      <select class="cp-form-select" id="needCat"></select>
+    </div>
+    <div class="cp-form-group">
+      <label class="cp-form-label">需求标题<span class="required">*</span></label>
+      <input class="cp-form-input" id="needTitle" placeholder="一句话描述您的需求">
+    </div>
+    <div class="cp-form-group">
+      <label class="cp-form-label">详细描述<span class="required">*</span></label>
+      <textarea class="cp-form-textarea" id="needDesc" rows="5"
+        placeholder="请详细描述：遇到什么问题？期望什么结果？有什么特殊要求？"></textarea>
+    </div>
+    <div class="cp-form-row">
+      <div class="cp-form-group">
+        <label class="cp-form-label">所在区域</label>
+        <select class="cp-form-select" id="needRegion">
+          <option value="">不限</option>
+          <option value="beijing">北京</option>
+          <option value="shanghai">上海</option>
+          <option value="guangzhou">广州</option>
+          <option value="shenzhen">深圳</option>
+          <option value="chengdu">成都</option>
+          <option value="hangzhou">杭州</option>
+        </select>
+      </div>
+      <div class="cp-form-group">
+        <label class="cp-form-label">紧急程度</label>
+        <select class="cp-form-select" id="needUrgency">
+          <option value="normal">常规</option>
+          <option value="urgent">紧急</option>
+          <option value="flexible">灵活</option>
+        </select>
+      </div>
+    </div>
+    <div class="submit-row">
+      <a href="institution-workspace.html" class="cp-btn cp-btn-ghost">返回</a>
+      <button class="cp-btn cp-btn-primary" onclick="submitNeed()">提交并匹配</button>
+    </div>
+  </div>
+  <div class="result-box" id="resultBox">
+    <h3>AI 匹配结果</h3>
+    <div id="matchResults"></div>
+    <a href="institution-workspace.html" class="cp-btn cp-btn-outline" style="margin-top:16px;">返回工作台</a>
+  </div>
+</div>
+<script src="ai-match.js"></script>
+<script src="institution-need.js"></script>
+</body>
+</html>

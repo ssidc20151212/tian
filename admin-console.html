@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理后台 · CareProof AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+.admin-wrap { max-width:1100px; margin:0 auto; padding:32px 24px; }
+.admin-header {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:36px; padding-bottom:20px; border-bottom:1px solid var(--cp-bg-soft);
+}
+.admin-header h1 { font-family:'Noto Serif SC',serif; font-size:24px; color:var(--cp-text-dark); }
+.admin-tabs { display:flex; gap:8px; margin-bottom:28px; flex-wrap:wrap; }
+.admin-tab {
+  padding:8px 18px; border-radius:8px; font-size:14px; font-weight:600;
+  cursor:pointer; background:var(--cp-bg-gray); color:var(--cp-text-body); transition:0.2s;
+}
+.admin-tab.active { background:var(--cp-primary); color:#fff; }
+.admin-section { display:none; }
+.admin-section.active { display:block; }
+.stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:32px; }
+.stat-box { background:#fff; border-radius:12px; padding:20px; text-align:center;
+  box-shadow:var(--cp-shadow); border:1px solid var(--cp-bg-soft); }
+.stat-box .num { font-size:28px; font-weight:700; color:var(--cp-primary); }
+.stat-box .lbl { font-size:12px; color:var(--cp-text-light); margin-top:4px; }
+.data-table { width:100%; border-collapse:collapse; font-size:13px; background:#fff;
+  border-radius:12px; overflow:hidden; box-shadow:var(--cp-shadow); }
+.data-table th { background:var(--cp-bg-gray); padding:12px 16px; text-align:left;
+  font-weight:600; color:var(--cp-text-dark); }
+.data-table td { padding:12px 16px; border-top:1px solid var(--cp-bg-soft); color:var(--cp-text-body); }
+@media (max-width:768px) { .stat-grid { grid-template-columns:repeat(2,1fr); } }
+</style>
+</head>
+<body>
+<script src="data-model.js"></script>
+<script>
+CP.boot();
+if (!CP.requireRole('admin','login.html?role=admin')) {}
+</script>
+<nav class="cp-navbar">
+  <div class="cp-nav-inner">
+    <a href="capability-platform.html" class="cp-nav-brand">思德库</a>
+    <div class="cp-nav-links">
+      <a href="admin-console.html" style="color:var(--cp-primary);font-weight:600;">管理后台</a>
+      <a href="find-talent.html">浏览档案</a>
+      <span class="cp-nav-user" id="navUser"></span>
+      <button class="cp-nav-logout" onclick="CP.logout()">退出</button>
+    </div>
+  </div>
+</nav>
+<div class="admin-wrap">
+  <div class="admin-header">
+    <h1>CareProof AI · 管理后台</h1>
+  </div>
+  <div class="admin-tabs" id="adminTabs">
+    <div class="admin-tab active" onclick="switchTab('overview')">数据总览</div>
+    <div class="admin-tab" onclick="switchTab('talents')">人才档案</div>
+    <div class="admin-tab" onclick="switchTab('needs')">机构需求</div>
+    <div class="admin-tab" onclick="switchTab('leads')">商务线索</div>
+  </div>
+  <div class="admin-section active" id="tab-overview"></div>
+  <div class="admin-section" id="tab-talents"></div>
+  <div class="admin-section" id="tab-needs"></div>
+  <div class="admin-section" id="tab-leads"></div>
+</div>
+<script src="admin-console.js"></script>
+</body>
+</html>

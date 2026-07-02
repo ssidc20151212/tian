@@ -1,99 +1,128 @@
-// 可信专业力量 - 独立搜索页
-const REGIONS = { beijing:'北京市', shanghai:'上海市', guangzhou:'广州市', shenzhen:'深圳市', chengdu:'成都市', hangzhou:'杭州市' };
-const LEVELS = { senior:'高级评估师', mid:'中级评估师', junior:'初级评估师' };
-const SKILL_MAP = { cognitive:'认知症评估', disability:'失能评估', daily:'日常生活评估', mental:'精神状态评估', social:'社会参与评估' };
-const TASK_OPTS = [
-    ['routine_assess','常规老年人能力评估'], ['complex_case','复杂案例评估'],
-    ['result_review','评估结果复核'], ['dispute','评估争议处理'],
-    ['family_comm','家属沟通与结果解释'], ['quality_ctrl','评估质量控制'],
-    ['training','评估师培训与督导'], ['proj_mgmt','评估项目组织管理'],
-    ['data_report','评估数据分析与报告']
-];
+/* ================================================================
+ * CareProof AI · find-talent.js — 公开能力档案浏览
+ * 展示 CP.load(TALENTS) 中的示范档案（isDemo:true）
+ * ================================================================ */
+(function () {
+  'use strict';
 
-const talentData = [
-    { name:'王美华', region:'beijing', level:'senior', skills:['cognitive','disability'], score:4.9, count:1280, years:8, badge:'金牌评估师', isTrainer:true },
-    { name:'李建国', region:'shanghai', level:'mid', skills:['daily','mental'], score:4.7, count:856, years:5, badge:'', isTrainer:false },
-    { name:'张秀芬', region:'guangzhou', level:'senior', skills:['social','cognitive'], score:4.8, count:1056, years:6, badge:'金牌评估师', isTrainer:true },
-    { name:'赵丽萍', region:'shenzhen', level:'mid', skills:['disability','daily'], score:4.6, count:620, years:4, badge:'', isTrainer:false },
-    { name:'陈志强', region:'chengdu', level:'senior', skills:['mental','social'], score:4.8, count:980, years:7, badge:'金牌评估师', isTrainer:true },
-    { name:'刘晓燕', region:'hangzhou', level:'junior', skills:['daily','disability'], score:4.5, count:320, years:2, badge:'', isTrainer:false }
-];
+  var REGIONS = {
+    beijing:'北京', shanghai:'上海', guangzhou:'广州',
+    shenzhen:'深圳', chengdu:'成都', hangzhou:'杭州'
+  };
+  var LEVELS = { senior:'高级', mid:'中级', junior:'初级' };
+  var DOMAINS = CP_CONST.CAPABILITY_DOMAINS;
 
-// 初始化下拉选项
-function initFilters() {
-    const regEl = document.getElementById('searchRegion');
-    Object.entries(REGIONS).forEach(([k,v]) => regEl.innerHTML += `<option value="${k}">${v}</option>`);
-    const lvlEl = document.getElementById('searchLevel');
-    Object.entries(LEVELS).forEach(([k,v]) => lvlEl.innerHTML += `<option value="${k}">${v}</option>`);
-    const skillEl = document.getElementById('searchSkill');
-    TASK_OPTS.forEach(([k,v]) => skillEl.innerHTML += `<option value="${k}">${v}</option>`);
-}
-
-function doSearch() {
-    const keyword = document.getElementById('searchInput').value.trim();
-    const region = document.getElementById('searchRegion').value;
-    const level = document.getElementById('searchLevel').value;
-    const skill = document.getElementById('searchSkill').value;
-
-    const results = talentData.filter(t => {
-        if (keyword && !t.name.includes(keyword)) return false;
-        if (region && t.region !== region) return false;
-        if (level && t.level !== level) return false;
-        if (skill && !(t.skills || []).includes(skill) && !(t.tasks || []).includes(skill)) return false;
-        return true;
+  // 初始化下拉
+  function initFilters() {
+    var r = document.getElementById('fRegion');
+    Object.keys(REGIONS).forEach(function (k) {
+      r.innerHTML += '<option value="' + k + '">' + REGIONS[k] + '</option>';
     });
+    var l = document.getElementById('fLevel');
+    Object.keys(LEVELS).forEach(function (k) {
+      l.innerHTML += '<option value="' + k + '">' + LEVELS[k] + '评估师</option>';
+    });
+    var d = document.getElementById('fDomain');
+    Object.keys(DOMAINS).forEach(function (k) {
+      d.innerHTML += '<option value="' + k + '">' + DOMAINS[k] + '</option>';
+    });
+  }
 
-    const container = document.getElementById('searchResults');
-    if (results.length === 0) {
-        container.innerHTML = '<p class="empty">未找到符合条件的评估师，请调整筛选条件</p>';
-        return;
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, function (c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function doSearch() {
+    var kw = document.getElementById('fKeyword').value.trim();
+    var region = document.getElementById('fRegion').value;
+    var level = document.getElementById('fLevel').value;
+    var domain = document.getElementById('fDomain').value;
+    var list = CP.load(CP_STORAGE.TALENTS).filter(function (t) {
+      if (kw && (t.name || '').indexOf(kw) < 0) return false;
+      if (region && t.region !== region) return false;
+      if (level && t.level !== level) return false;
+      if (domain && (t.domains || []).indexOf(domain) < 0) return false;
+      return true;
+    });
+    render(list);
+  }
+  window.doSearch = doSearch;
+
+  function render(list) {
+    var box = document.getElementById('talentGrid');
+    if (!list.length) {
+      box.innerHTML = '<div class="empty">未找到符合条件的能力档案</div>';
+      return;
     }
-    container.innerHTML = results.map(t => `
-        <div class="talent-card">
-            <div class="card-header">
-                <div class="avatar">${t.name[0]}</div>
-                <div class="info">
-                    <h3>${t.name}</h3>
-                    <div class="subtitle">${LEVELS[t.level]} · ${REGIONS[t.region]}</div>
-                </div>
-            </div>
-            <div class="tags">
-                ${t.badge ? `<span class="tag gold">${t.badge}</span>` : ''}
-                ${t.isTrainer ? `<span class="tag" style="background:#f0e6ff;color:#8e44ad;">讲师</span>` : ''}
-                ${t.skills.map(s => `<span class="tag">${SKILL_MAP[s] || s}</span>`).join('')}
-            </div>
-            <div class="metrics">
-                <div class="metric"><div class="val">${t.score}</div><div class="lbl">评分</div></div>
-                <div class="metric"><div class="val">${t.count.toLocaleString()}</div><div class="lbl">评估次数</div></div>
-                <div class="metric"><div class="val">${t.years}年</div><div class="lbl">从业年限</div></div>
-            </div>
-            <div class="card-actions">
-                <button class="btn-primary" onclick="requireLogin('${t.name}','profile')">查看完整画像</button>
-                <button class="btn-accent" onclick="requireLogin('${t.name}','invite')">邀请合作</button>
-            </div>
-        </div>
-    `).join('');
-}
+    var evAll = CP.load(CP_STORAGE.EVIDENCES);
+    box.innerHTML = list.map(function (t) {
+      var evs = evAll.filter(function (e) { return e.talentId === t.id; });
+      var verified = evs.filter(function (e) {
+        return e.verifyStatus === 'verified' || e.verifyStatus === 'institution_confirmed';
+      }).length;
+      var scores = t.scores || {};
+      var top3 = Object.keys(scores).sort(function (a, b) { return scores[b] - scores[a]; }).slice(0, 3);
+      return '<div class="talent-card">' +
+        '<div class="tc-head">' +
+          '<div class="tc-avatar">' + (t.name || '?')[0] + '</div>' +
+          '<div>' +
+            '<div class="tc-name">' + escapeHtml(t.name) +
+              (t.isDemo ? ' <span class="cp-demo-badge">示范数据</span>' : '') + '</div>' +
+            '<div class="tc-sub">' + (LEVELS[t.level] || '-') + '评估师 · ' +
+              (REGIONS[t.region] || '-') + ' · 从业' + (t.years || '-') + '年</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="tc-tags">' +
+          (t.domains || []).map(function (d) {
+            return '<span class="cp-tag">' + (DOMAINS[d] || d) + '</span>';
+          }).join('') +
+        '</div>' +
+        '<div class="tc-scores">' +
+          top3.map(function (k) {
+            return '<div class="s"><div class="v">' + scores[k] + '</div>' +
+              '<div class="l">' + (DOMAINS[k] || k) + '</div></div>';
+          }).join('') +
+        '</div>' +
+        '<div class="tc-sub" style="margin-bottom:12px;">已核验证据 ' + verified + ' 项</div>' +
+        '<div class="tc-actions">' +
+          '<button class="cp-btn cp-btn-outline cp-btn-sm" onclick="viewProfile(\'' + t.id + '\')">查看档案</button>' +
+          '<button class="cp-btn cp-btn-primary cp-btn-sm" onclick="startInvite(\'' + t.id + '\')">发起合作</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
 
-// 需要登录才能操作
-function requireLogin(name, action) {
-    const saved = localStorage.getItem('sdk_current_user');
-    if (saved) {
-        // 已登录，跳转到人才平台
-        if (action === 'invite') {
-            localStorage.setItem('sdk_pending_invite', name);
-            location.href = 'talent-platform.html#talent-dispatch';
-        } else {
-            localStorage.setItem('sdk_view_profile', name);
-            location.href = 'talent-platform.html';
-        }
-        return;
+  window.viewProfile = function (tid) {
+    var user = CP.currentUser();
+    if (!user) {
+      localStorage.setItem(CP_STORAGE.PENDING_ACTION,
+        JSON.stringify({ redirect: 'find-talent.html' }));
+      CP.safeReplace('login.html');
+      return;
     }
-    if (action === 'invite') localStorage.setItem('sdk_pending_invite', name);
-    else localStorage.setItem('sdk_view_profile', name);
-    location.href = 'login.html?role=org';
-}
+    alert('完整证据链查看功能开发中，当前用户：' + user.displayName);
+  };
+  window.startInvite = function (tid) {
+    var user = CP.currentUser();
+    if (!user || user.role !== 'institution') {
+      localStorage.setItem(CP_STORAGE.PENDING_ACTION,
+        JSON.stringify({ redirect: 'institution-need.html' }));
+      CP.safeReplace('login.html?role=institution');
+      return;
+    }
+    CP.safeReplace('institution-need.html');
+  };
 
-document.getElementById('year').textContent = new Date().getFullYear();
-initFilters();
-doSearch();
+  // 已登录时隐藏登录按钮
+  (function () {
+    if (CP.currentUser()) {
+      var btn = document.getElementById('navLoginBtn');
+      if (btn) btn.textContent = '进入工作台';
+    }
+    document.getElementById('year').textContent = new Date().getFullYear();
+    initFilters();
+    doSearch();
+  })();
+})();
