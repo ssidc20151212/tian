@@ -74,6 +74,7 @@
             <div class="nav-btns" style="margin-top:20px;">
                 <button class="btn-prev" onclick="resetAssess()">重新评估</button>
                 <button class="btn-result" onclick="window.print()">打印结果</button>
+                <button class="btn-next" onclick="location.href='ai-eval-copilot.html'">AI质控复核 →</button>
             </div>
         </div>
 
@@ -257,6 +258,21 @@
             document.getElementById('assessBlock').style.display = 'none';
             document.getElementById('resultSection').style.display = 'block';
             window.scrollTo(0, 0);
+
+            // 将评估结果存入 localStorage，供AI评估副驾导入
+            const dimScores = {};
+            dimensions.forEach((dim, i) => {
+                dimScores[dim.name] = calcDimScore(i);
+            });
+            const resultData = {
+                timestamp: new Date().toISOString(),
+                totalScore: total,
+                level: total <= 3 ? 0 : total <= 7 ? 1 : total <= 14 ? 2 : 3,
+                levelText: level,
+                dimensions: dimScores,
+                answers: { ...answers }
+            };
+            localStorage.setItem('ssidc_last_assessment', JSON.stringify(resultData));
         }
 
         function resetAssess() {

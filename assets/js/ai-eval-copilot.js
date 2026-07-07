@@ -25,6 +25,7 @@
   const form = document.getElementById('qcForm');
   const btnRun = document.getElementById('btnRunQC');
   const btnReset = document.getElementById('btnReset');
+  const btnImport = document.getElementById('btnImport');
   const btnPrint = document.getElementById('btnPrint');
   const btnExport = document.getElementById('btnExport');
   const loadingEl = document.getElementById('loadingOverlay');
@@ -820,6 +821,56 @@
     form.reset();
     hide(qcPanel); hide(sugPanel); hide(reportPanel);
     setStep(1);
+  });
+
+  // 从最近评估导入
+  btnImport.addEventListener('click', function () {
+    const raw = localStorage.getItem('ssidc_last_assessment');
+    if (!raw) {
+      alert('未找到最近的评估记录。\n请先在"老年人能力评估系统"中完成一次评估。');
+      return;
+    }
+    try {
+      const data = JSON.parse(raw);
+      const dims = data.dimensions || {};
+      // ADL 维度得分转换为 Barthel 近似值（原始满分30，Barthel满分100）
+      const adlRaw = dims['日常生活活动'] || 0;
+      // assess-system 的 ADL 分数越高=越依赖，Barthel 反向（越高=越独立）
+      const adlBarthel = Math.max(0, Math.round((1 - adlRaw / 30) * 100));
+      // 精神状态维度分数转换为 MMSE 近似（原始满分17，MMSE满分30）
+      const mentalRaw = dims['精神状态'] || 0;
+      const mmseApprox = Math.max(0, Math.round((1 - mentalRaw / 17) * 30));
+
+      // 填充表单
+      document.getElementById('evalType').value = 'ability';
+      document.getElementById('cognitiveScore').value = mmseApprox;
+      document.getElementById('adlScore').value = adlBarthel;
+      document.getElementById('careLevel').value = data.level || 0;
+
+      // 语言表达推断（感知觉与沟通维度）
+      const commRaw = dims['感知觉与沟通'] || 0;
+      if (commRaw >= 8) {
+        document.getElementById('speechStatus').value = 'aphasia';
+      } else if (commRaw >= 4) {
+        document.getElementById('speechStatus').value = 'slow';
+      } else {
+        document.getElementById('speechStatus').value = 'normal';
+      }
+
+      // 备注中写入导入信息
+      const time = new Date(data.timestamp).toLocaleString('zh-CN');
+      const noteEl = document.getElementById('notes');
+      noteEl.value = '【自动导入】来源：综合能力评估（' + time + '）\n' +
+        '原始总分：' + data.totalScore + '，等级：' + data.levelText + '\n' +
+        '各维度：' + Object.entries(dims).map(
+          ([k, v]) => k + ':' + v + '分').join('、');
+
+      alert('已导入最近一次评估数据（' + time + '）\n' +
+        '等级：' + data.levelText + '\n\n' +
+        '请补充姓名、年龄、评估师等信息后运行质控。');
+    } catch (e) {
+      alert('评估数据解析失败：' + e.message);
+    }
   });
 
   // 打印
