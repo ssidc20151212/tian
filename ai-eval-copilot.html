@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思德库AI评估副驾 V0.1</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="assets/css/ai-eval-copilot.css">
+</head>
+<body>
+    <!-- 页头 -->
+    <header class="copilot-header">
+        <h1>思德库AI评估副驾</h1>
+        <p class="subtitle">评估质控 / 逻辑复核 / 等级解释 / 照护计划草案</p>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="copilot-main">
+        <a href="index.html" class="back-link">← 返回首页</a>
+
+        <!-- 步骤指示器 -->
+        <div class="step-indicator">
+            <div class="step-item active" data-step="1">
+                <span class="step-num">1</span> 录入评估数据
+            </div>
+            <div class="step-item" data-step="2">
+                <span class="step-num">2</span> AI质控分析
+            </div>
+            <div class="step-item" data-step="3">
+                <span class="step-num">3</span> 查看报告
+            </div>
+        </div>
+
+        <!-- 评估表单 -->
+        <section class="form-section" id="formSection">
+            <h2 class="form-section-title">新建评估质控</h2>
+            <form id="qcForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>评估类型 <span class="req">*</span></label>
+                        <select id="evalType" required>
+                            <option value="">请选择</option>
+                            <option value="ability">老年人能力评估</option>
+                            <option value="ltc">长护险评估</option>
+                            <option value="nursing">护理等级评定</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>被评估人姓名 <span class="req">*</span></label>
+                        <input type="text" id="personName" required
+                               placeholder="请输入姓名">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>年龄 <span class="req">*</span></label>
+                        <input type="number" id="personAge" min="0"
+                               max="120" required placeholder="岁">
+                    </div>
+                    <div class="form-group">
+                        <label>评估师</label>
+                        <input type="text" id="assessorName"
+                               placeholder="评估师姓名">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>认知功能评分 <span class="req">*</span></label>
+                        <input type="number" id="cognitiveScore" min="0"
+                               max="30" required placeholder="0-30 (MMSE)">
+                    </div>
+                    <div class="form-group">
+                        <label>ADL评分 <span class="req">*</span></label>
+                        <input type="number" id="adlScore" min="0"
+                               max="100" required placeholder="0-100 (Barthel)">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>照护等级</label>
+                        <select id="careLevel">
+                            <option value="0">能力完好(0级)</option>
+                            <option value="1">轻度失能(1级)</option>
+                            <option value="2">中度失能(2级)</option>
+                            <option value="3">重度失能(3级)</option>
+                            <option value="4">完全失能(4级)</option>
+                            <option value="5">特殊照护(5级)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>评估耗时(分钟)</label>
+                        <input type="number" id="duration" min="0"
+                               placeholder="评估用时">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>移动方式</label>
+                        <select id="mobilityMode">
+                            <option value="">请选择</option>
+                            <option value="independent">独立行走</option>
+                            <option value="cane">使用拐杖/助行器</option>
+                            <option value="wheelchair">使用轮椅</option>
+                            <option value="bedridden">卧床</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>排泄控制</label>
+                        <select id="continence">
+                            <option value="">请选择</option>
+                            <option value="independent">自主如厕</option>
+                            <option value="reminder">提醒下可控</option>
+                            <option value="diaper">使用尿裤</option>
+                            <option value="incontinent">完全失禁</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>进食情况</label>
+                        <select id="feedingStatus">
+                            <option value="">请选择</option>
+                            <option value="independent">完全独立</option>
+                            <option value="assisted">需辅助餐具/备餐</option>
+                            <option value="partial">部分喂食</option>
+                            <option value="dependent">完全喂食</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>语言表达</label>
+                        <select id="speechStatus">
+                            <option value="">请选择</option>
+                            <option value="normal">正常表达</option>
+                            <option value="slow">表达缓慢</option>
+                            <option value="aphasia">失语/极少表达</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>辅具使用</label>
+                        <select id="assistDevice">
+                            <option value="">未使用辅具</option>
+                            <option value="walker">助行器/拐杖</option>
+                            <option value="hearing">助听器</option>
+                            <option value="wheelchair_device">轮椅</option>
+                            <option value="multiple">多种辅具</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>信息来源</label>
+                        <select id="infoSource">
+                            <option value="">请选择</option>
+                            <option value="observation">现场观察为主</option>
+                            <option value="inquiry">询问为主</option>
+                            <option value="records">查阅记录为主</option>
+                            <option value="mixed">综合多种来源</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>补充说明（病史/辅具/家属反馈/特殊情况）</label>
+                    <textarea id="notes" rows="3"
+                              placeholder="如：使用轮椅、家属24小时照护、近期骨折术后、有认知症诊断等"></textarea>
+                </div>
+            </form>
+        </section>
+
+        <!-- 操作按钮 -->
+        <div class="action-bar">
+            <button class="btn-qc btn-qc-primary" id="btnRunQC">
+                运行AI质控
+            </button>
+            <button class="btn-qc btn-qc-outline" id="btnReset">
+                重置表单
+            </button>
+        </div>
+
+        <!-- 加载动画 -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <p style="color:#718096;font-size:14px;">AI质控引擎分析中...</p>
+        </div>
+
+        <!-- 质控结果 -->
+        <section class="result-panel" id="qcResultPanel">
+            <div class="result-title">
+                <svg class="icon" viewBox="0 0 24 24" fill="none"
+                     stroke="#1a5276" stroke-width="2">
+                    <path d="M9 11l3 3L22 4"/>
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0
+                             01-2-2V5a2 2 0 012-2h11"/>
+                </svg>
+                质控结果
+            </div>
+            <div id="qcResultList"></div>
+        </section>
+
+        <!-- 补问建议 -->
+        <section class="result-panel" id="suggestionPanel">
+            <div class="result-title">
+                <svg class="icon" viewBox="0 0 24 24" fill="none"
+                     stroke="#f59e0b" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                补问建议
+            </div>
+            <ul class="suggestion-list" id="suggestionList"></ul>
+        </section>
+
+        <!-- 报告草案 -->
+        <section class="result-panel" id="reportPanel">
+            <div class="result-title">
+                <svg class="icon" viewBox="0 0 24 24" fill="none"
+                     stroke="#6BCB77" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0
+                             002 2h12a2 2 0 002-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+                评估质控报告草案
+            </div>
+            <div id="reportContent" class="report-structured"></div>
+            <div class="action-bar" style="margin-top:20px;">
+                <button class="btn-qc btn-qc-primary" id="btnPrint">
+                    打印报告
+                </button>
+                <button class="btn-qc btn-qc-outline" id="btnExport">
+                    导出文本
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/ai-eval-copilot.js"></script>
+</body>
+</html>
