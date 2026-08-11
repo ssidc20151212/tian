@@ -131,11 +131,13 @@ async function openEdit(id){
     applyAI.onclick=()=>{f_line.value=a.primary_business_line;f_pri.value=a.priority;f_stage.value=a.lead_stage;f_need.value=a.real_need;f_product.value=(a.product_suggestions||[]).join(' / ');f_action.value=a.next_action;f_date.value=a.next_date;aiStatus.textContent='已把AI建议填入表单；请人工确认后保存。';};
     copyAI.onclick=async()=>{try{await navigator.clipboard.writeText(a.message_draft||'');aiStatus.textContent='建议微信已复制';}catch(e){aiStatus.textContent='复制失败，请手动复制';}};
   }
+  let saving=false;
   saveM.onclick=async()=>{
     const action=f_action.value.trim();if(!f_name.value.trim()&&!id){formErr.textContent='请填写对象名称';return;}if(!action||vague.test(action)){formErr.textContent='下一步动作必须具体，不能写“持续跟进/继续沟通”。';return;}if(!f_date.value){formErr.textContent='请设置下一次联系日期';return;}
+    if(saving)return;saving=true;saveM.disabled=true;saveM.textContent='保存中...';formErr.textContent='';
     const payload={contact_name:f_name.value.trim(),business_line:f_line.value,priority:f_pri.value,stage:f_stage.value,need:f_need.value.trim(),product:f_product.value.trim(),expected_amount:Number(f_amount.value||0),next_action:action,next_date:f_date.value,last_note:f_note.value.trim()};
     if(state.me.role==='admin'&&document.getElementById('f_owner'))payload.owner_id=Number(f_owner.value);
-    try{if(id)await api('/api/opportunities/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify(payload)});else await api('/api/opportunities',{method:'POST',body:JSON.stringify(payload)});close();renderView();}catch(e){formErr.textContent=e.message;}
+    try{if(id)await api('/api/opportunities/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify(payload)});else await api('/api/opportunities',{method:'POST',body:JSON.stringify(payload)});close();renderView();}catch(e){saving=false;saveM.disabled=false;saveM.textContent='保存';formErr.textContent=e.message;}
   };
 }
 function opts(map,val){return Object.entries(map).map(([k,v])=>`<option value="${k}" ${k===val?'selected':''}>${v}</option>`).join('');}
