@@ -71,6 +71,8 @@ function pageHead(title,sub,right=''){return `<div class="page-head"><div><h2>${
 function kpi(v,l,cls=''){return `<div class="kpi ${cls}"><div class="v">${v}</div><div class="l">${l}</div></div>`;}
 function priorityBadge(p){return `<span class="badge ${esc(p||'C')}">${esc(p||'C')}</span>`;}
 function lineName(x){return ({sales:'招生',talent:'人才',partner:'伙伴',institution:'机构'})[x]||x||'未分类';}
+function stageName(x){return ({new:'新机会',contacted:'已联系',qualified:'明确需求',proposal:'已发方案/报名',payment_pending:'待付款',won:'已成交/完成',lost:'未成交',paused:'暂缓'})[x]||x||'未设置';}
+function stageBadge(x){const cls=x==='won'?'C':(x==='lost'||x==='paused'?'paused':'B');return `<span class="badge ${cls}">${esc(stageName(x))}</span>`;}
 
 function renderToday(d){
   const list=d.items||[];document.getElementById('main').innerHTML=pageHead('今天做什么','只处理今天到期、已逾期和A级未排期事项。')+
@@ -80,9 +82,9 @@ function renderToday(d){
 }
 function workTable(list,compact=false){
   if(!list.length)return '<div class="empty">当前没有待办。请到“机会雷达”领取/查看今日新机会。</div>';
-  return `<table class="table"><thead><tr><th>对象</th><th>业务</th><th>等级</th><th>当前需求</th><th>${compact?'今天做什么':'下一步动作'}</th><th>日期</th><th>预计金额</th><th></th></tr></thead><tbody>${list.map(x=>{
-    const cls=x.next_date<today()?'overdue':x.next_date===today()?'today':'';
-    return `<tr><td><b>${esc(x.contact_name||x.customer_name)}</b><div class="note">${esc(x.org_name||'')} ${x.region?'· '+esc(x.region):''}</div></td><td>${lineName(x.business_line)}</td><td>${priorityBadge(x.priority)}</td><td>${esc(x.need||'—')}</td><td><div class="action-text">${esc(x.next_action||'尚未设置')}</div><div class="note">${esc(x.last_note||'')}</div></td><td class="${cls}">${fmtDate(x.next_date)}</td><td>${money(x.expected_amount)}</td><td><button class="btn btn-ghost btn-sm edit-op" data-id="${esc(x.id)}">更新</button></td></tr>`;
+  return `<table class="table"><thead><tr><th>#</th><th>对象</th><th>业务</th><th>等级</th><th>阶段</th><th>当前需求</th><th>${compact?'今天做什么':'下一步动作'}</th><th>日期</th><th>预计金额</th><th></th></tr></thead><tbody>${list.map((x,index)=>{
+    const cls=x.stage==='won'||x.stage==='lost'||x.stage==='paused'?'':(x.next_date<today()?'overdue':x.next_date===today()?'today':'');
+    return `<tr><td class="nowrap">#${index+1}</td><td><b>${esc(x.contact_name||x.customer_name)}</b><div class="note">${esc(x.org_name||'')} ${x.region?'· '+esc(x.region):''}</div></td><td>${lineName(x.business_line)}</td><td>${priorityBadge(x.priority)}</td><td>${stageBadge(x.stage)}</td><td>${esc(x.need||'—')}</td><td><div class="action-text">${esc(x.next_action||'尚未设置')}</div><div class="note">${esc(x.last_note||'')}</div></td><td class="${cls}">${fmtDate(x.next_date)}</td><td>${money(x.expected_amount)}</td><td><button class="btn btn-ghost btn-sm edit-op" data-id="${esc(x.id)}">更新</button></td></tr>`;
   }).join('')}</tbody></table>`;
 }
 
@@ -111,8 +113,15 @@ async function openEdit(id){
     <div class="field span2"><label>下一步动作 *</label><input id="f_action" value="${esc(x.next_action||'')}" placeholder="必须具体：确认2-3名名单和材料 / 约20分钟需求访谈"></div>
     <div class="field span2"><label>本次沟通结果</label><textarea id="f_note">${esc(x.last_note||'')}</textarea></div>
     <div class="field span2 ai-box"><div class="ai-title-row"><div><label>AI商业线索升级器</label><div class="note">粘贴最新微信/电话纪要，让AI判断真实需求、隐藏机会和下一步。</div></div><span class="ai-chip">销售能力加持</span></div><textarea id="ai_context" placeholder="粘贴客户最新回复或电话纪要。例：我们单位还有两个人也想考，但不知道三级能不能报，我的工作证明还没准备好……"></textarea><div class="ai-actions"><button type="button" class="btn btn-orange btn-sm" id="runAI">AI判断这条线索</button><span id="aiStatus" class="note"></span></div><div id="aiResult"></div></div>
-  </div><div class="error" id="formErr"></div></div><div class="modal-foot"><button class="btn btn-ghost" id="cancelM">取消</button><button class="btn btn-primary" id="saveM">保存</button></div></div>`;
+  </div><div class="error" id="formErr"></div></div><div class="modal-foot">${id?'<button class="btn btn-danger" id="deleteM">删除机会</button>':''}<button class="btn btn-ghost" id="cancelM">取消</button><button class="btn btn-primary" id="saveM">保存</button></div></div>`;
   document.body.appendChild(mask);const close=()=>mask.remove();closeM.onclick=close;cancelM.onclick=close;
+  const deleteM=mask.querySelector('#deleteM');
+  if(deleteM)deleteM.onclick=async()=>{
+    if(!window.confirm(`确定删除“${x.contact_name||x.customer_name||'这条机会'}”吗？删除后无法恢复。`))return;
+    deleteM.disabled=true;deleteM.textContent='删除中...';formErr.textContent='';
+    try{await api('/api/opportunities/'+encodeURIComponent(id),{method:'DELETE'});close();renderView();}
+    catch(e){deleteM.disabled=false;deleteM.textContent='删除机会';formErr.textContent=e.message;}
+  };
   let lastAI=null;
   runAI.onclick=async()=>{
     const text=ai_context.value.trim();if(!text){aiStatus.textContent='请先粘贴客户最新对话/电话纪要';return;}
@@ -133,7 +142,7 @@ async function openEdit(id){
   }
   let saving=false;
   saveM.onclick=async()=>{
-    const action=f_action.value.trim();if(!f_name.value.trim()&&!id){formErr.textContent='请填写对象名称';return;}if(!action||vague.test(action)){formErr.textContent='下一步动作必须具体，不能写“持续跟进/继续沟通”。';return;}if(!f_date.value){formErr.textContent='请设置下一次联系日期';return;}
+    const action=f_action.value.trim();const terminal=['won','lost','paused'].includes(f_stage.value);if(!f_name.value.trim()&&!id){formErr.textContent='请填写对象名称';return;}if(!action||vague.test(action)){formErr.textContent='下一步动作必须具体，不能写“持续跟进/继续沟通”。';return;}if(!f_date.value&&!terminal){formErr.textContent='请设置下一次联系日期';return;}
     if(saving)return;saving=true;saveM.disabled=true;saveM.textContent='保存中...';formErr.textContent='';
     const payload={contact_name:f_name.value.trim(),business_line:f_line.value,priority:f_pri.value,stage:f_stage.value,need:f_need.value.trim(),product:f_product.value.trim(),expected_amount:Number(f_amount.value||0),next_action:action,next_date:f_date.value,last_note:f_note.value.trim()};
     if(state.me.role==='admin'&&document.getElementById('f_owner'))payload.owner_id=Number(f_owner.value);
@@ -149,8 +158,29 @@ function renderRadar(d){
 
 function renderResults(d){
   const m=d.metrics||{};document.getElementById('main').innerHTML=pageHead('我的成果','只看真实经营产出，不把发朋友圈、做海报当成交。','本周')+
-  `<div class="kpis">${kpi(m.touched||0,'完成触达')}${kpi(m.qualified||0,'明确需求')}${kpi(m.a||0,'A级机会','orange')}${kpi(m.won||0,'成交/完成','green')}${kpi(money(m.revenue||0),'已形成金额','purple')}</div>`+
+  `<div class="kpis">${resultKpi(m.touched||0,'完成触达','touched')}${resultKpi(m.qualified||0,'明确需求','qualified')}${resultKpi(m.a||0,'A级机会','a','orange')}${resultKpi(m.won||0,'成交/完成','won','green')}${resultKpi(money(m.revenue||0),'已形成金额','revenue','purple')}</div>`+
+  `<div class="card hidden" id="resultDetail"></div>`+
   `<div class="card"><div class="card-head"><h3>本周贡献</h3></div><div class="card-body"><p>新增人才：<b>${m.talent||0}</b>　新增伙伴：<b>${m.partner||0}</b>　机构机会：<b>${m.institution||0}</b>　转出机会：<b>${m.transferred||0}</b></p><p class="muted">平台记录好，就不需要再另写重复的招生周报。</p></div></div>`;
+  document.querySelectorAll('.result-kpi').forEach(b=>b.onclick=()=>showResultDetails(b.dataset.metric,b.dataset.label));
+}
+
+function resultKpi(v,l,metric,cls=''){
+  return `<button type="button" class="kpi kpi-button result-kpi ${cls}" data-metric="${esc(metric)}" data-label="${esc(l)}"><div class="v">${v}</div><div class="l">${esc(l)}</div></button>`;
+}
+
+async function showResultDetails(metric,label){
+  const box=document.getElementById('resultDetail');if(!box)return;
+  box.classList.remove('hidden');box.innerHTML=`<div class="card-head"><h3>${esc(label)}明细</h3><button class="btn btn-ghost btn-sm" id="closeResultDetail">收起</button></div><div class="card-body"><div class="empty">加载中…</div></div>`;
+  document.getElementById('closeResultDetail').onclick=()=>box.classList.add('hidden');
+  try{
+    const d=await api('/api/results?range=week&metric='+encodeURIComponent(metric));
+    box.innerHTML=`<div class="card-head"><h3>${esc(label)}明细</h3><button class="btn btn-ghost btn-sm" id="closeResultDetail">收起</button></div><div class="table-wrap">${workTable(d.items||[])}</div>`;
+    document.getElementById('closeResultDetail').onclick=()=>box.classList.add('hidden');
+    bindEditButtons();
+  }catch(e){
+    box.innerHTML=`<div class="card-head"><h3>${esc(label)}明细</h3><button class="btn btn-ghost btn-sm" id="closeResultDetail">收起</button></div><div class="card-body"><div class="error">${esc(e.message)}</div></div>`;
+    document.getElementById('closeResultDetail').onclick=()=>box.classList.add('hidden');
+  }
 }
 
 function renderDashboard(d){
