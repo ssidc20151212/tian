@@ -45,6 +45,7 @@ if (!CP.requireRole('admin','login.html?role=admin')) {}
     <a href="capability-platform.html" class="cp-nav-brand">思德库</a>
     <div class="cp-nav-links">
       <a href="admin-console.html" style="color:var(--cp-primary);font-weight:600;">管理后台</a>
+      <a href="professional-question-admin.html">专业问题管理</a>
       <a href="find-talent.html">浏览档案</a>
       <span class="cp-nav-user" id="navUser"></span>
       <button class="cp-nav-logout" onclick="CP.logout()">退出</button>
@@ -60,6 +61,7 @@ if (!CP.requireRole('admin','login.html?role=admin')) {}
     <div class="admin-tab" onclick="switchTab('talents')">人才档案</div>
     <div class="admin-tab" onclick="switchTab('needs')">机构需求</div>
     <div class="admin-tab" onclick="switchTab('leads')">商务线索</div>
+    <a class="admin-tab" href="professional-question-admin.html">专业问题管理</a>
   </div>
   <div class="admin-section active" id="tab-overview"></div>
   <div class="admin-section" id="tab-talents"></div>

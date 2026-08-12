@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>专业问题管理 - 思德库</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<link rel="stylesheet" href="professional-question.css">
+</head>
+<body>
+<script src="data-model.js"></script>
+<script>
+CP.boot();
+if (!CP.requireRole('admin', 'login.html?role=admin')) {}
+</script>
+<script src="professional-question-data.js"></script>
+<nav class="cp-navbar">
+  <div class="cp-nav-inner">
+    <a href="admin-console.html" class="cp-nav-brand">思德库</a>
+    <div class="cp-nav-links">
+      <a href="admin-console.html">管理后台</a>
+      <a href="professional-question-center.html">用户端</a>
+      <span class="cp-nav-user" id="adminUser"></span>
+      <button class="cp-nav-logout" onclick="CP.logout()">退出</button>
+    </div>
+  </div>
+</nav>
+
+<main class="pq-admin-shell">
+  <header class="pq-admin-head">
+    <div>
+      <p class="pq-eyebrow">专业问题管理</p>
+      <h1>统一整理、回复和沉淀专业问题</h1>
+    </div>
+    <button class="cp-btn cp-btn-primary" id="refreshAdmin">刷新列表</button>
+  </header>
+
+  <div class="pq-admin-tabs">
+    <button class="active" data-admin-view="questions">问题池</button>
+    <button data-admin-view="knowledge">知识库维护</button>
+    <button data-admin-view="consults">专项咨询申请</button>
+  </div>
+
+  <section class="pq-admin-panel active" id="admin-questions">
+    <div class="pq-admin-grid">
+      <div class="pq-table-card">
+        <table class="pq-table">
+          <thead><tr>
+            <th>问题编号</th><th>提交时间</th><th>姓名</th><th>单位</th><th>分类</th><th>紧急程度</th><th>问题摘要</th><th>状态</th><th>负责人</th>
+          </tr></thead>
+          <tbody id="adminQuestionRows"></tbody>
+        </table>
+      </div>
+      <aside class="pq-detail" id="questionDetail">
+        <div class="pq-empty">请选择一个问题查看完整内容。</div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="pq-admin-panel" id="admin-knowledge">
+    <div class="pq-two-col">
+      <form class="pq-form" id="kbForm">
+        <h2>手工添加常见问题</h2>
+        <label>分类<select id="kbCategory"></select></label>
+        <label>问题<textarea required id="kbQuestion" rows="3"></textarea></label>
+        <label>专业回答<textarea required id="kbAnswer" rows="5"></textarea></label>
+        <label>适用场景<textarea id="kbScenario" rows="3"></textarea></label>
+        <label>需要注意的边界<textarea id="kbBoundary" rows="3"></textarea></label>
+        <label>相关工具或课程<input id="kbTools"></label>
+        <div class="pq-actions"><button class="cp-btn cp-btn-primary">保存知识库条目</button></div>
+      </form>
+      <div id="adminKnowledgeList" class="pq-list"></div>
+    </div>
+  </section>
+
+  <section class="pq-admin-panel" id="admin-consults">
+    <div class="pq-table-card">
+      <table class="pq-table">
+        <thead><tr><th>提交时间</th><th>单位</th><th>联系人</th><th>联系电话</th><th>项目需求</th><th>状态</th></tr></thead>
+        <tbody id="consultRows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<script src="professional-question-admin.js"></script>
+</body>
+</html>

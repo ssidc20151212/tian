@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>思德库专业问题中心</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<link rel="stylesheet" href="professional-question.css">
+</head>
+<body>
+<script src="data-model.js"></script>
+<script>if (window.CP && CP.boot) CP.boot();</script>
+<script src="professional-question-data.js"></script>
+<nav class="cp-navbar">
+  <div class="cp-nav-inner">
+    <a href="index.html" class="cp-nav-brand">思德库</a>
+    <div class="cp-nav-links pq-nav">
+      <button data-view="submit">我要提问题</button>
+      <button data-view="mine">我的问题</button>
+      <button data-view="knowledge">常见专业问题</button>
+      <button data-view="consult">申请专项咨询</button>
+      <a href="professional-question-admin.html">后台</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="pq-hero">
+    <div class="pq-hero-inner">
+      <div>
+        <p class="pq-eyebrow">思德库专业问题中心</p>
+        <h1>遇到评估、认知症、照护和机构建设问题，统一在这里提交。</h1>
+        <p>问题进入统一专业问题池，思德库集中整理、分派、回复和沉淀。</p>
+      </div>
+      <div class="pq-hero-actions">
+        <button class="pq-big-btn primary" data-view="submit">我要提问题</button>
+        <button class="pq-big-btn" data-view="mine">我的问题</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="pq-shell">
+    <div class="pq-local-note" id="ownerNote"></div>
+
+    <section class="pq-panel active" id="view-submit">
+      <div class="pq-section-head">
+        <h2>我要提问题</h2>
+        <p>请尽量写清楚发生了什么，以及希望思德库帮助判断或解决什么。</p>
+      </div>
+      <form class="pq-form" id="questionForm">
+        <div class="pq-form-grid">
+          <label>姓名<input required id="qName" autocomplete="name"></label>
+          <label>单位<input required id="qUnit" autocomplete="organization"></label>
+          <label>联系电话<input required id="qPhone" autocomplete="tel"></label>
+        </div>
+        <fieldset>
+          <legend>问题分类</legend>
+          <div class="pq-choice-grid" id="categoryChoices"></div>
+        </fieldset>
+        <label>问题描述 <span id="descCount">0/500</span>
+          <textarea required id="qDesc" maxlength="500" rows="8" placeholder="建议用200-500字说明：老人或机构背景、发生了什么、已经做过什么、目前最困扰的地方。"></textarea>
+        </label>
+        <label>希望思德库帮助解决什么
+          <textarea required id="qHelp" rows="4" placeholder="例如：希望判断评估等级争议如何复核，或希望先看认知症专区平面图是否存在明显问题。"></textarea>
+        </label>
+        <fieldset>
+          <legend>紧急程度</legend>
+          <div class="pq-choice-row">
+            <label><input type="radio" name="urgency" value="normal" checked>普通</label>
+            <label><input type="radio" name="urgency" value="week">一周内需要答复</label>
+            <label><input type="radio" name="urgency" value="safety">涉及老人安全/重大纠纷</label>
+          </div>
+        </fieldset>
+        <label>资料上传
+          <input id="qFiles" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
+          <small>当前静态版本只保存附件名称、类型和大小；真实上传需要配置服务器或对象存储。</small>
+        </label>
+        <div class="pq-actions">
+          <button type="submit" class="cp-btn cp-btn-primary cp-btn-lg">提交问题</button>
+        </div>
+      </form>
+      <div class="pq-success" id="submitSuccess"></div>
+    </section>
+
+    <section class="pq-panel" id="view-mine">
+      <div class="pq-section-head">
+        <h2>我的问题</h2>
+        <p>只显示当前登录账号或本机访客提交的问题。</p>
+      </div>
+      <div class="pq-status-tabs" id="mineTabs">
+        <button data-status="all" class="active">全部</button>
+        <button data-status="已提交">已提交</button>
+        <button data-status="处理中">处理中</button>
+        <button data-status="已回复">已回复</button>
+      </div>
+      <div id="myQuestions" class="pq-list"></div>
+    </section>
+
+    <section class="pq-panel" id="view-knowledge">
+      <div class="pq-section-head">
+        <h2>常见专业问题</h2>
+        <p>由管理员手工添加，也可从已回复问题沉淀而来。</p>
+      </div>
+      <div class="pq-status-tabs" id="kbTabs"></div>
+      <div id="knowledgeList" class="pq-list"></div>
+    </section>
+
+    <section class="pq-panel" id="view-consult">
+      <div class="pq-section-head">
+        <h2>申请专项咨询</h2>
+        <p>该问题已超过普通专业答疑范围，可以申请思德库专项咨询服务。</p>
+      </div>
+      <div class="pq-consult-examples">
+        <span>完整审核平面图</span><span>修改认知症专区方案</span><span>审核多份评估资料</span>
+        <span>出正式报告</span><span>连续指导</span><span>参加机构会议</span><span>机构诊断</span>
+      </div>
+      <form class="pq-form pq-consult-form" id="consultForm">
+        <div class="pq-form-grid">
+          <label>单位<input required id="cUnit"></label>
+          <label>联系人<input required id="cName"></label>
+          <label>联系电话<input required id="cPhone"></label>
+        </div>
+        <label>项目需求<textarea required id="cNeed" rows="6"></textarea></label>
+        <div class="pq-actions"><button class="cp-btn cp-btn-primary cp-btn-lg">申请专项咨询</button></div>
+      </form>
+      <div class="pq-success" id="consultSuccess"></div>
+    </section>
+  </section>
+</main>
+
+<footer class="cp-footer">
+  <div class="cp-footer-bottom">普通专业问题不再通过个人微信重复转发，请统一进入思德库专业问题池。</div>
+</footer>
+<script src="professional-question-center.js"></script>
+</body>
+</html>
