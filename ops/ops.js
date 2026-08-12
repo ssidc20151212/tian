@@ -43,8 +43,8 @@ async function boot(){
 }
 
 function navItems(){
-  if(state.me.role==='admin') return [['dashboard','经营驾驶舱'],['today','今日作战'],['work','全部机会'],['assign','分配中心'],['import','导入总库']];
-  return [['today','今天做什么'],['work','我的工作池'],['radar','机会雷达'],['results','我的成果']];
+  if(state.me.role==='admin') return [['dashboard','经营驾驶舱'],['today','今日作战'],['work','全部机会'],['recycle','回收站'],['assign','分配中心'],['import','导入总库']];
+  return [['today','今天做什么'],['work','我的工作池'],['radar','机会雷达'],['results','我的成果'],['recycle','我的回收站']];
 }
 function renderShell(){
   const items=navItems();
@@ -61,6 +61,7 @@ async function renderView(){
     if(state.view==='work') return renderWork(await api('/api/work'));
     if(state.view==='radar') return renderRadar(await api('/api/radar'));
     if(state.view==='results') return renderResults(await api('/api/results?range=week'));
+    if(state.view==='recycle') return renderRecycleBin(await api('/api/recycle-bin'));
     if(state.view==='dashboard') return renderDashboard(await api('/api/admin/dashboard'));
     if(state.view==='assign') return renderAssign(await api('/api/admin/assign-summary'));
     if(state.view==='import') return renderImport();
@@ -113,14 +114,14 @@ async function openEdit(id){
     <div class="field span2"><label>下一步动作 *</label><input id="f_action" value="${esc(x.next_action||'')}" placeholder="必须具体：确认2-3名名单和材料 / 约20分钟需求访谈"></div>
     <div class="field span2"><label>本次沟通结果</label><textarea id="f_note">${esc(x.last_note||'')}</textarea></div>
     <div class="field span2 ai-box"><div class="ai-title-row"><div><label>AI商业线索升级器</label><div class="note">粘贴最新微信/电话纪要，让AI判断真实需求、隐藏机会和下一步。</div></div><span class="ai-chip">销售能力加持</span></div><textarea id="ai_context" placeholder="粘贴客户最新回复或电话纪要。例：我们单位还有两个人也想考，但不知道三级能不能报，我的工作证明还没准备好……"></textarea><div class="ai-actions"><button type="button" class="btn btn-orange btn-sm" id="runAI">AI判断这条线索</button><span id="aiStatus" class="note"></span></div><div id="aiResult"></div></div>
-  </div><div class="error" id="formErr"></div></div><div class="modal-foot">${id?'<button class="btn btn-danger" id="deleteM">删除机会</button>':''}<button class="btn btn-ghost" id="cancelM">取消</button><button class="btn btn-primary" id="saveM">保存</button></div></div>`;
+  </div><div class="error" id="formErr"></div></div><div class="modal-foot">${id?'<button class="btn btn-danger" id="deleteM">移入回收站</button>':''}<button class="btn btn-ghost" id="cancelM">取消</button><button class="btn btn-primary" id="saveM">保存</button></div></div>`;
   document.body.appendChild(mask);const close=()=>mask.remove();closeM.onclick=close;cancelM.onclick=close;
   const deleteM=mask.querySelector('#deleteM');
   if(deleteM)deleteM.onclick=async()=>{
-    if(!window.confirm(`确定删除“${x.contact_name||x.customer_name||'这条机会'}”吗？删除后无法恢复。`))return;
-    deleteM.disabled=true;deleteM.textContent='删除中...';formErr.textContent='';
+    if(!window.confirm(`确定将“${x.contact_name||x.customer_name||'这条机会'}”移入回收站吗？之后可在回收站恢复。`))return;
+    deleteM.disabled=true;deleteM.textContent='移入回收站...';formErr.textContent='';
     try{await api('/api/opportunities/'+encodeURIComponent(id),{method:'DELETE'});close();renderView();}
-    catch(e){deleteM.disabled=false;deleteM.textContent='删除机会';formErr.textContent=e.message;}
+    catch(e){deleteM.disabled=false;deleteM.textContent='移入回收站';formErr.textContent=e.message;}
   };
   let lastAI=null;
   runAI.onclick=async()=>{
@@ -180,6 +181,28 @@ async function showResultDetails(metric,label){
   }catch(e){
     box.innerHTML=`<div class="card-head"><h3>${esc(label)}明细</h3><button class="btn btn-ghost btn-sm" id="closeResultDetail">收起</button></div><div class="card-body"><div class="error">${esc(e.message)}</div></div>`;
     document.getElementById('closeResultDetail').onclick=()=>box.classList.add('hidden');
+  }
+}
+
+function renderRecycleBin(d){
+  const list=d.items||[];
+  document.getElementById('main').innerHTML=pageHead(state.me.role==='admin'?'回收站':'我的回收站','移入回收站的机会可恢复到原负责人和原阶段。')+
+    `<div class="card"><div class="card-head"><div><h3>已移入回收站 ${list.length}</h3><span class="muted">回收站内的记录不会计入工作池或成果统计。</span></div></div><div class="table-wrap">${recycleTable(list)}</div></div>`;
+  document.querySelectorAll('.restore-op').forEach(b=>b.onclick=()=>restoreFromRecycleBin(b.dataset.id,b.dataset.name));
+}
+
+function recycleTable(list){
+  if(!list.length)return '<div class="empty">回收站目前为空。</div>';
+  return `<table class="table"><thead><tr><th>#</th><th>对象</th><th>业务</th><th>等级</th><th>原阶段</th><th>原负责人</th><th>移入时间</th><th></th></tr></thead><tbody>${list.map((x,index)=>`<tr><td class="nowrap">#${index+1}</td><td><b>${esc(x.contact_name||x.customer_name)}</b><div class="note">${esc(x.org_name||'')} ${x.region?'· '+esc(x.region):''}</div></td><td>${lineName(x.business_line)}</td><td>${priorityBadge(x.priority)}</td><td>${stageBadge(x.stage)}</td><td>${esc(x.owner_id||'—')}</td><td>${fmtDate(x.deleted_at)}</td><td><button class="btn btn-primary btn-sm restore-op" data-id="${esc(x.id)}" data-name="${esc(x.contact_name||x.customer_name||'这条机会')}">恢复</button></td></tr>`).join('')}</tbody></table>`;
+}
+
+async function restoreFromRecycleBin(id,name){
+  if(!window.confirm(`确定恢复“${name}”吗？它会回到原来的工作池。`))return;
+  try{
+    await api('/api/recycle-bin/'+encodeURIComponent(id)+'/restore',{method:'POST'});
+    renderView();
+  }catch(e){
+    alert(e.message);
   }
 }
 
