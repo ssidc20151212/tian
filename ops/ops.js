@@ -101,7 +101,7 @@ async function openEdit(id){
   if(id){try{x=(await api('/api/opportunities/'+encodeURIComponent(id))).item;}catch(e){alert(e.message);return;}}
   const ownerField=state.me.role==='admin'?`<div class="field"><label>负责人</label><select id="f_owner">${(state.cache.users||[]).map(u=>`<option value="${u.id}" ${String(x.owner_id)===String(u.id)?'selected':''}>${esc(u.display_name)}</option>`).join('')}</select></div>`:'';
   if(state.me.role==='admin'&&!state.cache.users){try{state.cache.users=(await api('/api/admin/users')).items||[];return openEdit(id);}catch(e){alert(e.message);return;}}
-  const mask=document.createElement('div');mask.className='modal-mask';mask.innerHTML=`<div class="modal"><div class="modal-head"><h3>${id?'更新机会':'新增机会'}</h3><button class="btn btn-ghost btn-sm" id="closeM">关闭</button></div><div class="modal-body"><div class="form-grid">
+  const mask=document.createElement('div');mask.className='modal-mask';mask.innerHTML=`<div class="modal"><div class="modal-head"><h3>${id?'更新机会':'新增机会'}</h3><button type="button" class="btn btn-ghost btn-sm" id="closeM">关闭</button></div><div class="modal-body"><div class="form-grid">
     <div class="field"><label>对象姓名/机构 *</label><input id="f_name" value="${esc(x.contact_name||x.customer_name||'')}" ${id?'disabled':''}></div>
     <div class="field"><label>业务线</label><select id="f_line">${opts({sales:'招生',talent:'人才',partner:'伙伴',institution:'机构'},x.business_line)}</select></div>
     <div class="field"><label>等级</label><select id="f_pri">${opts({A:'A｜30天内可能产生结果',B:'B｜有明确需求',C:'C｜长期培育',paused:'暂停'},x.priority)}</select></div>
@@ -114,9 +114,33 @@ async function openEdit(id){
     <div class="field span2"><label>下一步动作 *</label><input id="f_action" value="${esc(x.next_action||'')}" placeholder="必须具体：确认2-3名名单和材料 / 约20分钟需求访谈"></div>
     <div class="field span2"><label>本次沟通结果</label><textarea id="f_note">${esc(x.last_note||'')}</textarea></div>
     <div class="field span2 ai-box"><div class="ai-title-row"><div><label>AI商业线索升级器</label><div class="note">粘贴最新微信/电话纪要，让AI判断真实需求、隐藏机会和下一步。</div></div><span class="ai-chip">销售能力加持</span></div><textarea id="ai_context" placeholder="粘贴客户最新回复或电话纪要。例：我们单位还有两个人也想考，但不知道三级能不能报，我的工作证明还没准备好……"></textarea><div class="ai-actions"><button type="button" class="btn btn-orange btn-sm" id="runAI">AI判断这条线索</button><span id="aiStatus" class="note"></span></div><div id="aiResult"></div></div>
-  </div><div class="error" id="formErr"></div></div><div class="modal-foot">${id?'<button class="btn btn-danger" id="deleteM">移入回收站</button>':''}<button class="btn btn-ghost" id="cancelM">取消</button><button class="btn btn-primary" id="saveM">保存</button></div></div>`;
-  document.body.appendChild(mask);const close=()=>mask.remove();closeM.onclick=close;cancelM.onclick=close;
+  </div><div class="error" id="formErr"></div></div><div class="modal-foot">${id?'<button type="button" class="btn btn-danger" id="deleteM">移入回收站</button>':''}<button type="button" class="btn btn-ghost" id="cancelM">取消</button><button type="button" class="btn btn-primary" id="saveM">保存</button></div></div>`;
+  document.body.appendChild(mask);
+  const close=()=>mask.remove();
+  const closeM=mask.querySelector('#closeM');
+  const cancelM=mask.querySelector('#cancelM');
+  const saveM=mask.querySelector('#saveM');
   const deleteM=mask.querySelector('#deleteM');
+  const formErr=mask.querySelector('#formErr');
+  const f_name=mask.querySelector('#f_name');
+  const f_line=mask.querySelector('#f_line');
+  const f_pri=mask.querySelector('#f_pri');
+  const f_stage=mask.querySelector('#f_stage');
+  const f_need=mask.querySelector('#f_need');
+  const f_product=mask.querySelector('#f_product');
+  const f_amount=mask.querySelector('#f_amount');
+  const f_date=mask.querySelector('#f_date');
+  const f_action=mask.querySelector('#f_action');
+  const f_note=mask.querySelector('#f_note');
+  const f_owner=mask.querySelector('#f_owner');
+  const ai_context=mask.querySelector('#ai_context');
+  const aiStatus=mask.querySelector('#aiStatus');
+  const aiResult=mask.querySelector('#aiResult');
+  const runAI=mask.querySelector('#runAI');
+  const applyAI=mask.querySelector('#applyAI');
+  const copyAI=mask.querySelector('#copyAI');
+  closeM.onclick=close;
+  cancelM.onclick=close;
   if(deleteM)deleteM.onclick=async()=>{
     if(!window.confirm(`确定将“${x.contact_name||x.customer_name||'这条机会'}”移入回收站吗？之后可在回收站恢复。`))return;
     deleteM.disabled=true;deleteM.textContent='移入回收站...';formErr.textContent='';
@@ -138,16 +162,18 @@ async function openEdit(id){
     const qs=(a.questions_to_ask||[]).map(q=>`<li>${esc(q)}</li>`).join('');
     const no=(a.do_not_do||[]).map(q=>`<li>${esc(q)}</li>`).join('');
     aiResult.innerHTML=`<div class="ai-result"><div class="ai-summary"><div>${priorityBadge(a.priority)} <b>${lineName(a.primary_business_line)}</b> <span class="note">置信度 ${esc(a.confidence)}%</span></div><div class="ai-need">${esc(a.real_need)}</div></div><div class="ai-grid"><div><h5>隐藏机会</h5><ul>${hidden}</ul></div><div><h5>关键阻碍</h5><ul>${(a.blockers||[]).map(x=>`<li>${esc(x)}</li>`).join('')||'<li>暂无明显阻碍</li>'}</ul></div><div><h5>下一步</h5><p class="action-text">${esc(a.next_action)}</p><div class="note">建议日期：${esc(a.next_date)}</div></div><div><h5>只问这3个问题</h5><ul>${qs||'<li>暂无</li>'}</ul></div><div><h5>不要这样做</h5><ul>${no||'<li>暂无</li>'}</ul></div><div><h5>AI教你怎么说</h5><div class="message-draft">${esc(a.message_draft)}</div></div></div><div class="coach-note">${esc(a.coach_note||'')}</div><div class="ai-result-actions"><button type="button" class="btn btn-primary btn-sm" id="applyAI">采用AI建议</button><button type="button" class="btn btn-ghost btn-sm" id="copyAI">复制建议微信</button></div></div>`;
-    applyAI.onclick=()=>{f_line.value=a.primary_business_line;f_pri.value=a.priority;f_stage.value=a.lead_stage;f_need.value=a.real_need;f_product.value=(a.product_suggestions||[]).join(' / ');f_action.value=a.next_action;f_date.value=a.next_date;aiStatus.textContent='已把AI建议填入表单；请人工确认后保存。';};
-    copyAI.onclick=async()=>{try{await navigator.clipboard.writeText(a.message_draft||'');aiStatus.textContent='建议微信已复制';}catch(e){aiStatus.textContent='复制失败，请手动复制';}};
+    const applyBtn=mask.querySelector('#applyAI');
+    const copyBtn=mask.querySelector('#copyAI');
+    if(applyBtn)applyBtn.onclick=()=>{f_line.value=a.primary_business_line;f_pri.value=a.priority;f_stage.value=a.lead_stage;f_need.value=a.real_need;f_product.value=(a.product_suggestions||[]).join(' / ');f_action.value=a.next_action;f_date.value=a.next_date;aiStatus.textContent='已把AI建议填入表单；请人工确认后保存。';};
+    if(copyBtn)copyBtn.onclick=async()=>{try{await navigator.clipboard.writeText(a.message_draft||'');aiStatus.textContent='建议微信已复制';}catch(e){aiStatus.textContent='复制失败，请手动复制';}};
   }
   let saving=false;
   saveM.onclick=async()=>{
     const action=f_action.value.trim();const terminal=['won','lost','paused'].includes(f_stage.value);if(!f_name.value.trim()&&!id){formErr.textContent='请填写对象名称';return;}if(!action||vague.test(action)){formErr.textContent='下一步动作必须具体，不能写“持续跟进/继续沟通”。';return;}if(!f_date.value&&!terminal){formErr.textContent='请设置下一次联系日期';return;}
     if(saving)return;saving=true;saveM.disabled=true;saveM.textContent='保存中...';formErr.textContent='';
     const payload={contact_name:f_name.value.trim(),business_line:f_line.value,priority:f_pri.value,stage:f_stage.value,need:f_need.value.trim(),product:f_product.value.trim(),expected_amount:Number(f_amount.value||0),next_action:action,next_date:f_date.value,last_note:f_note.value.trim()};
-    if(state.me.role==='admin'&&document.getElementById('f_owner'))payload.owner_id=Number(f_owner.value);
-    try{if(id)await api('/api/opportunities/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify(payload)});else await api('/api/opportunities',{method:'POST',body:JSON.stringify(payload)});close();renderView();}catch(e){saving=false;saveM.disabled=false;saveM.textContent='保存';formErr.textContent=e.message;}
+    if(state.me.role==='admin'&&f_owner)payload.owner_id=Number(f_owner.value);
+    try{if(id)await api('/api/opportunities/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify(payload)});else await api('/api/opportunities',{method:'POST',body:JSON.stringify(payload)});close();renderView();}catch(e){saving=false;saveM.disabled=false;saveM.textContent='保存';formErr.textContent=e.message||'保存失败';}
   };
 }
 function opts(map,val){return Object.entries(map).map(([k,v])=>`<option value="${k}" ${k===val?'selected':''}>${v}</option>`).join('');}
