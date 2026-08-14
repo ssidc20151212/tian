@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
             location.replace('/professional-question-center.html');
         }
     </script>
-    <title>鎬濆痉搴撳吇鑰佹満鏋勮兘鍔涙敮鎸佸钩鍙?/title>
+    <title>思德库养老机构能力支持平�?/title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap');
         :root {
@@ -31,7 +31,7 @@
         a { text-decoration: none; color: inherit; }
         .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
 
-        /* 瀵艰埅 */
+        /* 导航 */
         .navbar { position: sticky; top: 0; background: #fff; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
         .nav-inner { display: flex; align-items: center; height: 64px; justify-content: space-between; }
         .nav-brand { font-family: 'Noto Serif SC', serif; font-size: 26px; font-weight: 900; color: var(--primary); background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 4px; }
@@ -51,7 +51,7 @@
         .btn-primary { display: inline-block; background: linear-gradient(135deg, #FFD166 0%, #FF8C42 100%); color: #1a202c; padding: 14px 40px; border-radius: 30px; font-size: 16px; font-weight: 700; letter-spacing: 1px; border: none; box-shadow: 0 4px 16px rgba(255,140,66,0.4); transition: transform 0.2s, box-shadow 0.2s; }
         .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(255,140,66,0.5); }
 
-        /* 鍖哄潡 */
+        /* 区块 */
         .section { padding: 64px 0; }
         .section-gray { background: var(--bg-gray); }
         .section-title { text-align: center; margin-bottom: 40px; }
@@ -59,7 +59,7 @@
         .section-title p { color: var(--text-light); font-size: 16px; }
         .section-title h2::after { content: ''; display: block; width: 48px; height: 3px; background: var(--accent); margin: 12px auto 0; border-radius: 2px; }
 
-        /* 宸ュ叿鍗＄墖缃戞牸 */
+        /* 工具卡片网格 */
         .tool-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
         .tool-card { background: #fff; border-radius: var(--radius); padding: 24px 16px; text-align: center; box-shadow: var(--shadow); transition: all 0.25s; border: 1px solid #edf2f7; }
         .tool-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--primary-light); }
@@ -68,25 +68,25 @@
         .tool-card h3 { font-size: 15px; color: var(--text-dark); margin-bottom: 4px; }
         .tool-card p { font-size: 13px; color: var(--text-light); }
 
-        /* 浠峰€间富寮犲崱鐗?*/
+        /* 价值主张卡�?*/
         .value-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
         .value-card { text-align: center; padding: 32px 20px; }
         .value-card h3 { font-family: 'Noto Serif SC', serif; font-size: 26px; font-weight: 900; letter-spacing: 3px; background: linear-gradient(135deg, #FF8C42 0%, #FFD166 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; }
         .value-card p { font-size: 15px; color: var(--text-body); }
 
-        /* 澶у崱鐗囷紙绠＄悊宸ュ叿锛?*/
+        /* 大卡片（管理工具�?*/
         .big-card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
         .big-card { background: #fff; border-radius: var(--radius); padding: 32px 24px; box-shadow: var(--shadow); border: 1px solid #edf2f7; transition: all 0.25s; }
         .big-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
         .big-card h3 { font-size: 18px; color: var(--text-dark); margin-bottom: 8px; }
         .big-card p { font-size: 14px; color: var(--text-light); }
 
-        /* CTA妯箙 */
+        /* CTA横幅 */
         .cta-banner { background: linear-gradient(135deg, #FF6B6B 0%, #FF8C42 30%, #FFD166 60%, #6BCB77 100%); padding: 60px 0; text-align: center; color: #fff; margin: 0 auto; max-width: 1200px; border-radius: 28px; box-shadow: 0 12px 40px rgba(255,140,66,0.25); }
         .cta-banner h2 { font-family: 'Noto Serif SC', serif; font-size: 28px; font-weight: 700; margin-bottom: 16px; letter-spacing: 1px; }
         .cta-banner p { font-size: 16px; opacity: 0.85; margin-bottom: 24px; }
 
-        /* 椤佃剼 */
+        /* 页脚 */
         .footer { background: linear-gradient(160deg, #1a1a2e 0%, #2d2d44 50%, #1a1a2e 100%); color: rgba(255,255,255,0.7); padding: 48px 0 32px; margin-top: 40px; }
         .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; margin-bottom: 32px; }
         .footer-brand { font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 8px; letter-spacing: 3px; }
@@ -95,7 +95,7 @@
         .footer-links-col a:hover { color: var(--accent); }
         .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; font-size: 13px; text-align: center; color: rgba(255,255,255,0.5); }
 
-        /* 鍝嶅簲寮?*/
+        /* 响应�?*/
         @media (max-width: 1024px) {
             .tool-grid { grid-template-columns: repeat(3, 1fr); }
             .value-grid { grid-template-columns: repeat(2, 1fr); }
@@ -114,311 +114,313 @@
     </style>
 </head>
 <body>
-    <!-- 椤堕儴瀵艰埅 -->
+    <!-- 顶部导航 -->
     <nav class="navbar">
         <div class="container nav-inner">
-            <div class="nav-brand">鎬濆痉搴?AI鎸囨尌瀹?/div>
-            <button class="nav-toggle" aria-label="鑿滃崟">
+            <div class="nav-brand">思德�?AI指挥�?/div>
+            <button class="nav-toggle" aria-label="菜单">
                 <span></span><span></span><span></span>
             </button>
             <ul class="nav-links">
-                <li><a href="#assess">涓撲笟璇勪及</a></li>
-                <li><a href="#dementia">璁ょ煡鐥囩収鎶?/a></li>
-                <li><a href="#management">鐓ф姢绠＄悊</a></li>
-                <li><a href="#academy">缃戠粶瀛﹁嫅</a></li>
-                <li><a href="terminal-v2/06-pricing.html">浠锋牸</a></li>
-                <li><a href="terminal-v2/08-contact.html" class="nav-cta">鑱旂郴鎴戜滑</a></li>
+                <li><a href="#assess">专业评估</a></li>
+                <li><a href="#dementia">认知症照�?/a></li>
+                <li><a href="#management">照护管理</a></li>
+                <li><a href="#academy">网络学苑</a></li>
+                <li><a href="professional-question-center.html">专业问题中心</a></li>
+                <li><a href="terminal-v2/06-pricing.html">价格</a></li>
+                <li><a href="terminal-v2/08-contact.html" class="nav-cta">联系我们</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero鍖?-->
+    <!-- Hero�?-->
     <section class="hero">
         <div class="container">
-            <p style="font-size:24px;font-weight:600;letter-spacing:2px;margin-bottom:12px;">浠庤瘎浼板埌鐓ф姢锛屼粠瀛︿範鍒扮鐞嗭紝涓€绔欏紡鍏昏€佷笓涓氭敮鎸佸钩鍙?/p>
-            <h1><span style="font-size:48px;color:#FFD166;text-shadow:0 2px 12px rgba(255,209,102,0.5);">鎬濆痉搴?/span> <span style="font-size:28px;font-weight:400;opacity:0.9;">鈥?璁╀笓涓氱収鎶よ鐪嬭锛岃鏈烘瀯鏇村€煎緱鎵樹粯</span></h1>
+            <p style="font-size:24px;font-weight:600;letter-spacing:2px;margin-bottom:12px;">从评估到照护，从学习到管理，一站式养老专业支持平�?/p>
+            <h1><span style="font-size:48px;color:#FFD166;text-shadow:0 2px 12px rgba(255,209,102,0.5);">思德�?/span> <span style="font-size:28px;font-weight:400;opacity:0.9;">�?让专业照护被看见，让机构更值得托付</span></h1>
             <div class="hero-tags">
-                <span>閫傜敤浜庤蛋鍚戝崜瓒婄殑涓撲笟鏈烘瀯</span>
+                <span>适用于走向卓越的专业机构</span>
             </div>
-            <a href="#assess" class="btn-primary">鎺㈢储宸ュ叿</a>
+            <a href="#assess" class="btn-primary">探索工具</a>
+            <a href="professional-question-center.html" class="btn-primary" style="margin-left:12px;background:#fff;color:#1a5276;">专业问题中心</a>
         </div>
     </section>
 
-    <!-- 浠峰€间富寮?-->
+    <!-- 价值主�?-->
     <section class="section section-gray">
         <div class="container">
             <div class="value-grid">
                 <div class="value-card">
-                    <h3>鑳藉睍绀?/h3>
-                    <p>涓撲笟褰㈣薄</p>
+                    <h3>能展�?/h3>
+                    <p>专业形象</p>
                 </div>
                 <div class="value-card">
-                    <h3>鏄撲娇鐢?/h3>
-                    <p>瀛︿範绯荤粺</p>
+                    <h3>易使�?/h3>
+                    <p>学习系统</p>
                 </div>
                 <div class="value-card">
-                    <h3>浼氭寚瀵?/h3>
-                    <p>鐓ф姢宸ュ叿</p>
+                    <h3>会指�?/h3>
+                    <p>照护工具</p>
                 </div>
                 <div class="value-card">
-                    <h3>鍏辨垚闀?/h3>
-                    <p>鏈烘瀯鑳藉姏</p>
+                    <h3>共成�?/h3>
+                    <p>机构能力</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 鐓ф姢璇勪及宸ュ叿 -->
+    <!-- 照护评估工具 -->
     <section class="section" id="assess">
         <div class="container">
             <div class="section-title">
-                <h2>鐓ф姢璇勪及宸ュ叿</h2>
-                <p>10椤瑰浗闄呮爣鍑嗚瘎浼伴噺琛紝瑕嗙洊鑰佸勾浜虹収鎶ら闄╁叏缁村害</p>
+                <h2>照护评估工具</h2>
+                <p>10项国际标准评估量表，覆盖老年人照护风险全维度</p>
             </div>
             <div class="tool-grid">
                 <a href="assess-system.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8f4fd;"><svg viewBox="0 0 24 24" fill="none" stroke="#2980b9" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M9 14l2 2 4-4"/></svg></div>
-                    <h3>缁煎悎鑳藉姏璇勪及</h3><p>鍦ㄧ嚎璇勪及锛岃嚜鍔ㄨ绠楃瓑绾?/p>
+                    <h3>综合能力评估</h3><p>在线评估，自动计算等�?/p>
                 </a>
                 <a href="assess-morse.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fef3e8;"><svg viewBox="0 0 24 24" fill="none" stroke="#FF8C42" stroke-width="2"><path d="M13 4v16M7 12l6 8M17 8l-4 4"/></svg></div>
-                    <h3>璺屽€掗闄?/h3><p>Morse璺屽€掕瘎浼?/p>
+                    <h3>跌倒风�?/h3><p>Morse跌倒评�?/p>
                 </a>
                 <a href="assess-braden.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fde8e8;"><svg viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7V5a2 2 0 012-2h6a2 2 0 012 2v2"/></svg></div>
-                    <h3>鍘嬬柈椋庨櫓</h3><p>Braden鍘嬬柈璇勪及</p>
+                    <h3>压疮风险</h3><p>Braden压疮评估</p>
                 </a>
                 <a href="assess-mna.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8fdf0;"><svg viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg></div>
-                    <h3>钀ュ吇椋庨櫓</h3><p>MNA钀ュ吇绛涙煡</p>
+                    <h3>营养风险</h3><p>MNA营养筛查</p>
                 </a>
                 <a href="assess-mmse.html" class="tool-card">
                     <div class="icon-wrap" style="background:#f3e8fd;"><svg viewBox="0 0 24 24" fill="none" stroke="#8e44ad" stroke-width="2"><path d="M12 2a8 8 0 018 8c0 6-8 12-8 12s-8-6-8-12a8 8 0 018-8z"/><circle cx="12" cy="10" r="3"/></svg></div>
-                    <h3>璁ょ煡绛涙煡</h3><p>MMSE璁ょ煡璇勪及</p>
+                    <h3>认知筛查</h3><p>MMSE认知评估</p>
                 </a>
                 <a href="assess-gds.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8ecfd;"><svg viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5-2 4-2 4 2 4 2M9 9h.01M15 9h.01"/></svg></div>
-                    <h3>鎶戦儊绛涙煡</h3><p>GDS-15鎶戦儊閲忚〃</p>
+                    <h3>抑郁筛查</h3><p>GDS-15抑郁量表</p>
                 </a>
                 <a href="assess-pain.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fde8f3;"><svg viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg></div>
-                    <h3>鐤肩棝璇勪及</h3><p>NRS+琛屼负瑙傚療</p>
+                    <h3>疼痛评估</h3><p>NRS+行为观察</p>
                 </a>
                 <a href="assess-swallow.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8f9fd;"><svg viewBox="0 0 24 24" fill="none" stroke="#16a085" stroke-width="2"><path d="M8 2v4l4 3 4-3V2M12 9v13M8 17l4 4 4-4"/></svg></div>
-                    <h3>鍚炲捊绛涙煡</h3><p>鍣庨璇惛椋庨櫓</p>
+                    <h3>吞咽筛查</h3><p>噎食误吸风险</p>
                 </a>
                 <a href="assess-restraint.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fdf8e8;"><svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
-                    <h3>绾︽潫璇勪及</h3><p>绾︽潫蹇呰鎬у垽瀹?/p>
+                    <h3>约束评估</h3><p>约束必要性判�?/p>
                 </a>
                 <a href="assess-incontinence.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8fdfd;"><svg viewBox="0 0 24 24" fill="none" stroke="#2980b9" stroke-width="2"><path d="M12 2L6 7v6a8 8 0 0012 0V7l-6-5z"/></svg></div>
-                    <h3>鎺掓硠璇勪及</h3><p>澶辩绋嬪害涓庣収鎶?/p>
+                    <h3>排泄评估</h3><p>失禁程度与照�?/p>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- 璁ょ煡鐥囩収鎶や笓鍖?-->
+    <!-- 认知症照护专�?-->
     <section class="section section-gray" id="dementia">
         <div class="container">
             <div class="section-title">
-                <h2>璁ょ煡鐥囩収鎶や笓鍖?/h2>
-                <p>浠庤瘎浼板埌骞查锛屼粠鐜鍒板灞烇紝璁ょ煡鐥囩収鎶ゅ叏娴佺▼宸ュ叿</p>
+                <h2>认知症照护专�?/h2>
+                <p>从评估到干预，从环境到家属，认知症照护全流程工具</p>
             </div>
             <div class="tool-grid">
                 <a href="dementia-cdr.html" class="tool-card">
                     <div class="icon-wrap" style="background:#f3e8fd;"><svg viewBox="0 0 24 24" fill="none" stroke="#8e44ad" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 5-5"/></svg></div>
-                    <h3>CDR璁ょ煡鍒嗘湡</h3><p>璁ょ煡鐥囦弗閲嶇▼搴﹁瘎瀹?/p>
+                    <h3>CDR认知分期</h3><p>认知症严重程度评�?/p>
                 </a>
                 <a href="dementia-adl.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8f4fd;"><svg viewBox="0 0 24 24" fill="none" stroke="#2980b9" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path d="M9 22V12h6v10"/></svg></div>
-                    <h3>ADL鑳藉姏杩借釜</h3><p>鏃ュ父鐢熸椿鑳藉姏璇勪及</p>
+                    <h3>ADL能力追踪</h3><p>日常生活能力评估</p>
                 </a>
                 <a href="dementia-bpsd-log.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fef3e8;"><svg viewBox="0 0 24 24" fill="none" stroke="#FF8C42" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
-                    <h3>BPSD琛屼负鏃ュ織</h3><p>ABC璁板綍涓庡垎鏋?/p>
+                    <h3>BPSD行为日志</h3><p>ABC记录与分�?/p>
                 </a>
                 <a href="dementia-bpsd-plan.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8fdf0;"><svg viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
-                    <h3>BPSD搴斿鏂规</h3><p>琛屼负闂搴斿娴佺▼</p>
+                    <h3>BPSD应对方案</h3><p>行为问题应对流程</p>
                 </a>
                 <a href="dementia-bpsd-npi.html" class="tool-card">
                     <div class="icon-wrap" style="background:#f3e8fd;"><svg viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-                    <h3>NPI-NH璇勪及</h3><p>BPSD璇嗗埆路璇勫垎路搴斿路璁板綍</p>
+                    <h3>NPI-NH评估</h3><p>BPSD识别·评分·应对·记录</p>
                 </a>
                 <a href="dementia-activity.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fde8f3;"><svg viewBox="0 0 24 24" fill="none" stroke="#e91e63" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg></div>
-                    <h3>闈炶嵂鐗╁共棰?/h3><p>娲诲姩鏂规涓庢墽琛屾寚寮?/p>
+                    <h3>非药物干�?/h3><p>活动方案与执行指�?/p>
                 </a>
                 <a href="dementia-cognitive-train.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8ecfd;"><svg viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></div>
-                    <h3>璁ょ煡璁粌</h3><p>鍒嗛樁娈佃鐭ュ埡婵€娲诲姩</p>
+                    <h3>认知训练</h3><p>分阶段认知刺激活动</p>
                 </a>
                 <a href="dementia-environment.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fdf8e8;"><svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2"><rect x="1" y="6" width="22" height="16" rx="2"/><path d="M6 6V4a2 2 0 012-2h8a2 2 0 012 2v2"/></svg></div>
-                    <h3>鐜鑷煡</h3><p>璁ょ煡鐥囧弸濂界幆澧冩鏌?/p>
+                    <h3>环境自查</h3><p>认知症友好环境检�?/p>
                 </a>
                 <a href="dementia-wandering.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fde8e8;"><svg viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg></div>
-                    <h3>璧板け闃叉帶</h3><p>椋庨櫓璇勪及涓庡簲鎬ラ妗?/p>
+                    <h3>走失防控</h3><p>风险评估与应急预�?/p>
                 </a>
                 <a href="dementia-family-comm.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8fdfd;"><svg viewBox="0 0 24 24" fill="none" stroke="#16a085" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-                    <h3>瀹跺睘娌熼€?/h3><p>娌熼€氭ā鏉夸笌鎶€宸?/p>
+                    <h3>家属沟�?/h3><p>沟通模板与技�?/p>
                 </a>
                 <a href="dementia-family-edu.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8f4fd;"><svg viewBox="0 0 24 24" fill="none" stroke="#2980b9" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
-                    <h3>瀹跺睘鏁欒偛</h3><p>璁ょ煡鐥囩煡璇嗙鏅?/p>
+                    <h3>家属教育</h3><p>认知症知识科�?/p>
                 </a>
                 <a href="dementia-training.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fef3e8;"><svg viewBox="0 0 24 24" fill="none" stroke="#FF8C42" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg></div>
-                    <h3>涓撻」鍩硅</h3><p>鐓ф姢鍛樻妧鑳借€冩牳</p>
+                    <h3>专项培训</h3><p>照护员技能考核</p>
                 </a>
                 <a href="dementia-quality.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8fdf0;"><svg viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
-                    <h3>璐ㄩ噺鐪嬫澘</h3><p>KPI鐩戞帶涓庢暟鎹拷韪?/p>
+                    <h3>质量看板</h3><p>KPI监控与数据追�?/p>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- 鐓ф姢绠＄悊宸ュ叿 -->
+    <!-- 照护管理工具 -->
     <section class="section" id="management">
         <div class="container">
             <div class="section-title">
-                <h2>鐓ф姢绠＄悊宸ュ叿</h2>
-                <p>璁╃収鎶よ鍒掕惤鍦般€佽鎶ょ悊璁板綍瑙勮寖銆佽杩庢浠庡涓嶈揩</p>
+                <h2>照护管理工具</h2>
+                <p>让照护计划落地、让护理记录规范、让迎检从容不迫</p>
             </div>
             <div class="big-card-grid">
                 <a href="care-plan.html" class="big-card">
                     <div class="icon-wrap" style="background:#e8f4fd;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#2980b9" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
-                    <h3>鐓ф姢璁″垝妯℃澘</h3>
-                    <p>璇勪及缁撴灉涓€閿浆鍖栦负涓€у寲鐓ф姢鏂规锛屽憡鍒墜鍐欐ā鏉?/p>
+                    <h3>照护计划模板</h3>
+                    <p>评估结果一键转化为个性化照护方案，告别手写模�?/p>
                 </a>
                 <a href="nursing-record.html" class="big-card">
                     <div class="icon-wrap" style="background:#fef3e8;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#FF8C42" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M12 12v6M9 15h6"/></svg></div>
-                    <h3>鎶ょ悊璁板綍宸ュ叿</h3>
-                    <p>鏃ュ父璁板綍涓庝氦鎺ョ彮妯℃澘锛岃鑼冩姢鐞嗘枃涔︽牸寮?/p>
+                    <h3>护理记录工具</h3>
+                    <p>日常记录与交接班模板，规范护理文书格�?/p>
                 </a>
                 <a href="self-check.html" class="big-card">
                     <div class="icon-wrap" style="background:#e8fdf0;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#27ae60" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div>
-                    <h3>鏈烘瀯鑷煡宸ュ叿</h3>
-                    <p>璐ㄩ噺鑷煡涓庤繋妫€鍑嗗锛屽畨鍏ㄩ殣鎮ｄ竴鐩簡鐒?/p>
+                    <h3>机构自查工具</h3>
+                    <p>质量自查与迎检准备，安全隐患一目了�?/p>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- 缃戠粶瀛﹁嫅 -->
+    <!-- 网络学苑 -->
     <section class="section section-gray" id="academy">
         <div class="container">
             <div class="section-title">
-                <h2>鎬濆痉搴撶綉缁滃鑻?/h2>
-                <p>鑱屼笟璁よ瘉绮捐璇剧▼锛屽姪鍔涚収鎶や汉鎵嶆垚闀?/p>
+                <h2>思德库网络学�?/h2>
+                <p>职业认证精讲课程，助力照护人才成�?/p>
             </div>
             <div class="tool-grid" style="grid-template-columns: repeat(3, 1fr);">
                 <a href="academy.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8f4fd;"><svg viewBox="0 0 24 24" fill="none" stroke="#2980b9" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg></div>
-                    <h3>瀛﹁嫅棣栭〉</h3><p>鑱屼笟璁よ瘉涓庢満鏋勮兘鍔涙彁鍗?/p>
+                    <h3>学苑首页</h3><p>职业认证与机构能力提�?/p>
                 </a>
                 <a href="courses.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fef3e8;"><svg viewBox="0 0 24 24" fill="none" stroke="#FF8C42" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
-                    <h3>鎶ょ悊鍛樿绋?/h3><p>鎶ょ悊鍛樻妧鑳借€冭瘯绮捐7璇?/p>
+                    <h3>护理员课�?/h3><p>护理员技能考试精讲7�?/p>
                 </a>
                 <a href="courses-assess.html" class="tool-card">
                     <div class="icon-wrap" style="background:#e8fdf0;"><svg viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
-                    <h3>璇勪及甯堣绋?/h3><p>鑳藉姏璇勪及甯堜笁绾х簿璁?璇?/p>
+                    <h3>评估师课�?/h3><p>能力评估师三级精�?�?/p>
                 </a>
                 <a href="courses-conflict.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fde8e8;"><svg viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-                    <h3>鍐茬獊妗堜緥璇剧▼</h3><p>璇勪及楂橀鍐茬獊鍗侀棶鍗佽В</p>
+                    <h3>冲突案例课程</h3><p>评估高频冲突十问十解</p>
                 </a>
                 <a href="courses-elderly-service.html" class="tool-card">
                     <div class="icon-wrap" style="background:#f3e8fd;"><svg viewBox="0 0 24 24" fill="none" stroke="#8e44ad" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                    <h3>鍏昏€佹湇鍔″笀璇剧▼</h3><p>鍏昏€佹湇鍔″笀鑱屼笟璇剧▼10璁?/p>
+                    <h3>养老服务师课程</h3><p>养老服务师职业课程10�?/p>
                 </a>
                 <a href="coach.html" class="tool-card">
                     <div class="icon-wrap" style="background:#fdf8e8;"><svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 00-16 0"/><path d="M12 13v3M10 18h4"/></svg></div>
-                    <h3>鎴愰暱鏁欑粌</h3><p>璇勪及甯堣祫鏍艰嚜鏌ヤ笌澶囪€?/p>
+                    <h3>成长教练</h3><p>评估师资格自查与备�?/p>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- CTA妯箙 -->
+    <!-- CTA横幅 -->
     <section class="cta-banner">
         <div class="container">
-            <h2>寮€濮嬩娇鐢ㄤ笓涓氬伐鍏凤紝璁╃収鎶ゆ洿鏈夋俯搴?/h2>
-            <p>宸叉湁鐧句綑瀹跺吇鑰佹満鏋勬鍦ㄤ娇鐢ㄦ€濆痉搴撳钩鍙版彁鍗囩収鎶よ川閲?/p>
-            <a href="terminal-v2/08-contact.html" class="btn-primary">浜嗚В鍚堜綔鏂规</a>
+            <h2>开始使用专业工具，让照护更有温�?/h2>
+            <p>已有百余家养老机构正在使用思德库平台提升照护质�?/p>
+            <a href="terminal-v2/08-contact.html" class="btn-primary">了解合作方案</a>
         </div>
     </section>
 
-    <!-- 鍥涘ぇ鏍稿績鑳藉姏 -->
+    <!-- 四大核心能力 -->
     <section class="section">
         <div class="container">
             <div class="section-title">
-                <h2>鍥涘ぇ鏍稿績鑳藉姏</h2>
-                <p>瑕嗙洊鍏昏€佹湇鍔″叏閾捐矾鐨勪笓涓氳В鍐虫柟妗?/p>
+                <h2>四大核心能力</h2>
+                <p>覆盖养老服务全链路的专业解决方�?/p>
             </div>
             <div class="value-grid">
                 <div class="value-card">
-                    <h3>涓撲笟璇勪及</h3>
-                    <p>10椤瑰浗闄呮爣鍑嗚瘎浼伴噺琛紝鍦ㄧ嚎浣跨敤鑷姩鍑哄垎</p>
+                    <h3>专业评估</h3>
+                    <p>10项国际标准评估量表，在线使用自动出分</p>
                 </div>
                 <div class="value-card">
-                    <h3>璁ょ煡鐥囧叏娴佺▼</h3>
-                    <p>浠庤瘎浼板埌骞查锛?2椤逛笓涓氬伐鍏蜂竴绔欒鐩?/p>
+                    <h3>认知症全流程</h3>
+                    <p>从评估到干预�?2项专业工具一站覆�?/p>
                 </div>
                 <div class="value-card">
-                    <h3>鍦ㄧ嚎瀛︿範</h3>
-                    <p>鎶ょ悊鍛樸€佽瘎浼板笀绛夎亴涓氳绋嬬郴缁熷涔?/p>
+                    <h3>在线学习</h3>
+                    <p>护理员、评估师等职业课程系统学�?/p>
                 </div>
                 <div class="value-card">
-                    <h3>绠＄悊璧嬭兘</h3>
-                    <p>鐓ф姢璁″垝銆佹姢鐞嗚褰曘€佹満鏋勮嚜鏌ヤ竴閿畬鎴?/p>
+                    <h3>管理赋能</h3>
+                    <p>照护计划、护理记录、机构自查一键完�?/p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 椤佃剼 -->
+    <!-- 页脚 -->
     <footer class="footer">
         <div class="container">
             <div class="footer-inner">
                 <div>
-                    <div class="footer-brand">鎬濆痉搴?/div>
-                    <p style="font-size:14px;">鍏昏€佹満鏋勮兘鍔涙敮鎸佸钩鍙?/p>
+                    <div class="footer-brand">思德�?/div>
+                    <p style="font-size:14px;">养老机构能力支持平�?/p>
                 </div>
                 <div class="footer-links-col">
-                    <h4>涓撲笟宸ュ叿</h4>
-                    <a href="#assess">鐓ф姢璇勪及</a>
-                    <a href="#dementia">璁ょ煡鐥囩収鎶?/a>
-                    <a href="#management">绠＄悊宸ュ叿</a>
+                    <h4>专业工具</h4>
+                    <a href="#assess">照护评估</a>
+                    <a href="#dementia">认知症照�?/a>
+                    <a href="#management">管理工具</a>
                 </div>
                 <div class="footer-links-col">
-                    <h4>瀛︿範涓績</h4>
-                    <a href="academy.html">缃戠粶瀛﹁嫅</a>
-                    <a href="courses.html">鎶ょ悊鍛樿绋?/a>
-                    <a href="coach.html">鎴愰暱鏁欑粌</a>
+                    <h4>学习中心</h4>
+                    <a href="academy.html">网络学苑</a>
+                    <a href="courses.html">护理员课�?/a>
+                    <a href="coach.html">成长教练</a>
                 </div>
                 <div class="footer-links-col">
-                    <h4>鍏充簬鎴戜滑</h4>
-                    <a href="terminal-v2/06-pricing.html">鏈嶅姟涓庝环鏍?/a>
-                    <a href="terminal-v2/07-partner.html">浼欎即鏈烘瀯</a>
-                    <a href="terminal-v2/08-contact.html">鍚堜綔涓庤仈绯?/a>
+                    <h4>关于我们</h4>
+                    <a href="terminal-v2/06-pricing.html">服务与价�?/a>
+                    <a href="terminal-v2/07-partner.html">伙伴机构</a>
+                    <a href="terminal-v2/08-contact.html">合作与联�?/a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>鏈钩鍙版彁渚涘吇鑰佹湇鍔″満鏅腑鐨勪笓涓氳瘎浼般€佽瀵熶笌鐓ф姢鏀寔锛屼笉鏇夸唬鍖诲璇婃柇銆佷复搴婂喅绛栧強渚濇硶搴旂敱鎸佽瘉涓撲笟浜哄憳瀹屾垚鐨勫伐浣溿€傛渶缁堝垽鏂簲鐢辩浉搴斾笓涓氫汉鍛樼粨鍚堝疄闄呮儏鍐电‘璁ゃ€?/p>
-                <p style="margin-top:8px;">漏 <script>document.write(new Date().getFullYear())</script> 鎬濆痉搴?鐗堟潈鎵€鏈?/p>
+                <p>本平台提供养老服务场景中的专业评估、观察与照护支持，不替代医学诊断、临床决策及依法应由持证专业人员完成的工作。最终判断应由相应专业人员结合实际情况确认�?/p>
+                <p style="margin-top:8px;">© <script>document.write(new Date().getFullYear())</script> 思德�?版权所�?/p>
             </div>
         </div>
     </footer>
 
-    <!-- JS: 姹夊牎鑿滃崟 + 骞虫粦婊氬姩 -->
+    <!-- JS: 汉堡菜单 + 平滑滚动 -->
     <script>
         const toggle = document.querySelector('.nav-toggle');
         const links = document.querySelector('.nav-links');
@@ -434,5 +436,3 @@
     </script>
 </body>
 </html>
-
-

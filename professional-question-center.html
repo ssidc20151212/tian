@@ -1,90 +1,136 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>专业问题中心 - 思德库</title>
+<title>思德库专业问题中心</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="common.css">
-<style>
-.hero { background: linear-gradient(135deg, #1a5276 0%, #2980b9 46%, #FF8C42 100%); color: #fff; padding: 88px 24px 72px; text-align: center; }
-.hero h1 { font-family: 'Noto Serif SC', serif; font-size: 42px; font-weight: 900; margin-bottom: 14px; }
-.hero p { max-width: 820px; margin: 0 auto; font-size: 16px; line-height: 1.9; opacity: .92; }
-.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
-.hero-actions .cp-btn { min-width: 160px; }
-.grid { max-width: 1200px; margin: 0 auto; padding: 72px 24px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-.panel { background: #fff; border: 1px solid var(--cp-bg-soft); border-radius: var(--cp-radius); box-shadow: var(--cp-shadow); padding: 26px; }
-.panel h3 { font-family: 'Noto Serif SC', serif; font-size: 20px; margin-bottom: 10px; color: var(--cp-text-dark); }
-.panel p { font-size: 14px; line-height: 1.8; color: var(--cp-text-light); min-height: 84px; }
-.panel .cp-btn { margin-top: 8px; }
-.steps { background: var(--cp-bg-gray); padding: 72px 24px; }
-.steps-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.step { background: #fff; border-radius: var(--cp-radius); border: 1px solid var(--cp-bg-soft); padding: 22px; }
-.step .num { width: 34px; height: 34px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: var(--cp-primary); color: #fff; font-weight: 700; margin-bottom: 12px; }
-.step h4 { font-size: 16px; color: var(--cp-text-dark); margin-bottom: 8px; }
-.step p { font-size: 13px; line-height: 1.8; color: var(--cp-text-light); }
-@media (max-width: 960px) { .grid, .steps-inner { grid-template-columns: 1fr; } .hero h1 { font-size: 30px; } }
-</style>
+<link rel="stylesheet" href="professional-question.css">
 </head>
 <body>
 <script src="data-model.js"></script>
 <script>if (window.CP && CP.boot) CP.boot();</script>
-
+<script src="professional-question-data.js"></script>
 <nav class="cp-navbar">
   <div class="cp-nav-inner">
-    <a href="professional-question-center.html" class="cp-nav-brand">专业问题中心</a>
-    <div class="cp-nav-links">
-      <a href="index.html">平台首页</a>
-      <a href="institution-need.html">提交问题</a>
+    <a href="index.html" class="cp-nav-brand">思德库</a>
+    <div class="cp-nav-links pq-nav">
+      <button data-view="submit">我要提问题</button>
+      <button data-view="mine">我的问题</button>
+      <button data-view="knowledge">常见专业问题</button>
+      <button data-view="consult">申请专项咨询</button>
     </div>
   </div>
 </nav>
 
-<section class="hero">
-  <h1>专业问题中心</h1>
-  <p>这里是机构提交专业问题、查看能力证据、进入后续处理流程的统一入口。新域名 `que.ssidc.org.cn` 会直接落到这里。</p>
-  <div class="hero-actions">
-    <a class="cp-btn cp-btn-primary" href="institution-need.html">提交专业问题</a>
-    <a class="cp-btn cp-btn-outline" href="find-talent.html">查看档案</a>
-  </div>
-</section>
+<main>
+  <section class="pq-hero">
+    <div class="pq-hero-inner">
+      <div>
+        <p class="pq-eyebrow">思德库专业问题中心</p>
+        <h1>遇到评估、认知症、照护和机构建设问题，统一在这里提交。</h1>
+        <p>问题进入统一专业问题池，思德库集中整理、分派、回复和沉淀。</p>
+      </div>
+      <div class="pq-hero-actions">
+        <button class="pq-big-btn primary" data-view="submit">我要提问题</button>
+        <button class="pq-big-btn" data-view="mine">我的问题</button>
+      </div>
+    </div>
+  </section>
 
-<section class="grid">
-  <div class="panel">
-    <h3>机构入口</h3>
-    <p>描述机构遇到的问题、补充场景和目标，系统会根据能力证据进入匹配流程。</p>
-    <a class="cp-btn cp-btn-primary" href="institution-need.html">开始提交</a>
-  </div>
-  <div class="panel">
-    <h3>能力档案</h3>
-    <p>先看经过验证的能力档案，再决定是否匹配、转介或进一步沟通。</p>
-    <a class="cp-btn cp-btn-outline" href="find-talent.html">查看档案</a>
-  </div>
-  <div class="panel">
-    <h3>处理流程</h3>
-    <p>提交之后会进入核对、匹配、确认和跟进的常规流程，方便继续处理。</p>
-    <a class="cp-btn cp-btn-ghost" href="#flow">查看流程</a>
-  </div>
-</section>
+  <section class="pq-shell">
+    <div class="pq-local-note" id="ownerNote"></div>
 
-<section class="steps" id="flow">
-  <div class="cp-section-title">
-    <h2>三步走</h2>
-    <p>把问题说清楚，把匹配做准确，把后续跟进留住。</p>
-  </div>
-  <div class="steps-inner">
-    <div class="step"><div class="num">1</div><h4>提交问题</h4><p>机构把专业问题、场景和目标一次说清。</p></div>
-    <div class="step"><div class="num">2</div><h4>查看证据</h4><p>先看能力档案和验证信息，再做判断。</p></div>
-    <div class="step"><div class="num">3</div><h4>继续处理</h4><p>核对清楚后，不同流程断点都能继续推进。</p></div>
-    <div class="step"><div class="num">4</div><h4>持续追踪</h4><p>后续状态都能继续查，方便闭环管理。</p></div>
-  </div>
-</section>
+    <section class="pq-panel active" id="view-submit">
+      <div class="pq-section-head">
+        <h2>我要提问题</h2>
+        <p>请尽量写清楚发生了什么，以及希望思德库帮助判断或解决什么。</p>
+      </div>
+      <form class="pq-form" id="questionForm">
+        <div class="pq-form-grid">
+          <label>姓名<input required id="qName" autocomplete="name"></label>
+          <label>单位<input required id="qUnit" autocomplete="organization"></label>
+          <label>联系电话<input required id="qPhone" autocomplete="tel"></label>
+        </div>
+        <fieldset>
+          <legend>问题分类</legend>
+          <div class="pq-choice-grid" id="categoryChoices"></div>
+        </fieldset>
+        <label>问题描述 <span id="descCount">0/500</span>
+          <textarea required id="qDesc" maxlength="500" rows="8" placeholder="建议用200-500字说明：老人或机构背景、发生了什么、已经做过什么、目前最困扰的地方。"></textarea>
+        </label>
+        <label>希望思德库帮助解决什么
+          <textarea required id="qHelp" rows="4" placeholder="例如：希望判断评估等级争议如何复核，或希望先看认知症专区平面图是否存在明显问题。"></textarea>
+        </label>
+        <fieldset>
+          <legend>紧急程度</legend>
+          <div class="pq-choice-row">
+            <label><input type="radio" name="urgency" value="normal" checked>普通</label>
+            <label><input type="radio" name="urgency" value="week">一周内需要答复</label>
+            <label><input type="radio" name="urgency" value="safety">涉及老人安全/重大纠纷</label>
+          </div>
+        </fieldset>
+        <label>资料上传
+          <input id="qFiles" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
+          <small>当前静态版本只保存附件名称、类型和大小；真实上传需要配置服务器或对象存储。</small>
+        </label>
+        <div class="pq-actions">
+          <button type="submit" class="cp-btn cp-btn-primary cp-btn-lg">提交问题</button>
+        </div>
+      </form>
+      <div class="pq-success" id="submitSuccess"></div>
+    </section>
+
+    <section class="pq-panel" id="view-mine">
+      <div class="pq-section-head">
+        <h2>我的问题</h2>
+        <p>只显示当前登录账号或本机访客提交的问题。</p>
+      </div>
+      <div class="pq-status-tabs" id="mineTabs">
+        <button data-status="all" class="active">全部</button>
+        <button data-status="已提交">已提交</button>
+        <button data-status="处理中">处理中</button>
+        <button data-status="已回复">已回复</button>
+      </div>
+      <div id="myQuestions" class="pq-list"></div>
+    </section>
+
+    <section class="pq-panel" id="view-knowledge">
+      <div class="pq-section-head">
+        <h2>常见专业问题</h2>
+        <p>由管理员手工添加，也可从已回复问题沉淀而来。</p>
+      </div>
+      <div class="pq-status-tabs" id="kbTabs"></div>
+      <div id="knowledgeList" class="pq-list"></div>
+    </section>
+
+    <section class="pq-panel" id="view-consult">
+      <div class="pq-section-head">
+        <h2>申请专项咨询</h2>
+        <p>该问题已超过普通专业答疑范围，可以申请思德库专项咨询服务。</p>
+      </div>
+      <div class="pq-consult-examples">
+        <span>完整审核平面图</span><span>修改认知症专区方案</span><span>审核多份评估资料</span>
+        <span>出正式报告</span><span>连续指导</span><span>参加机构会议</span><span>机构诊断</span>
+      </div>
+      <form class="pq-form pq-consult-form" id="consultForm">
+        <div class="pq-form-grid">
+          <label>单位<input required id="cUnit"></label>
+          <label>联系人<input required id="cName"></label>
+          <label>联系电话<input required id="cPhone"></label>
+        </div>
+        <label>项目需求<textarea required id="cNeed" rows="6"></textarea></label>
+        <div class="pq-actions"><button class="cp-btn cp-btn-primary cp-btn-lg">申请专项咨询</button></div>
+      </form>
+      <div class="pq-success" id="consultSuccess"></div>
+    </section>
+  </section>
+</main>
 
 <footer class="cp-footer">
-  <div class="cp-footer-inner">
-    <div><div class="cp-footer-brand">思德库</div><p>专业问题中心</p></div>
-    <div class="cp-footer-links"><h4>入口</h4><a href="institution-need.html">提交专业问题</a><a href="find-talent.html">能力档案</a></div>
-  </div>
+  <div class="cp-footer-bottom">普通专业问题不再通过个人微信重复转发，请统一进入思德库专业问题池。</div>
 </footer>
+<script src="professional-question-center.js"></script>
 </body>
 </html>
