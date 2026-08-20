@@ -154,7 +154,7 @@ async function openEdit(id){
     const snapshot={contact_name:f_name.value.trim(),business_line:f_line.value,priority:f_pri.value,stage:f_stage.value,need:f_need.value.trim(),product:f_product.value.trim(),last_note:f_note.value.trim()};
     try{
       const r=await api('/api/ai/lead-analyze',{method:'POST',body:JSON.stringify({opportunity_id:id||null,conversation:text,snapshot})});
-      lastAI=r.analysis;aiStatus.textContent=(r.mode==='openai'?'AI智能判断':'规则备用判断')+' · '+(r.model||'');renderAIResult(lastAI,r.mode);
+      lastAI=r.analysis;aiStatus.textContent=(['openai','deepseek'].includes(r.mode)?'AI智能判断':'规则备用判断')+' · '+(r.model||'');renderAIResult(lastAI,r.mode);
     }catch(e){aiStatus.textContent='判断失败：'+e.message;}
   };
   function renderAIResult(a,mode){
